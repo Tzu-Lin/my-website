@@ -9,8 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Noto+Serif+TC:wght@300;400;600;700&display=swap" rel="stylesheet">
-  
-  <style>
+    <style>
     :root{
       --tide-deep: #1E444F;
       --tide-mid: #35827D;
@@ -95,7 +94,22 @@
       padding: 0 1rem; 
       margin-top: 2rem;
     }
-
+    .hero-greeting{
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.7rem;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    }
+    .hero-greeting-sub{
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.82);
+      letter-spacing: 0.08em;
+      line-height: 1.8;
+      margin-bottom: 1.8rem;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.35);
+    }
     /* ============ 金色呼吸心 ============ */
     .hero-elegant-heart {
       margin: 0 auto;
@@ -138,25 +152,19 @@
     color: var(--dusk-gold);
     margin-bottom: 0.3rem;
 }
-    /* 藝術感問候區塊 */
-    section.greeting-section { padding: 2rem 1.5rem 3rem; text-align: center; max-width: 650px; margin: 0 auto; }
-    .greeting-box { padding: 3.5rem 2rem; }
-    .greeting{ 
-      font-family: 'Noto Serif TC', serif;
-      font-size: 1.8rem; 
-      font-weight: 600;
-      color: var(--tide-deep); 
-      margin-bottom: 0.8rem; 
-      letter-spacing: 0.15em;
-    }
+
+    /* 藝術感問候區塊(HTML 已移到 hero 內,這段樣式保留給金色文字用) */
     .highlight-gold {
+      font-size: 1.25em;
       background: linear-gradient(135deg, #E8D08C 0%, #C59B47 50%, #9A7326 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       font-weight: 700;
       text-shadow: 0 0 15px rgba(197, 155, 71, 0.3);
+      position: relative;
+      padding: 0 0.15em;
     }
-    .greeting-sub{ font-size: 1rem; color: var(--ink-soft); line-height: 2.2; letter-spacing: 0.08em; }
+
 
     /* GAYA 飯店沉浸式背景區塊 */
     .venue-immersive {
@@ -177,6 +185,28 @@
     .venue-name-card {
       display: inline-block; border: 1px solid rgba(232, 208, 140, 0.5);
       padding: 0.8rem 2rem; border-radius: 999px; font-size: 0.9rem; letter-spacing: 0.1em; color: var(--gold-light); background: rgba(0,0,0,0.3); backdrop-filter: blur(4px);
+    }
+
+    /* 交通與停車資訊卡片 */
+    section.access-section { padding: 3rem 1.5rem; max-width: 650px; margin: 0 auto; }
+    .access-card { padding: 2.5rem 2rem; text-align: center; }
+    .access-addr {
+      font-size: 1rem; color: var(--ink-navy); margin-bottom: 1.8rem; line-height: 1.8;
+    }
+    .map-frame {
+      width: 100%; aspect-ratio: 16/11; border: none; border-radius: 6px;
+      filter: grayscale(0.15) saturate(0.9); margin-bottom: 2rem;
+    }
+    .parking-list { list-style: none; text-align: left; }
+    .parking-list li {
+      position: relative; padding: 0.8rem 0 0.8rem 1.4rem;
+      font-size: 0.9rem; line-height: 1.7; color: var(--ink-navy);
+      border-bottom: 1px solid rgba(197,155,71,0.2);
+    }
+    .parking-list li:last-child { border-bottom: none; }
+    .parking-list li::before {
+      content: ""; position: absolute; left: 0; top: 1.15rem;
+      width: 6px; height: 6px; background: var(--dusk-gold); border-radius: 50%;
     }
 
     /* RSVP 表單樣式 */
@@ -207,7 +237,7 @@
     .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(30,68,79,0.4); }
     .btn-submit:disabled{ opacity: 0.6; pointer-events: none; }
     
-    /* ============ 完美修復：優雅的中文字體與金色漸層「謝謝您」 ============ */
+  
     .thank-you{ display: none; text-align: center; padding: 4rem 0.5rem; }
     .thank-you .big{ 
       font-family: 'Noto Serif TC', serif; 
@@ -246,8 +276,8 @@
       .hero-topbar { font-size: 0.85rem; letter-spacing: 0.08em; }
       .hero-elegant-heart { font-size: 2rem; }
 
-      .greeting { font-size: 1.35rem; letter-spacing: 0.06em; }
-      .greeting-sub { font-size: 0.85rem; line-height: 1.8; }
+      .hero-greeting { font-size: 1.3rem; letter-spacing: 0.06em; }
+      .hero-greeting-sub { font-size: 0.82rem; line-height: 1.7; }
 
       .hero-infobar .date { font-size: 1rem; }
       .hero-infobar .place { font-size: 0.8rem; }
@@ -258,7 +288,9 @@
       .venue-name-card { font-size: 0.75rem; padding: 0.55rem 1.2rem; }
 
       .venue-immersive { padding: 4rem 1.2rem; }
-      .greeting-box { padding: 2rem 1.2rem; }
+      .access-card { padding: 1.8rem 1.2rem; }
+      .access-addr { font-size: 0.9rem; }
+      .parking-list li { font-size: 0.82rem; }
 
       .closing .msg { font-size: 1rem; }
       .closing .names-sm { font-size: 1.1rem; }
@@ -281,7 +313,11 @@
       </div>
 
       <div class="hero-content">
-        <!-- 完美的漸層金文字愛心 -->
+        <p class="hero-greeting">
+          <span class="highlight-gold">靖</span>好歲月　都<span class="highlight-gold">瑜</span>你
+        </p>
+        <p class="hero-greeting-sub">我們想，把接下來的日子都算在一起</p>
+
         <div class="hero-elegant-heart">♥</div>
       </div>
     </div>
@@ -293,16 +329,6 @@
       <div class="date">18:30 開席</div>
       <div class="place">THE GAYA HOTEL · 10F KI-PA</div>
     </div>
-
-    <!-- 問候區塊 -->
-    <section class="greeting-section fade-up">
-      <div class="greeting-box clean-card">
-        <p class="greeting">
-          <span class="highlight-gold">靖</span>好歲月, 都<span class="highlight-gold">瑜</span>你
-        </p>
-        <p class="greeting-sub">我們想，把接下來的日子都算在一起</p>
-      </div>
-    </section>
 
     <!-- GAYA 飯店沉浸式背景區塊 -->
     <div class="venue-immersive fade-up">
@@ -324,6 +350,28 @@
         </div>
       </div>
     </div>
+
+    <!-- 交通與停車資訊 -->
+    <section class="access-section fade-up">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <p class="section-eyebrow" style="color: var(--dusk-gold);">Access</p>
+        <h2 style="font-size: 1.6rem; color: var(--tide-deep); letter-spacing: 0.1em;">交通與停車</h2>
+      </div>
+
+      <div class="access-card clean-card">
+        <p class="access-addr">
+          台東縣台東市新生路 169 號
+        </p>
+
+        <iframe class="map-frame" id="map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+        <ul class="parking-list">
+          <li>飯店提供免費停車，地下一樓為室內停車場(限高 2.2 公尺)</li>
+          <li>戶外停車場位於飯店右側與後方廣場，先到先停</li>
+          <li>如車位已滿，可停附近停車場，並持收據至飯店櫃檯處理</li>
+        </ul>
+      </div>
+    </section>
 
     <!-- RSVP 出席登記表單區塊 -->
     <section id="rsvp" class="rsvp-section fade-up">
@@ -382,7 +430,6 @@
           <button class="btn-submit" id="rsvpSubmitBtn" onclick="submitRSVP()">確認送出</button>
         </form>
 
-        <!-- 修正後的美麗中文字體與金色漸層 -->
         <div class="thank-you" id="thankYou">
           <p class="big">登記完成，謝謝您！</p>
           <p class="sub">我們 11 月 22 日台東見</p>
@@ -399,6 +446,12 @@
 
   <!-- 互動腳本與動畫觀測器 -->
   <script>
+    // 地圖嵌入
+    document.getElementById('map').src =
+      'https://www.google.com/maps?q=' +
+      encodeURIComponent('The GAYA Hotel 潮渡假酒店 台東縣台東市新生路169號') +
+      '&output=embed';
+
     // 捲動浮現動畫觀測器
     document.addEventListener("DOMContentLoaded", function() {
       const observer = new IntersectionObserver((entries) => {
