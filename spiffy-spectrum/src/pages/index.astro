@@ -33,7 +33,15 @@
     }
     .serif-en{ font-family: 'Cormorant Garamond', serif; }
 
-    /* ============ 加寬版的精緻雙層金框 (大氣不狹窄) ============ */
+    /* ============ 手寫字圖片(靖/瑜) ============ */
+    .hand-char{
+      height: 1.9em;
+      display: inline-block;
+      vertical-align: -0.4em;
+      margin: 0 0.1em;
+    }
+
+    /* ============ 加寬版雙層金框 ============ */
     .page-wrapper {
       max-width: 920px; 
       margin: 3rem auto;
@@ -110,6 +118,7 @@
       margin-bottom: 1.8rem;
       text-shadow: 0 1px 6px rgba(0,0,0,0.35);
     }
+
     /* ============ 金色呼吸心 ============ */
     .hero-elegant-heart {
       margin: 0 auto;
@@ -127,12 +136,14 @@
       50% { transform: scale(1.12); opacity: 1; }
     }
 
-    /* 乾淨無壓紋的純白卡片 */
+    /* 卡片 */
     .clean-card {
-      background: var(--lace);
+      background: rgba(255, 253, 248, 0.62);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border-radius: 6px;
-      border: 1px solid rgba(197, 155, 71, 0.3);
-      box-shadow: 0 15px 35px -10px rgba(11,25,31,0.15);
+      border: 1px solid rgba(197, 155, 71, 0.25);
+      box-shadow: 0 15px 35px -10px rgba(11,25,31,0.12);
       position: relative;
       z-index: 10;
     }
@@ -152,19 +163,6 @@
     color: var(--dusk-gold);
     margin-bottom: 0.3rem;
 }
-
-    /* 藝術感問候區塊(HTML 已移到 hero 內,這段樣式保留給金色文字用) */
-    .highlight-gold {
-      font-size: 1.25em;
-      background: linear-gradient(135deg, #E8D08C 0%, #C59B47 50%, #9A7326 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: 700;
-      text-shadow: 0 0 15px rgba(197, 155, 71, 0.3);
-      position: relative;
-      padding: 0 0.15em;
-    }
-
 
     /* GAYA 飯店沉浸式背景區塊 */
     .venue-immersive {
@@ -314,9 +312,9 @@
 
       <div class="hero-content">
         <p class="hero-greeting">
-          <span class="highlight-gold">靖</span>好歲月　都<span class="highlight-gold">瑜</span>你
+          <img src="/images/jian-final.png" alt="靖" class="hand-char">好歲月　都<img src="/images/yu-final.png" alt="瑜" class="hand-char">你
         </p>
-        <p class="hero-greeting-sub">我們想，把接下來的日子都算在一起</p>
+        <p class="hero-greeting-sub">我們想，把接下來的日子都寫在一起</p>
 
         <div class="hero-elegant-heart">♥</div>
       </div>
