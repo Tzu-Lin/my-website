@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="240" viewBox="0 0 200 240">
+  <defs>
+    <g id="flower">
+      <g fill="#8A5A1E">
+        <ellipse cx="0" cy="-6.5" rx="4" ry="7"/>
+        <ellipse cx="0" cy="6.5" rx="4" ry="7"/>
+        <ellipse cx="-6.5" cy="0" rx="7" ry="4"/>
+        <ellipse cx="6.5" cy="0" rx="7" ry="4"/>
+      </g>
+      <circle r="3.2" fill="#5A3B10"/>
+    </g>
+    <g id="curl">
+      <path d="M0,0 C-16,-5 -25,5 -20,16 C-17,24 -6,22 -4,14 C-2,8 -8,4 -11,9"
+            fill="none" stroke="#16323E" stroke-width="3" stroke-linecap="round"/>
+    </g>
+    <g id="ogee">
+      <path d="M50,0 C80,0 92,34 92,60 C92,92 74,116 50,130 C26,116 8,92 8,60 C8,34 20,0 50,0 Z"
+            fill="none" stroke="#16323E" stroke-width="3.5"/>
+      <path d="M50,13 C72,13 82,36 82,58 C82,84 68,102 50,113 C32,102 18,84 18,58 C18,36 28,13 50,13 Z"
+            fill="none" stroke="#16323E" stroke-width="2.2"/>
+      <use href="#flower" xlink:href="#flower" x="50" y="34"/>
+      <use href="#flower" xlink:href="#flower" x="50" y="95"/>
+      <use href="#curl" xlink:href="#curl" x="8" y="55"/>
+      <use href="#curl" xlink:href="#curl" x="92" y="65" transform="scale(-1,1) translate(-184,0)"/>
+    </g>
+  </defs>
+
+  <use href="#ogee" xlink:href="#ogee" x="0" y="-5"/>
+  <use href="#ogee" xlink:href="#ogee" x="100" y="115"/>
+
+  <use href="#flower" xlink:href="#flower" x="0" y="120"/>
+  <use href="#flower" xlink:href="#flower" x="200" y="120"/>
+  <use href="#flower" xlink:href="#flower" x="100" y="0"/>
+  <use href="#flower" xlink:href="#flower" x="100" y="240"/>
+
+  <g stroke="#16323E" stroke-width="2" opacity="0.7" fill="none">
+    <path d="M0,60 C6,50 10,40 8,25"/>
+    <path d="M200,60 C194,50 190,40 192,25"/>
+    <path d="M0,180 C6,170 10,160 8,145"/>
+    <path d="M200,180 C194,170 190,160 192,145"/>
+  </g>
+</svg>
