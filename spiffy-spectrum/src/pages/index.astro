@@ -269,6 +269,21 @@
       opacity: 1;
       transform: translateY(0);
     }
+    body{
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+    /* 表單欄位還是要能選取/輸入文字,不然賓客沒辦法填資料 */
+    input, textarea{
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      user-select: text;
+    }
+    img{
+      -webkit-user-drag: none;
+      pointer-events: none;
+    }
     /* ============ 手機版字級調整 ============ */
     @media (max-width: 480px) {
       .hero-topbar { font-size: 0.85rem; letter-spacing: 0.08em; }
@@ -312,7 +327,7 @@
 
       <div class="hero-content">
         <p class="hero-greeting">
-          <img src="/images/jian-final.png" alt="靖" class="hand-char">好歲月　都<img src="/images/yu-final.png" alt="瑜" class="hand-char">你
+          <img src="/images/jian-v2.png" alt="靖" class="hand-char">好歲月　都<img src="/images/yu-final.png" alt="瑜" class="hand-char">你
         </p>
         <p class="hero-greeting-sub">我們想，把接下來的日子都寫在一起</p>
 
@@ -444,6 +459,8 @@
 
   <!-- 互動腳本與動畫觀測器 -->
   <script>
+    // 禁用右鍵選單
+    document.addEventListener('contextmenu', e => e.preventDefault());
     // 地圖嵌入
     document.getElementById('map').src =
       'https://www.google.com/maps?q=' +
