@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Noto+Serif+TC:wght@300;400;600;700&family=LXGW+WenKai+TC&display=swap" rel="stylesheet">
     <style>
     :root{
-      --tide-deep: #1E444F;
+      --tide-deep: #2A4A4D;
       --tide-mid: #35827D;
       --dusk-gold: #C59B47;
       --gold-light: #E8D08C;
@@ -21,7 +21,7 @@
       --ink-soft: #5b5d5c;
 
       /* 三章節主色,捲動時背景會過渡到這幾個顏色 */
-      --ch1-bg: #1E444F;   /* 第一章:延續你原本的深藍 */
+      --ch1-bg: #2C5F63;   /* 第一章:延續你原本的深藍 */
       --ch2-bg: #D8C1A0;   /* 第二章:台南街景,低飽和暖杏色(老照片沖印紙感) */
       --ch3-bg: #E8DCC4;   /* 第三章:棚拍復古,米黃泛舊 */
     }
@@ -110,12 +110,16 @@
       100%{ background-position: 100% 70%; }
     }
     #chapter1 .chapter-bg-motion{
-      background-image: linear-gradient(135deg, #16323E 0%, #1E444F 35%, #2C5F63 70%, #1E444F 100%);
+      background-image: linear-gradient(135deg, #223C3E 0%, #2A4A4D 35%, #375D5D 70%, #2A4A4D 100%);
     }
     #chapter2 .chapter-bg-motion{
       background-image: linear-gradient(135deg, #C9AD87 0%, #D8C1A0 35%, #E4D2AE 70%, #D8C1A0 100%);
     }
     #chapter3 .chapter-bg-motion{
+      background-image: linear-gradient(135deg, #DED0AE 0%, #E8DCC4 40%, #F2E9D2 70%, #E8DCC4 100%);
+    }
+    /* RSVP 用跟留影一樣的動態漸層,兩個區塊視覺上融合成一體 */
+    section.rsvp-section .chapter-bg-motion{
       background-image: linear-gradient(135deg, #DED0AE 0%, #E8DCC4 40%, #F2E9D2 70%, #E8DCC4 100%);
     }
     /* 細顆粒紋理疊層,增加質感,避免漸層看起來過於平滑塑膠感 */
@@ -153,7 +157,6 @@
       align-items: center;
       transition: background-color 1.2s ease;
       overflow: hidden;
-      border-radius: 4px;
     }
     /* 只有開場頁要上下貼齊、中間內容自然撐開,其他章節維持原本頂部對齊 */
     #hero-open{ padding-top: 3rem; padding-bottom: 3rem; }
@@ -297,7 +300,21 @@
     /* 鐵橋遠景大場面:最大張 */
     .tt-2{ width: 100%; align-self: flex-end; }
     /* 墨鏡向日葵近拍:縮小做對比 */
-    .tt-3{ width: 62%; align-self: flex-start; }
+    .tt-photo.tt-3{
+      width: 100%;
+      align-self: flex-start;
+      flex-direction: row;
+      align-items: flex-end;
+      gap: 1rem;
+    }
+    .tt-photo.tt-3 .tt-caption{
+      font-size: 1.8rem;
+      font-style: normal;
+    }
+    .tt-photo.tt-3 .photo-frame{
+      width: 62%;
+      flex-shrink: 0;
+    }
     /* 日常互動:中等偏小 */
     .tt-4{ width: 70%; align-self: flex-end; }
     .tt-photo .photo-frame{ width: 100%; overflow: hidden; border-radius: 3px; }
@@ -342,6 +359,11 @@
       letter-spacing: 0.05em;
       text-shadow: 0 2px 12px rgba(0,0,0,0.5);
     }
+    .tt-spotlight img.duo-slide{
+      opacity: 0;
+      transition: opacity 1.3s ease-in-out;
+    }
+    .tt-spotlight img.duo-slide.active{ opacity: 1; }
 
     /* ============ 偶爾耍廢:雙圖輪播 ============ */
     .tt-duo{ position: relative; }
@@ -403,11 +425,11 @@
     /* 滿版貼邊 —— 照片直接貼齊章節左/右邊緣,文字擠在另一側留白,交錯排列 */
     .bleed-right{ width: calc(100% + 1.2rem); margin-right: -1.2rem; }
     .bleed-left{ width: calc(100% + 1.2rem); margin-left: -1.2rem; }
-    .photo-a{ width: 78%; align-self: flex-start; }
+    .photo-a{ width: 90%; align-self: flex-start; }
     .photo-a .photo-frame img{ aspect-ratio: 4/3; }
-    .photo-b{ width: 62%; align-self: flex-end; }
+    .photo-b{ width: 65%; align-self: flex-end; }
     .photo-b .photo-frame img{ aspect-ratio: 3/4; }
-    .photo-c{ width: 70%; align-self: center; }
+    .photo-c{ width: 90%; align-self: center; }
     .photo-c .photo-frame img{ aspect-ratio: 5/4; }
 
     /* 照片本身的容器 */
@@ -446,7 +468,7 @@
     }
     .venue-name-card {
       display: inline-block; border: 1px solid rgba(232, 208, 140, 0.5);
-      padding: 0.8rem 2rem; border-radius: 999px; font-size: 0.9rem; letter-spacing: 0.1em;
+      padding: 0.8rem 2rem; border-radius: 999px; font-size: 0.8rem; letter-spacing: 0.1em;
       color: var(--gold-light); background: rgba(0,0,0,0.3); backdrop-filter: blur(4px);
       margin-top: 1.5rem;
     }
@@ -479,10 +501,52 @@
       margin: 1.5rem 0 2.5rem;
     }
     .vc-photo{ display: flex; flex-direction: column; gap: 0.6rem; }
-    .vc-big{ width: 82%; align-self: flex-start; }
-    .vc-small{ width: 62%; align-self: flex-end; margin-top: -2.5rem; }
+    .vc-big{
+      width: 80%;
+      align-self: flex-start;
+      transform: rotate(-8deg) scale(0.94);
+      opacity: 0;
+      transition: transform 1.4s ease, opacity 1.4s ease;
+    }
+    .vc-big.settled{
+      transform: rotate(-3deg) scale(1);
+      opacity: 1;
+    }
+
+    .vc-small{
+      width: 80%;
+      align-self: flex-end;
+      margin-top: -2.5rem;
+      z-index: 2;
+      position: relative;
+      transform: rotate(9deg) scale(0.94);
+      opacity: 0;
+      transition: transform 1.4s ease, opacity 1.4s ease;
+    }
+    .vc-small.settled{
+      transform: rotate(4deg) scale(1);
+      opacity: 1;
+    }
     .vintage-frame{ position: relative; padding: 8px; background: #fff; box-shadow: 0 8px 20px -10px rgba(0,0,0,0.35); }
-    .vintage-frame img{ display: block; width: 100%; object-fit: cover; filter: sepia(0.35) contrast(0.95); aspect-ratio: 4/5; }
+    .vintage-frame img{ display: block; width: 100%; object-fit: cover; aspect-ratio: 4/5; }
+    .vc-big .vintage-frame img{
+      aspect-ratio: 4/3;
+    }
+    /* ============ 留影第二張:雙圖輪播(維持橫式比例,不裁成直式) ============ */
+    .vintage-duo{
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+    }
+    .vintage-duo .duo-slide{
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.3s ease-in-out;
+    }
+    .vintage-duo .duo-slide.active{ opacity: 1; }
     /* 橫式文字放在照片正下方,不再擠壓照片寬度 */
     .vintage-collage .hcaption{
       font-family: 'Noto Serif TC', serif;
@@ -534,12 +598,17 @@
 
     .section-eyebrow{ font-size: 0.85rem; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1rem; font-family: 'Cormorant Garamond', serif; opacity: 0.85; }
 
-    /* ============ RSVP(功能導向,不故事化) ============ */
+    /* ============ RSVP(功能導向,不故事化) —— 跟留影用同一種動態漸層,視覺融合 ============ */
     section.rsvp-section {
       padding: 4rem 1.5rem;
-      max-width: 650px;
-      margin: 0 auto;
-      background: linear-gradient(180deg, #E8DCC4 0%, #F3EEE3 100%);
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      background: #E8DCC4;
+    }
+    .rsvp-inner{
+      position: relative;
+      z-index: 2;
     }
     .rsvp-card{
       padding: 3rem 2.5rem;
@@ -548,6 +617,8 @@
       border: 1px solid rgba(138,106,46,0.3);
       box-shadow: 0 15px 35px -10px rgba(74,59,40,0.25);
       border-radius: 3px;
+      max-width: 650px;
+      margin: 0 auto;
     }
     .field{ margin-bottom: 1.8rem; }
     .field label{ display: block; font-size: 0.85rem; letter-spacing: 0.15em; color: #6b4a1f; margin-bottom: 0.8rem; font-weight: 600; }
@@ -596,19 +667,29 @@
     /* ============ 結語:手寫「11/22 台東見」 ============ */
     .closing{
       position: relative;
-      padding: 2.5rem 1.5rem 2.5rem;
+      width: 100%;
+      margin: 0;
+      padding: 1.8rem 1.5rem;
       text-align: center;
       overflow: hidden;
-      border-radius: 4px;
-      margin-top: 1rem;
+    }
+    .closing::before{
+      content: "";
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: rgba(232,208,140,0.5);
+      margin: 0 auto 1.2rem;
+      position: relative;
+      z-index: 2;
     }
     .closing-bg{
       position: absolute; inset: 0; z-index: 0;
-      background-size: cover; background-position: center;
+      background-size: 130% auto; background-position: center;
     }
     .closing-overlay{
       position: absolute; inset: 0; z-index: 1;
-      background: rgba(11,25,31,0.68);
+      background: rgba(11,25,31,0.1);
     }
     .closing-content{ position: relative; z-index: 2; }
     .closing .hand-placeholder{ color: var(--dusk-gold); }
@@ -621,8 +702,17 @@
       color: var(--dusk-gold);
       letter-spacing: 0.08em;
       margin-bottom: 5.5rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3), 0 1px 1px rgba(0,0,0,0.2);
     }
-    .closing .names-sm{ font-family:'Cormorant Garamond', serif; font-style:italic; font-size:1.2rem; color: rgba(255,255,255,0.85); letter-spacing: 0.1em; display: block; }
+    .closing .names-sm{
+      font-family:'Cormorant Garamond', serif;
+      font-style:italic;
+      font-size:1.2rem;
+      color: rgba(255,255,255,0.85);
+      letter-spacing: 0.1em;
+      display: block;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.5);
+    }
 
     /* ============ 滑動浮現特效 ============ */
     .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 1s ease-out, transform 1s ease-out; }
@@ -642,14 +732,15 @@
       .ghost-word{ font-size: 4.5rem; }
       .pull-quote{ max-width: 100%; font-size: 0.82rem; }
       .hcaption{ font-size: 0.88rem; }
-      .vcaption{ font-size: 1.3rem; letter-spacing: 0.25em; }
-      .tt-caption{ font-size: 0.9rem; width: 115px; }
+      .vcaption{ font-size: 1rem; letter-spacing: 0.25em; }
+      .tt-caption{ font-size: 0.9rem; }
       .closing-hand{ font-size: 1.5rem; }
       .hand-placeholder{ font-size: 2.2rem; }
       .access-card { padding: 1.8rem 1.2rem; }
       .access-addr { font-size: 0.9rem; }
       .parking-list li { font-size: 0.82rem; }
       .closing .names-sm { font-size: 1.1rem; }
+      .tt-4{ width: 90%; }
     }
   </style>
 </head>
@@ -707,7 +798,7 @@
     <!-- ============================================
          第一章・海(台東)—— 真正的故事開始,獨立畫面
          ============================================ -->
-    <section class="chapter" id="chapter1" data-track="/music-chapter1.mp3">
+    <section class="chapter" id="chapter1">
       <div class="chapter-bg-motion"></div>
       <div class="chapter-grain"></div>
       <span class="ghost-word">Taitung</span>
@@ -720,7 +811,7 @@
                 fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
         </svg>
         <p class="chapter-story" style="color: rgba(255,255,255,0.9);">
-          那年，我去了一趟台東，第一次懂了什麼是「台東藍」。<br>
+          那年，我去了一趟台東，第一次看懂什麼是<br>「台東藍」。<br>
           我們的故事，就從那片藍開始說起。
         </p>
       </div>
@@ -736,9 +827,9 @@
         </div>
 
         <!-- 豔陽正好 —— 獨立滿版一頁,不再跟其他照片擠在同一個堆疊列表裡 -->
-        <div class="tt-spotlight fade-up">
-          <!-- TODO: 換成正式檔案 -->
-          <img src="/images/taitung-2-bridge.jpg" alt="">
+        <div class="tt-spotlight fade-up" data-carousel>
+          <img src="/images/taitung-2-bridge.jpg" alt="" class="duo-slide active">
+          <img src="/images/taitung-2b-bridge.jpg" alt="" class="duo-slide">
           <div class="tt-spotlight-overlay"></div>
           <span class="tt-spotlight-caption">太陽好大。</span>
         </div>
@@ -757,7 +848,7 @@
             <!-- TODO: 換成正式檔案 -->
             <img src="/images/taitung-4-frown.jpg" alt="">
           </div>
-          <span class="tt-caption">日常</span>
+          <span class="tt-caption">他又講了一個不好笑的笑話</span>
         </div>
       </div>
     </section>
@@ -768,7 +859,7 @@
          等台南街景婚紗照來了直接換 src
          保留你原本 GAYA 飯店介紹文字 + 名稱卡片
          ============================================ -->
-    <section class="chapter fade-up" id="chapter2" data-track="/music-chapter2.mp3">
+    <section class="chapter fade-up" id="chapter2">
       <div class="chapter-bg-motion"></div>
       <div class="chapter-grain"></div>
       <span class="ghost-word">Tainan</span>
@@ -792,11 +883,11 @@
             <img src="/images/street-a-walk.jpg" alt="">
           </div>
           <!-- TODO: 照片確定後再補文字 -->
-          <span class="vcaption"></span>
+          <span class="vcaption">後面的草有點多</span>
         </div>
         <div class="street-photo photo-b">
           <!-- TODO: 照片確定後再補文字 -->
-          <span class="vcaption"></span>
+          <span class="vcaption">滿好看的><</span>
           <div class="photo-frame">
             <!-- TODO: 台南街景照片來了記得換掉 -->
             <img src="/images/street-b-portrait.jpg" alt="">
@@ -804,7 +895,7 @@
         </div>
         <div class="street-photo photo-c">
           <!-- TODO: 照片確定後再補文字 -->
-          <span class="vcaption"></span>
+          <span class="vcaption">陽光好刺眼...</span>
           <div class="photo-frame">
             <!-- TODO: 台南街景照片來了記得換掉 -->
             <img src="/images/street-c-sunflower.jpg" alt="">
@@ -822,7 +913,7 @@
           <span class="chapter-title-en" style="font-size: 1.8rem; color: var(--gold-light);">The Celebration</span>
           <span class="chapter-title-zh" style="color: var(--gold-light); opacity:0.9;">婚禮・於此</span>
           <p class="chapter-story" style="color: rgba(255,255,255,0.9); margin-top: 1rem;">
-            我們特地選在可眺望台東美景的 GAYA 飯店舉辦婚禮，<br>
+            我們特地選在可眺望台東市景的潮渡假酒店舉辦婚禮，<br>
             沒有繁瑣的儀式，只想邀請最重要的你，<br>
             與我們一同分享這份喜悅與幸福。
           </p>
@@ -835,7 +926,6 @@
             <ul class="parking-list">
               <li>飯店提供免費停車，地下一樓為室內停車場(限高 2.2 公尺)</li>
               <li>戶外停車場位於飯店右側與後方廣場，先到先停</li>
-              <li>如車位已滿，可停附近停車場，並持收據至飯店櫃檯處理</li>
             </ul>
           </div>
         </div>
@@ -847,7 +937,7 @@
          照片先用飯店照片頂著,套泛黃濾鏡 + 金色相角,
          保留你原本交通停車三條資訊 + 地圖
          ============================================ -->
-    <section class="chapter fade-up" id="chapter3" data-track="/music-chapter3.mp3">
+    <section class="chapter fade-up" id="chapter3">
       <div class="chapter-bg-motion"></div>
       <div class="chapter-grain"></div>
       <span class="ghost-word">Memories</span>
@@ -862,7 +952,7 @@
         <!-- 主句放在標題下方,置中,正常大小的文字 -->
         <p class="chapter-story">
           婚姻是承諾，是責任，更是一種選擇。<br>
-          我們想把彼此，放進生命裡最重要的選擇裡。
+          我們想把彼此，放進生命中最重要的選擇裡。
         </p>
       </div>
 
@@ -879,7 +969,10 @@
           <div class="vintage-frame">
             <span class="corner tl"></span><span class="corner tr"></span>
             <span class="corner bl"></span><span class="corner br"></span>
-            <img src="/images/vintage-b.jpg" alt="">
+            <div class="vintage-duo" data-carousel>
+              <img src="/images/vintage-b.jpg" alt="" class="duo-slide active">
+              <img src="/images/vintage-b2.jpg" alt="" class="duo-slide">
+            </div>
           </div>
         </div>
       </div>
@@ -893,76 +986,80 @@
       </div>
     </section>
 
-    <!-- ============ RSVP 出席登記表單(維持原樣,功能導向) ============ -->
+    <!-- ============ RSVP 出席登記表單(跟留影用同一種動態漸層,視覺融合成一體) ============ -->
     <section id="rsvp" class="rsvp-section fade-up">
-      <div style="text-align: center; margin-bottom: 2.5rem;">
-        <p class="section-eyebrow" style="color: #8a6a2e;">RSVP</p>
-        <h2 style="font-size: 1.8rem; color: #4a3b28; letter-spacing: 0.1em;">出席登記</h2>
-        <svg class="squiggle" viewBox="0 0 90 18" style="color: #8a6a2e; margin-top: 0.6rem;">
-          <path d="M2,9 C15,2 20,16 33,9 C46,2 51,16 64,9 C72,5 80,12 88,9"
-                fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-        </svg>
-      </div>
+      <div class="chapter-bg-motion"></div>
+      <div class="chapter-grain"></div>
+      <div class="rsvp-inner">
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+          <p class="section-eyebrow" style="color: #8a6a2e;">RSVP</p>
+          <h2 style="font-size: 1.8rem; color: #4a3b28; letter-spacing: 0.1em;">出席登記</h2>
+          <svg class="squiggle" viewBox="0 0 90 18" style="color: #8a6a2e; margin-top: 0.6rem;">
+            <path d="M2,9 C15,2 20,16 33,9 C46,2 51,16 64,9 C72,5 80,12 88,9"
+                  fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </div>
 
-      <div class="rsvp-card">
-        <form id="rsvpForm" onsubmit="return false;">
-          <div class="field">
-            <label>姓名 / 稱謂 *</label>
-            <input type="text" id="rsvpName" placeholder="請輸入您的姓名">
-          </div>
-
-          <div class="field">
-            <label>出席人數</label>
-            <div class="counter-row">
-              <div class="counter-field">
-                <div class="stepper">
-                  <button type="button" onclick="stepCount('rsvpAdults',-1)">−</button>
-                  <span id="rsvpAdults">1</span>
-                  <button type="button" onclick="stepCount('rsvpAdults',1)">+</button>
-                </div>
-                <div style="text-align:center;font-size:0.8rem;color:var(--ink-soft);margin-top:0.5rem;">大人</div>
-              </div>
-              <div class="counter-field">
-                <div class="stepper">
-                  <button type="button" onclick="stepCount('rsvpKids',-1)">−</button>
-                  <span id="rsvpKids">0</span>
-                  <button type="button" onclick="stepCount('rsvpKids',1)">+</button>
-                </div>
-                <div style="text-align:center;font-size:0.8rem;color:var(--ink-soft);margin-top:0.5rem;">小孩</div>
-              </div>
+        <div class="rsvp-card">
+          <form id="rsvpForm" onsubmit="return false;">
+            <div class="field">
+              <label>姓名 / 稱謂 *</label>
+              <input type="text" id="rsvpName" placeholder="請輸入您的姓名">
             </div>
-          </div>
 
-          <div class="field">
-            <label>飲食需求</label>
-            <div class="veg-toggle">
-              <input type="checkbox" id="rsvpVegCheck" onchange="toggleVeg()">
-              <span>需要素食</span>
-            </div>
-            <div class="counter-row" id="vegCountRow" style="display:none; margin-top:1.2rem;">
-              <div class="counter-field">
-                <div class="stepper">
-                  <button type="button" onclick="stepCount('rsvpVeg',-1)">−</button>
-                  <span id="rsvpVeg">1</span>
-                  <button type="button" onclick="stepCount('rsvpVeg',1)">+</button>
+            <div class="field">
+              <label>出席人數</label>
+              <div class="counter-row">
+                <div class="counter-field">
+                  <div class="stepper">
+                    <button type="button" onclick="stepCount('rsvpAdults',-1)">−</button>
+                    <span id="rsvpAdults">1</span>
+                    <button type="button" onclick="stepCount('rsvpAdults',1)">+</button>
+                  </div>
+                  <div style="text-align:center;font-size:0.8rem;color:var(--ink-soft);margin-top:0.5rem;">大人</div>
                 </div>
-                <div style="text-align:center;font-size:0.8rem;color:var(--ink-soft);margin-top:0.5rem;">素食人數</div>
+                <div class="counter-field">
+                  <div class="stepper">
+                    <button type="button" onclick="stepCount('rsvpKids',-1)">−</button>
+                    <span id="rsvpKids">0</span>
+                    <button type="button" onclick="stepCount('rsvpKids',1)">+</button>
+                  </div>
+                  <div style="text-align:center;font-size:0.8rem;color:var(--ink-soft);margin-top:0.5rem;">小孩</div>
+                </div>
               </div>
             </div>
+
+            <div class="field">
+              <label>飲食需求</label>
+              <div class="veg-toggle">
+                <input type="checkbox" id="rsvpVegCheck" onchange="toggleVeg()">
+                <span>需要素食</span>
+              </div>
+              <div class="counter-row" id="vegCountRow" style="display:none; margin-top:1.2rem;">
+                <div class="counter-field">
+                  <div class="stepper">
+                    <button type="button" onclick="stepCount('rsvpVeg',-1)">−</button>
+                    <span id="rsvpVeg">1</span>
+                    <button type="button" onclick="stepCount('rsvpVeg',1)">+</button>
+                  </div>
+                  <div style="text-align:center;font-size:0.8rem;color:var(--ink-soft);margin-top:0.5rem;">素食人數</div>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn-submit" id="rsvpSubmitBtn" onclick="submitRSVP()">確認送出</button>
+          </form>
+
+          <div class="thank-you" id="thankYou">
+            <p class="big">登記完成，謝謝您！</p>
+            <p class="sub">我們 11 月 22 日台東見</p>
           </div>
-
-          <button class="btn-submit" id="rsvpSubmitBtn" onclick="submitRSVP()">確認送出</button>
-        </form>
-
-        <div class="thank-you" id="thankYou">
-          <p class="big">登記完成，謝謝您！</p>
-          <p class="sub">我們 11 月 22 日台東見</p>
         </div>
       </div>
     </section>
 
     <!-- ============ 結語:手寫「台東見」 ============ -->
-    <section class="closing fade-up">
+    <section class="closing">
       <div class="closing-bg" style="background-image: url('/images/hero-2611.jpg');"></div>
       <div class="closing-overlay"></div>
       <div class="closing-content">
@@ -986,6 +1083,18 @@
 
     // ---------- 捲動浮現動畫 ----------
     document.addEventListener("DOMContentLoaded", function() {
+      // 留影照片捲動入場的角度動畫
+      const vcPhotos = document.querySelectorAll('.vc-photo');
+      const vcObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if(entry.isIntersecting){
+            const order = Array.from(vcPhotos).indexOf(entry.target);
+            setTimeout(() => entry.target.classList.add('settled'), order * 400);
+            vcObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      vcPhotos.forEach(el => vcObserver.observe(el));
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -1044,7 +1153,7 @@
     }
     setInterval(changeVenue, 6000);
 
-    // ---------- 偶爾耍廢:雙圖輪播 ----------
+    // ---------- 各種雙圖輪播(太陽好大 / 偶爾耍廢 / 留影第二張) ----------
     document.querySelectorAll('[data-carousel]').forEach(container => {
       const slides = container.querySelectorAll('.duo-slide');
       if (slides.length < 2) return;
@@ -1056,70 +1165,50 @@
       }, 3500);
     });
 
-    // ---------- 音樂播放與章節切換(淡入淡出,只觸發一次) ----------
+    // ---------- 音樂播放(全站統一一首歌,不再依章節切換) ----------
     const bgMusic = document.getElementById('bgMusic');
     const musicToggle = document.getElementById('musicToggle');
     const musicIcon = musicToggle.querySelector('.music-icon');
+    const MUSIC_SRC = '/cc.mp3';
     let isPlaying = false;
-    let currentTrack = null;
 
-    function fadeToTrack(src){
-      if(!isPlaying || currentTrack === src) return;
-      currentTrack = src;
-      const fadeOutStep = () => {
-        if(bgMusic.volume > 0.05){
-          bgMusic.volume -= 0.05;
-          setTimeout(fadeOutStep, 40);
-        }else{
-          bgMusic.src = src;
-          bgMusic.volume = 0;
-          bgMusic.play().catch(()=>{});
-          fadeInStep();
-        }
-      };
-      const fadeInStep = () => {
-        if(bgMusic.volume < 0.95){
-          bgMusic.volume += 0.05;
-          setTimeout(fadeInStep, 40);
-        }else{
-          bgMusic.volume = 1;
-        }
-      };
-      fadeOutStep();
+    bgMusic.src = MUSIC_SRC;
+    bgMusic.volume = 1;
+
+    function startMusic(){
+      if(isPlaying) return;
+      bgMusic.play().then(() => {
+        isPlaying = true;
+        musicIcon.classList.add('playing');
+      }).catch(() => {
+        // 瀏覽器擋下自動播放,等使用者第一次互動時會再嘗試
+      });
     }
+
+    function stopMusic(){
+      bgMusic.pause();
+      isPlaying = false;
+      musicIcon.classList.remove('playing');
+    }
+
+    // 頁面載入時先嘗試自動播放
+    startMusic();
+
+    // 若被瀏覽器擋下,使用者第一次滑動/點擊/觸碰畫面時自動補播放,
+    // 不需要特地點音樂符號
+    ['scroll', 'touchstart', 'click'].forEach(evt => {
+      document.addEventListener(evt, function firstInteraction(){
+        startMusic();
+      }, { once: true, passive: true });
+    });
 
     musicToggle.addEventListener('click', () => {
       if(isPlaying){
-        bgMusic.pause();
-        musicIcon.classList.remove('playing');
-        isPlaying = false;
+        stopMusic();
       }else{
-        if(!currentTrack){
-          currentTrack = document.getElementById('chapter1').dataset.track;
-          bgMusic.src = currentTrack;
-          bgMusic.volume = 1;
-        }
-        bgMusic.play().catch(()=>{});
-        musicIcon.classList.add('playing');
-        isPlaying = true;
+        startMusic();
       }
     });
-
-    function setupChapterTransition(chapterId){
-      const chapterEl = document.getElementById(chapterId);
-      let triggered = false;
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if(entry.isIntersecting && !triggered){
-            triggered = true;
-            fadeToTrack(chapterEl.dataset.track);
-          }
-        });
-      }, { threshold: 0.3 });
-      observer.observe(chapterEl);
-    }
-    setupChapterTransition('chapter2');
-    setupChapterTransition('chapter3');
 
     // ---------- RSVP 表單計數邏輯 ----------
     const counts = { rsvpAdults: 1, rsvpKids: 0, rsvpVeg: 1 };
