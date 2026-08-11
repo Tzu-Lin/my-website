@@ -29,7 +29,7 @@
     html{ scroll-behavior:smooth; }
 
     body{
-      background: #EBE5D9;
+      background: var(--sand);
       color: var(--ink-navy);
       font-family: 'Noto Serif TC', serif;
       font-weight: 300;
@@ -128,24 +128,46 @@
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
-    /* ============ 加寬版雙層金框(整站外框,維持你原本設定) ============ */
+    /* ============ 加寬版雙層金框(整站外框,現在直接撐滿頁面成為唯一背景層) ============ */
     .page-wrapper {
-      max-width: 920px;
-      margin: 3rem auto;
+      max-width: 1400px;
+      margin: 0 auto;
       padding: 1.5rem;
-      border: 2px solid var(--dusk-gold);
+      border: 1px solid rgba(197,155,71,0.4);
       position: relative;
       background-color: var(--sand);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+      overflow: hidden;
     }
+    .page-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 18px;
+    border: 1px solid rgba(232, 208, 140, 0.25);
+    pointer-events: none;
+    z-index: 19;
+  }
     .page-wrapper::before {
       content: "";
       position: absolute;
-      inset: 8px;
-      border: 1px dashed rgba(197, 155, 71, 0.5);
+      inset: 12px;
+      border: 1px dashed rgba(232, 208, 140, 0.6);
       pointer-events: none;
       z-index: 20;
     }
+
+    /* ============ 最外層四角裝飾角標,像畫框角落 ============ */
+    .page-corner{
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      border: 2px solid var(--gold-light);
+      z-index: 25;
+      pointer-events: none;
+    }
+    .page-corner.tl{ top: 14px; left: 14px; border-right: none; border-bottom: none; }
+    .page-corner.tr{ top: 14px; right: 14px; border-left: none; border-bottom: none; }
+    .page-corner.bl{ bottom: 14px; left: 14px; border-right: none; border-top: none; }
+    .page-corner.br{ bottom: 14px; right: 14px; border-left: none; border-top: none; }
 
     /* ============ 章節共用結構 ============ */
     .chapter{
@@ -482,6 +504,16 @@
       overflow: hidden;
       color: #fff;
     }
+    /* 現在移到 page-wrapper 底下,包在有留白的容器裡,
+       只有背景照片本身貼邊,不再直接頂到金框 */
+    .venue-standalone-wrap{
+      width: 100%;
+      padding: 0 1.2rem;
+    }
+    .venue-immersive.venue-standalone{
+      width: calc(100% + 2.4rem);
+      margin: 0 -1.2rem;
+    }
     .venue-bg{
       position: absolute; inset: 0; z-index: 0;
       background-size: cover; background-position: center;
@@ -627,10 +659,10 @@
       background: transparent; padding: 0.6rem 0.2rem; font-family: 'Noto Serif TC', serif;
       font-size: 1.05rem; color: var(--ink-navy); outline: none; transition: 0.3s;
     }
-    .field input:focus{ border-color: var(--dusk-gold); }
+    .field input:focus{ border-color: var(--dusk-gold); width: 100%; }
     .counter-row{ display: flex; gap: 1.5rem; }
-    .counter-field{ flex: 1; }
-    .stepper{ display: flex; align-items: center; justify-content: space-between; border: 1.5px solid rgba(53,130,125,0.3); border-radius: 6px; padding: 0.5rem 0.8rem; background: #fff; }
+    .counter-field{ flex: 1; min-width: 0; }
+    .stepper{ display: flex; align-items: center; justify-content: space-between; border: 1.5px solid rgba(53,130,125,0.3); border-radius: 6px; padding: 0.5rem 0.8rem; background: #fff; width: 100%; box-sizing: border-box; }
     .stepper button{ width: 28px; height: 28px; border: none; background: #EFE6D0; color: #6b4a1f; font-size: 1.1rem; border-radius: 50%; cursor: pointer; line-height: 1; transition: 0.2s; }
     .stepper span{ font-size: 1.1rem; min-width: 24px; text-align: center; color: #6b4a1f; font-weight: 600; }
     .veg-toggle{ display: flex; align-items: center; gap: 0.8rem; font-size: 1rem; color: var(--ink-navy); }
@@ -672,16 +704,9 @@
       padding: 1.8rem 1.5rem;
       text-align: center;
       overflow: hidden;
-    }
-    .closing::before{
-      content: "";
-      display: block;
-      width: 40px;
-      height: 1px;
-      background: rgba(232,208,140,0.5);
-      margin: 0 auto 1.2rem;
-      position: relative;
-      z-index: 2;
+      background: rgba(8,18,22,0.6);
+      border-top: 1px dashed rgba(232,208,140,0.45);
+      border-bottom: 1px dashed rgba(232,208,140,0.45);
     }
     .closing-bg{
       position: absolute; inset: 0; z-index: 0;
@@ -689,7 +714,7 @@
     }
     .closing-overlay{
       position: absolute; inset: 0; z-index: 1;
-      background: rgba(11,25,31,0.1);
+      background: rgba(8,18,22,0.6);
     }
     .closing-content{ position: relative; z-index: 2; }
     .closing .hand-placeholder{ color: var(--dusk-gold); }
@@ -741,6 +766,12 @@
       .parking-list li { font-size: 0.82rem; }
       .closing .names-sm { font-size: 1.1rem; }
       .tt-4{ width: 90%; }
+      .page-wrapper{ margin: 0; }
+      .page-corner{ width: 20px; height: 20px; }
+      .page-corner.tl{ top: 10px; left: 10px; }
+      .page-corner.tr{ top: 10px; right: 10px; }
+      .page-corner.bl{ bottom: 10px; left: 10px; }
+      .page-corner.br{ bottom: 10px; right: 10px; }
     }
   </style>
 </head>
@@ -749,6 +780,10 @@
   <!-- 翻頁過場層,JS 會在章節交界處觸發一次 -->
 
   <div class="page-wrapper">
+    <span class="page-corner tl"></span>
+    <span class="page-corner tr"></span>
+    <span class="page-corner bl"></span>
+    <span class="page-corner br"></span>
 
     <!-- ============================================
          第一章・海(台東)
@@ -902,34 +937,6 @@
           </div>
         </div>
       </div>
-
-      <!-- 飯店介紹單獨用滿版照片背景呈現,像你原本的 venue-immersive 設計一樣 -->
-      <div class="venue-immersive">
-        <div class="venue-bg active" style="background-image: url('/images/S__20357193_0.jpg');"></div>
-        <div class="venue-bg" style="background-image: url('/images/S__20357194_0.jpg');"></div>
-        <div class="venue-bg" style="background-image: url('/images/S__20357195_0.jpg');"></div>
-        <div class="venue-overlay"></div>
-        <div class="venue-content">
-          <span class="chapter-title-en" style="font-size: 1.8rem; color: var(--gold-light);">The Celebration</span>
-          <span class="chapter-title-zh" style="color: var(--gold-light); opacity:0.9;">婚禮・於此</span>
-          <p class="chapter-story" style="color: rgba(255,255,255,0.9); margin-top: 1rem;">
-            我們特地選在可眺望台東市景的潮渡假酒店舉辦婚禮，<br>
-            沒有繁瑣的儀式，只想邀請最重要的你，<br>
-            與我們一同分享這份喜悅與幸福。
-          </p>
-          <div class="venue-name-card">THE GAYA HOTEL · 10F KI-PA</div>
-
-          <div class="access-card">
-            <span class="access-label">Where to find us</span>
-            <p class="access-addr">台東縣台東市新生路 169 號</p>
-            <iframe class="map-frame" id="map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            <ul class="parking-list">
-              <li>飯店提供免費停車，地下一樓為室內停車場(限高 2.2 公尺)</li>
-              <li>戶外停車場位於飯店右側與後方廣場，先到先停</li>
-            </ul>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- ============================================
@@ -1058,14 +1065,43 @@
       </div>
     </section>
 
+    <!-- ============ 婚禮・於此(飯店介紹) —— 從台南街景移到這裡,出席登記跟台東見中間 ============ -->
+    <div class="venue-standalone-wrap">
+      <div class="venue-immersive venue-standalone">
+        <div class="venue-bg active" style="background-image: url('/images/S__20357193_0.jpg');"></div>
+        <div class="venue-bg" style="background-image: url('/images/S__20357194_0.jpg');"></div>
+        <div class="venue-bg" style="background-image: url('/images/S__20357195_0.jpg');"></div>
+        <div class="venue-overlay"></div>
+        <div class="venue-content">
+          <span class="chapter-title-en" style="font-size: 1.8rem; color: var(--gold-light);">The Celebration</span>
+          <span class="chapter-title-zh" style="color: var(--gold-light); opacity:0.9;">婚禮・於此</span>
+          <p class="chapter-story" style="color: rgba(255,255,255,0.9); margin-top: 1rem;">
+            我們特地選在可眺望台東市景的潮渡假酒店舉辦婚禮，<br>
+            沒有繁瑣的儀式，只想邀請最重要的你，<br>
+            與我們一同分享這份喜悅與幸福。
+          </p>
+          <div class="venue-name-card">THE GAYA HOTEL · 10F KI-PA</div>
+
+          <div class="access-card">
+            <span class="access-label">Where to find us</span>
+            <p class="access-addr">台東縣台東市新生路 169 號</p>
+            <iframe class="map-frame" id="map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <ul class="parking-list">
+              <li>飯店提供免費停車，地下一樓為室內停車場(限高 2.2 公尺)</li>
+              <li>戶外停車場位於飯店右側與後方廣場，先到先停</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ============ 結語:手寫「台東見」 ============ -->
     <section class="closing">
       <div class="closing-bg" style="background-image: url('/images/hero-2611.jpg');"></div>
       <div class="closing-overlay"></div>
       <div class="closing-content">
-        <!-- TODO: 換成你手寫「台東見」的去背金色圖片,做法跟「靖」「瑜」一樣 -->
-        <span class="closing-hand">台東見 ₍•͈ᴗ•͈₎</span>
-        <span class="names-sm">Jian Chung &amp; Tzu Yu</span>
+          <span class="closing-hand">台東見 ₍•͈ᴗ•͈₎</span>
+          <span class="names-sm">Jian Chung &amp; Tzu Yu</span>
       </div>
     </section>
 
