@@ -283,6 +283,7 @@
       background-image: repeating-linear-gradient(90deg, rgba(232,208,140,0.5) 0 5px, transparent 5px 10px);
     }
 
+    /* ============ 人物介紹 (無白邊、優雅淡入) ============ */
     .portrait-collage{
       display: flex;
       align-items: flex-start;
@@ -294,7 +295,7 @@
       width: 42%;
       opacity: 0;
       transform: translateY(24px) scale(0.96);
-      transition: opacity 0.9s ease, transform 0.9s ease;
+      transition: opacity 1s ease, transform 1s ease;
     }
     .portrait-photo.in-view{ opacity: 1; transform: translateY(0) scale(1); }
     .portrait-photo .photo-frame{ overflow: hidden; border-radius: 3px; aspect-ratio: 3/4; }
@@ -302,18 +303,25 @@
       display: block; width: 100%; height: 100%; object-fit: cover;
       box-shadow: 0 14px 30px -14px rgba(0,0,0,0.55);
     }
-    .portrait-bride{ z-index: 1; margin-right: -1%; }
+    .portrait-bride{ z-index: 1; margin-right: -3%; }
     .portrait-groom{ z-index: 2; margin-left: -3%; margin-top: 4rem; }
-    .portrait-caption{
-      display: block;
-      margin-top: 0.7rem;
-      font-family: 'Noto Serif TC', serif;
-      font-style: italic;
-      font-size: 0.92rem;
-      color: rgba(255,255,255,0.85);
-      text-align: center;
+
+    /* ✅ 合照乾淨淡入 - 改回橫式與原本尺寸 */
+    .portrait-together {
+      width: 80%; /* 電腦版控制不要太大 */
+      margin: 2rem auto 0;
     }
-    .portrait-together{ margin-top: 2rem; }
+    .portrait-together .photo-frame {
+      overflow: hidden;
+      border-radius: 3px;
+    }
+    .portrait-together .photo-frame img {
+      display: block; 
+      width: 100%; 
+      height: auto; /* 改為 auto 讓圖片順應原始高度 */
+      box-shadow: 0 14px 30px -14px rgba(0,0,0,0.55);
+      /* 刪除了 object-fit: cover; 與 aspect-ratio 比例限制 */
+    }
 
     .taitung-gallery{
       display: flex;
@@ -446,12 +454,6 @@
     .photo-b .photo-frame img{ aspect-ratio: 3/4; }
     .photo-c{ width: 90%; align-self: center; }
     .photo-c .photo-frame img{ aspect-ratio: 5/4; }
-    .photo-d{ width: 55%; align-self: flex-start; margin-top: -0.5rem; }
-    .photo-d .photo-frame img{ aspect-ratio: 4/5; }
-    .photo-e{ width: 88%; align-self: flex-end; }
-    .photo-e .photo-frame img{ aspect-ratio: 16/10; }
-    .photo-f{ width: 48%; align-self: flex-start; }
-    .photo-f .photo-frame img{ aspect-ratio: 1/1; }
 
     .photo-frame{ overflow: hidden; border-radius: 3px; }
     .photo-frame img{
@@ -751,6 +753,12 @@
       .page-corner.tr{ top: 10px; right: 10px; }
       .page-corner.bl{ bottom: 10px; left: 10px; }
       .page-corner.br{ bottom: 10px; right: 10px; }
+      
+      .street-photo { gap: 0.8rem; }
+      .photo-b { width: 92%; } 
+      
+      /* ✅ 手機版合照寬度修正 */
+      .portrait-together { width: 92%; }
     }
 
     @media (min-width: 640px) {
@@ -823,9 +831,7 @@
                 fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
         </svg>
         <p class="chapter-story" style="color: rgba(255,255,255,0.9);">
-          這是新郎唐靖軒，還有新娘林子瑜
-          
-        </p>
+          這是新郎唐靖軒，還有新娘林子瑜</p>
       </div>
 
       <div class="portrait-collage">
@@ -840,11 +846,11 @@
           </div>
         </div>
       </div>
-              <div class="street-photo photo-c portrait-together">
-          <div class="photo-frame">
-            <img src="/images/tainan-togother.jpg" alt="">
-          </div>
+      <div class="portrait-together fade-up">
+        <div class="photo-frame">
+          <img src="/images/tainan-togother.jpg" alt="兩人合照">
         </div>
+      </div>
     </section>
 
     <section class="chapter" id="chapter1">
@@ -929,22 +935,6 @@
           <span class="vcaption">看起來像在代言</span>
           <div class="photo-frame">
             <img src="/images/tainan-tea.jpg" alt="">
-          </div>
-        </div>
-
-        <div class="street-photo photo-d">
-          <div class="photo-frame">
-            <img src="/images/street-b-portrait.jpg" alt="">
-          </div>
-        </div>
-        <div class="street-photo photo-e">
-          <div class="photo-frame">
-            <img src="/images/street-a-walk.jpg" alt="">
-          </div>
-        </div>
-        <div class="street-photo photo-f">
-          <div class="photo-frame">
-            <img src="/images/street-c-sunflower.jpg" alt="">
           </div>
         </div>
       </div>
