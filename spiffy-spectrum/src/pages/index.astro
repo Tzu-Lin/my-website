@@ -20,10 +20,9 @@
       --lace: #FFFDF8;
       --ink-soft: #5b5d5c;
 
-      /* 三章節主色,捲動時背景會過渡到這幾個顏色 */
-      --ch1-bg: #2C5F63;   /* 第一章:延續你原本的深藍 */
-      --ch2-bg: #D8C1A0;   /* 第二章:台南街景,低飽和暖杏色(老照片沖印紙感) */
-      --ch3-bg: #E8DCC4;   /* 第三章:棚拍復古,米黃泛舊 */
+      --ch1-bg: #2C5F63;
+      --ch2-bg: #D8C1A0;
+      --ch3-bg: #E8DCC4;
     }
     *{ box-sizing:border-box; margin:0; padding:0; }
     html{ scroll-behavior:smooth; }
@@ -39,7 +38,6 @@
       -moz-user-select: none;
       user-select: none;
     }
-    /* 表單欄位還是要能選取/輸入文字,不然賓客沒辦法填資料 */
     input, textarea{
       -webkit-user-select: text;
       -moz-user-select: text;
@@ -49,7 +47,6 @@
 
     .serif-en{ font-family: 'Cormorant Garamond', serif; }
 
-    /* ============ 手寫字圖片(靖/瑜) ============ */
     .hand-char{
       height: 1.9em;
       display: inline-block;
@@ -58,8 +55,6 @@
       pointer-events: none;
     }
 
-    /* ⚠️ 花體字(Parisienne)不支援中文字元,只能用在英文單字上,
-       中文一律維持 Noto Serif TC,兩者組合成「花體英文 + 印刷中文小標」 */
     .chapter-title-en{
       font-family: 'Parisienne', cursive;
       font-size: 2.4rem;
@@ -76,7 +71,6 @@
       display: block;
     }
 
-    /* ============ 角落大型花體字背景裝飾 —— 增加層次,不再是單調空白 ============ */
     .ghost-word{
       position: absolute;
       font-family: 'Parisienne', cursive;
@@ -87,18 +81,17 @@
       pointer-events: none;
       white-space: nowrap;
     }
+    #portraits .ghost-word{ top: 8%; left: -6%; color: var(--gold-light); transform: rotate(5deg); }
     #chapter1 .ghost-word{ top: 8%; right: -6%; color: var(--gold-light); transform: rotate(-6deg); }
     #chapter2 .ghost-word{ top: 6%; left: -8%; color: #8a6a2e; opacity: 0.12; transform: rotate(4deg); }
     #chapter3 .ghost-word{ top: 6%; left: -6%; color: #8a6a2e; transform: rotate(-5deg); }
 
-    /* 小型手繪風分隔線,連接標題與故事文字 */
     .squiggle{
       width: 90px; height: 18px;
       margin: 0.8rem auto 1.2rem;
       opacity: 0.7;
     }
 
-    /* ============ 背景動態漸層 —— 取代死板的單色切換 ============ */
     .chapter-bg-motion{
       position: absolute; inset: 0; z-index: 0;
       background-size: 220% 220%;
@@ -109,7 +102,7 @@
       0%{ background-position: 0% 30%; }
       100%{ background-position: 100% 70%; }
     }
-    #chapter1 .chapter-bg-motion{
+    #portraits .chapter-bg-motion, #chapter1 .chapter-bg-motion{
       background-image: linear-gradient(135deg, #223C3E 0%, #2A4A4D 35%, #375D5D 70%, #2A4A4D 100%);
     }
     #chapter2 .chapter-bg-motion{
@@ -118,19 +111,16 @@
     #chapter3 .chapter-bg-motion{
       background-image: linear-gradient(135deg, #DED0AE 0%, #E8DCC4 40%, #F2E9D2 70%, #E8DCC4 100%);
     }
-    /* RSVP 用跟留影一樣的動態漸層,兩個區塊視覺上融合成一體 */
     section.rsvp-section .chapter-bg-motion{
       background-image: linear-gradient(135deg, #DED0AE 0%, #E8DCC4 40%, #F2E9D2 70%, #E8DCC4 100%);
     }
-    /* 細顆粒紋理疊層,增加質感,避免漸層看起來過於平滑塑膠感 */
     .chapter-grain{
       position: absolute; inset: 0; z-index: 1; opacity: 0.06; mix-blend-mode: overlay;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
-    /* ============ 加寬版雙層金框(整站外框,現在直接撐滿頁面成為唯一背景層) ============ */
     .page-wrapper {
-      max-width: 1400px;
+      max-width: 920px;
       margin: 0 auto;
       padding: 1.5rem;
       border: 1px solid rgba(197,155,71,0.4);
@@ -139,13 +129,13 @@
       overflow: hidden;
     }
     .page-wrapper::after {
-    content: "";
-    position: absolute;
-    inset: 18px;
-    border: 1px solid rgba(232, 208, 140, 0.25);
-    pointer-events: none;
-    z-index: 19;
-  }
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border: 1px solid rgba(232, 208, 140, 0.25);
+      pointer-events: none;
+      z-index: 19;
+    }
     .page-wrapper::before {
       content: "";
       position: absolute;
@@ -155,7 +145,6 @@
       z-index: 20;
     }
 
-    /* ============ 最外層四角裝飾角標,像畫框角落 ============ */
     .page-corner{
       position: absolute;
       width: 28px;
@@ -169,7 +158,6 @@
     .page-corner.bl{ bottom: 14px; left: 14px; border-right: none; border-top: none; }
     .page-corner.br{ bottom: 14px; right: 14px; border-left: none; border-top: none; }
 
-    /* ============ 章節共用結構 ============ */
     .chapter{
       position: relative;
       min-height: 100vh;
@@ -180,7 +168,6 @@
       transition: background-color 1.2s ease;
       overflow: hidden;
     }
-    /* 只有開場頁要上下貼齊、中間內容自然撐開,其他章節維持原本頂部對齊 */
     #hero-open{ padding-top: 3rem; padding-bottom: 3rem; }
     #hero-open .chapter-inner{
       display: flex;
@@ -203,8 +190,7 @@
       max-width: 420px;
     }
 
-    /* ============ 第一章・海(台東)—— 沿用你原本的 hero 版面邏輯 ============ */
-    #hero-open, #chapter1{ background: var(--ch1-bg); color: #fff; }
+    #hero-open, #portraits, #chapter1{ background: var(--ch1-bg); color: #fff; }
     .hero-bg-slide {
       position: absolute; inset: 0; z-index: 0;
       background-size: cover; background-position: center bottom;
@@ -247,7 +233,6 @@
       50% { transform: scale(1.12); opacity: 1; }
     }
 
-    /* 玻璃霧面卡片,沿用你原本的 clean-card 設定 */
     .clean-card {
       background: rgba(255, 253, 248, 0.62);
       backdrop-filter: blur(14px);
@@ -298,7 +283,38 @@
       background-image: repeating-linear-gradient(90deg, rgba(232,208,140,0.5) 0 5px, transparent 5px 10px);
     }
 
-    /* ============ 第一章照片 + 偶像劇字幕式 OS ============ */
+    .portrait-collage{
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      width: 100%;
+      margin: 2.8rem 0 1rem;
+    }
+    .portrait-photo{
+      width: 42%;
+      opacity: 0;
+      transform: translateY(24px) scale(0.96);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .portrait-photo.in-view{ opacity: 1; transform: translateY(0) scale(1); }
+    .portrait-photo .photo-frame{ overflow: hidden; border-radius: 3px; aspect-ratio: 3/4; }
+    .portrait-photo .photo-frame img{
+      display: block; width: 100%; height: 100%; object-fit: cover;
+      box-shadow: 0 14px 30px -14px rgba(0,0,0,0.55);
+    }
+    .portrait-bride{ z-index: 1; margin-right: -1%; }
+    .portrait-groom{ z-index: 2; margin-left: -3%; margin-top: 4rem; }
+    .portrait-caption{
+      display: block;
+      margin-top: 0.7rem;
+      font-family: 'Noto Serif TC', serif;
+      font-style: italic;
+      font-size: 0.92rem;
+      color: rgba(255,255,255,0.85);
+      text-align: center;
+    }
+    .portrait-together{ margin-top: 2rem; }
+
     .taitung-gallery{
       display: flex;
       flex-direction: column;
@@ -306,7 +322,6 @@
       width: 100%;
       margin: 2.5rem 0 1rem;
     }
-    /* 照片在上、文字在下,不左右並排搶空間 */
     .tt-photo{
       display: flex;
       flex-direction: column;
@@ -316,12 +331,8 @@
       transition: opacity 0.9s ease, transform 0.9s ease;
     }
     .tt-photo.in-view{ opacity: 1; transform: translateY(0) scale(1); }
-    /* 大小交錯,不再是四張一樣寬的死板堆疊 */
-    /* 台東好美字卡:開場定調,給大張 */
+    
     .tt-1{ width: 95%; align-self: flex-start; }
-    /* 鐵橋遠景大場面:最大張 */
-    .tt-2{ width: 100%; align-self: flex-end; }
-    /* 墨鏡向日葵近拍:縮小做對比 */
     .tt-photo.tt-3{
       width: 100%;
       align-self: flex-start;
@@ -329,35 +340,25 @@
       align-items: flex-end;
       gap: 1rem;
     }
-    .tt-photo.tt-3 .tt-caption{
-      font-size: 1.8rem;
-      font-style: normal;
-    }
-    .tt-photo.tt-3 .photo-frame{
-      width: 62%;
-      flex-shrink: 0;
-    }
-    /* 日常互動:中等偏小 */
+    .tt-photo.tt-3 .tt-caption{ font-size: 1.8rem; font-style: normal; }
+    .tt-photo.tt-3 .photo-frame{ width: 62%; flex-shrink: 0; }
     .tt-4{ width: 70%; align-self: flex-end; }
+    
     .tt-photo .photo-frame{ width: 100%; overflow: hidden; border-radius: 3px; }
     .tt-photo .photo-frame img{
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      display: block; width: 100%; height: 100%; object-fit: cover;
       box-shadow: 0 14px 30px -14px rgba(0,0,0,0.55);
     }
-    /* 固定比例,手機上高度才不會失控,橫向直向照片都能穩定呈現 */
     .tt-1 .photo-frame{ aspect-ratio: 4/3; }
-    .tt-2 .photo-frame{ aspect-ratio: 3/4; }
     .tt-3 .photo-frame{ aspect-ratio: 3/4; }
     .tt-4 .photo-frame{ aspect-ratio: 4/3; }
-    /* ============ 豔陽正好:滿版沉浸式版面 ============ */
+    
     .tt-spotlight{
       width: calc(100% + 2.4rem);
       margin: 0.5rem -1.2rem 0.5rem;
       position: relative;
       min-height: 62vh;
+      max-height: 720px;
       overflow: hidden;
     }
     .tt-spotlight.fade-up{ opacity: 0; transform: scale(1.06); transition: opacity 1.3s ease, transform 1.6s ease; }
@@ -381,13 +382,9 @@
       letter-spacing: 0.05em;
       text-shadow: 0 2px 12px rgba(0,0,0,0.5);
     }
-    .tt-spotlight img.duo-slide{
-      opacity: 0;
-      transition: opacity 1.3s ease-in-out;
-    }
+    .tt-spotlight img.duo-slide{ opacity: 0; transition: opacity 1.3s ease-in-out; }
     .tt-spotlight img.duo-slide.active{ opacity: 1; }
 
-    /* ============ 偶爾耍廢:雙圖輪播 ============ */
     .tt-duo{ position: relative; }
     .tt-duo .duo-slide{
       position: absolute; inset: 0;
@@ -397,7 +394,7 @@
       transition: opacity 1.3s ease-in-out;
     }
     .tt-duo .duo-slide.active{ opacity: 1; }
-    /* OS 文字放在照片正下方,跟著照片同寬,不再擠壓照片空間 */
+    
     .tt-caption{
       font-family: 'Noto Serif TC', serif;
       font-style: italic;
@@ -407,11 +404,9 @@
       text-align: left;
       padding-left: 0.2rem;
     }
-    .tt-2 .tt-caption, .tt-4 .tt-caption{ text-align: right; padding-left: 0; padding-right: 0.2rem; }
+    .tt-4 .tt-caption{ text-align: right; padding-left: 0; padding-right: 0.2rem; }
 
-    /* ============ 第二章・街(台南街景) ============ */
     #chapter2{ background: var(--ch2-bg); color: #4a3b28; }
-    /* ============ 不規則街景相片組合 —— 正常文件流排版,不會蓋到下方文字 ============ */
     .street-gallery{
       display: flex;
       flex-direction: column;
@@ -431,7 +426,6 @@
     .street-photo.reverse{ flex-direction: row-reverse; }
     .street-photo .photo-frame{ flex: 1; min-width: 0; }
 
-    /* 直式字幕,像電影海報旁邊的直式片名/字卡,貼著照片放,不疊在圖片上 */
     .vcaption{
       writing-mode: vertical-rl;
       font-family: 'Noto Serif TC', serif;
@@ -444,7 +438,6 @@
       padding-bottom: 0.3rem;
     }
 
-    /* 滿版貼邊 —— 照片直接貼齊章節左/右邊緣,文字擠在另一側留白,交錯排列 */
     .bleed-right{ width: calc(100% + 1.2rem); margin-right: -1.2rem; }
     .bleed-left{ width: calc(100% + 1.2rem); margin-left: -1.2rem; }
     .photo-a{ width: 90%; align-self: flex-start; }
@@ -453,15 +446,19 @@
     .photo-b .photo-frame img{ aspect-ratio: 3/4; }
     .photo-c{ width: 90%; align-self: center; }
     .photo-c .photo-frame img{ aspect-ratio: 5/4; }
+    .photo-d{ width: 55%; align-self: flex-start; margin-top: -0.5rem; }
+    .photo-d .photo-frame img{ aspect-ratio: 4/5; }
+    .photo-e{ width: 88%; align-self: flex-end; }
+    .photo-e .photo-frame img{ aspect-ratio: 16/10; }
+    .photo-f{ width: 48%; align-self: flex-start; }
+    .photo-f .photo-frame img{ aspect-ratio: 1/1; }
 
-    /* 照片本身的容器 */
     .photo-frame{ overflow: hidden; border-radius: 3px; }
     .photo-frame img{
       display: block; width: 100%; object-fit: cover;
       box-shadow: 0 14px 30px -14px rgba(0,0,0,0.55);
     }
 
-    /* 雜誌引言式文字 —— 細直線 + 斜體字,獨立於照片之外,不疊在圖片上 */
     .pull-quote{
       border-left: 2px solid #8a6a2e;
       padding-left: 0.9rem;
@@ -495,35 +492,6 @@
       margin-top: 1.5rem;
     }
 
-    /* ============ 飯店介紹:滿版照片背景 + 暗角遮罩(還原原本設計) ============ */
-    .venue-immersive{
-      position: relative;
-      width: calc(100% + 2.4rem);
-      margin: 2.5rem -1.2rem 0;
-      padding: 5rem 1.5rem;
-      overflow: hidden;
-      color: #fff;
-    }
-    /* 現在移到 page-wrapper 底下,包在有留白的容器裡,
-       只有背景照片本身貼邊,不再直接頂到金框 */
-    .venue-standalone-wrap{
-      width: 100%;
-      padding: 0 1.2rem;
-    }
-    .venue-immersive.venue-standalone{
-      width: calc(100% + 2.4rem);
-      margin: 0 -1.2rem;
-    }
-    .venue-bg{
-      position: absolute; inset: 0; z-index: 0;
-      background-size: cover; background-position: center;
-      opacity: 0; transition: opacity 1.5s ease-in-out;
-    }
-    .venue-bg.active{ opacity: 0.5; }
-    .venue-overlay{ position: absolute; inset: 0; z-index: 1; background: rgba(11,25,31,0.78); }
-    .venue-content{ position: relative; z-index: 2; max-width: 420px; margin: 0 auto; text-align: center; }
-
-    /* ============ 第三章・光陰(台南棚拍復古) ============ */
     #chapter3{ background: var(--ch3-bg); color: #4a3b28; }
     .vintage-collage{
       display: flex;
@@ -540,10 +508,7 @@
       opacity: 0;
       transition: transform 1.4s ease, opacity 1.4s ease;
     }
-    .vc-big.settled{
-      transform: rotate(-3deg) scale(1);
-      opacity: 1;
-    }
+    .vc-big.settled{ transform: rotate(-3deg) scale(1); opacity: 1; }
 
     .vc-small{
       width: 80%;
@@ -555,16 +520,11 @@
       opacity: 0;
       transition: transform 1.4s ease, opacity 1.4s ease;
     }
-    .vc-small.settled{
-      transform: rotate(4deg) scale(1);
-      opacity: 1;
-    }
+    .vc-small.settled{ transform: rotate(4deg) scale(1); opacity: 1; }
     .vintage-frame{ position: relative; padding: 8px; background: #fff; box-shadow: 0 8px 20px -10px rgba(0,0,0,0.35); }
     .vintage-frame img{ display: block; width: 100%; object-fit: cover; aspect-ratio: 4/5; }
-    .vc-big .vintage-frame img{
-      aspect-ratio: 4/3;
-    }
-    /* ============ 留影第二張:雙圖輪播(維持橫式比例,不裁成直式) ============ */
+    .vc-big .vintage-frame img{ aspect-ratio: 4/3; }
+    
     .vintage-duo{
       position: relative;
       width: 100%;
@@ -579,7 +539,7 @@
       transition: opacity 1.3s ease-in-out;
     }
     .vintage-duo .duo-slide.active{ opacity: 1; }
-    /* 橫式文字放在照片正下方,不再擠壓照片寬度 */
+    
     .vintage-collage .hcaption{
       font-family: 'Noto Serif TC', serif;
       font-style: italic;
@@ -603,7 +563,7 @@
       background: #FBF6E8;
       border: 1px solid rgba(138,106,46,0.35);
       box-shadow: 0 10px 24px -14px rgba(74,59,40,0.35);
-      color: #4a3b28;   /* 明確蓋掉 venue-immersive 的白字設定,不然文字會隱形 */
+      color: #4a3b28;
     }
     .access-label{
       font-family: 'Cormorant Garamond', serif;
@@ -630,7 +590,6 @@
 
     .section-eyebrow{ font-size: 0.85rem; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1rem; font-family: 'Cormorant Garamond', serif; opacity: 0.85; }
 
-    /* ============ RSVP(功能導向,不故事化) —— 跟留影用同一種動態漸層,視覺融合 ============ */
     section.rsvp-section {
       padding: 4rem 1.5rem;
       width: 100%;
@@ -659,7 +618,7 @@
       background: transparent; padding: 0.6rem 0.2rem; font-family: 'Noto Serif TC', serif;
       font-size: 1.05rem; color: var(--ink-navy); outline: none; transition: 0.3s;
     }
-    .field input:focus{ border-color: var(--dusk-gold); width: 100%; }
+    .field input:focus{ border-color: var(--dusk-gold); }
     .counter-row{ display: flex; gap: 1.5rem; }
     .counter-field{ flex: 1; min-width: 0; }
     .stepper{ display: flex; align-items: center; justify-content: space-between; border: 1.5px solid rgba(53,130,125,0.3); border-radius: 6px; padding: 0.5rem 0.8rem; background: #fff; width: 100%; box-sizing: border-box; }
@@ -696,7 +655,29 @@
       font-size: 1.1rem;
     }
 
-    /* ============ 結語:手寫「11/22 台東見」 ============ */
+    .venue-standalone-wrap{
+      width: 100%;
+      padding: 0 1.2rem;
+    }
+    .venue-immersive{
+      position: relative;
+      padding: 5rem 1.5rem;
+      overflow: hidden;
+      color: #fff;
+    }
+    .venue-immersive.venue-standalone{
+      width: calc(100% + 2.4rem);
+      margin: 0 -1.2rem;
+    }
+    .venue-bg{
+      position: absolute; inset: 0; z-index: 0;
+      background-size: cover; background-position: center;
+      opacity: 0; transition: opacity 1.5s ease-in-out;
+    }
+    .venue-bg.active{ opacity: 0.5; }
+    .venue-overlay{ position: absolute; inset: 0; z-index: 1; background: rgba(11,25,31,0.78); }
+    .venue-content{ position: relative; z-index: 2; max-width: 420px; margin: 0 auto; text-align: center; }
+
     .closing{
       position: relative;
       width: 100%;
@@ -739,11 +720,9 @@
       text-shadow: 0 2px 4px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.5);
     }
 
-    /* ============ 滑動浮現特效 ============ */
     .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 1s ease-out, transform 1s ease-out; }
     .fade-up.visible { opacity: 1; transform: translateY(0); }
 
-    /* ============ 手機版字級調整 ============ */
     @media (max-width: 480px) {
       .hero-topbar { font-size: 0.85rem; letter-spacing: 0.08em; }
       .hero-elegant-heart { width: 44px; }
@@ -773,11 +752,21 @@
       .page-corner.bl{ bottom: 10px; left: 10px; }
       .page-corner.br{ bottom: 10px; right: 10px; }
     }
+
+    @media (min-width: 640px) {
+      .tt-spotlight{
+        width: 60%;
+        margin: 0.5rem auto;
+        min-height: 0;
+        max-height: none;
+        height: auto;
+        aspect-ratio: 3/4;
+        border-radius: 4px;
+      }
+    }
   </style>
 </head>
 <body>
-
-  <!-- 翻頁過場層,JS 會在章節交界處觸發一次 -->
 
   <div class="page-wrapper">
     <span class="page-corner tl"></span>
@@ -785,15 +774,6 @@
     <span class="page-corner bl"></span>
     <span class="page-corner br"></span>
 
-    <!-- ============================================
-         第一章・海(台東)
-         沿用你原本 hero 的兩張背景照片、手寫問候語、
-         跳動愛心、婚宴資訊卡,外層包成第一章
-         ============================================ -->
-    <!-- ============================================
-         開場問候 —— 名字、手寫問候語、愛心、SHOWTIME 卡
-         純粹是封面/問候頁,不算章節,不掛章節標題
-         ============================================ -->
     <section class="chapter" id="hero-open">
       <div class="hero-bg-slide active" style="background-image: url('/images/07231.jpg');"></div>
       <div class="hero-bg-slide" style="background-image: url('/images/07232.jpg');"></div>
@@ -813,7 +793,7 @@
 
         <div class="hero-main">
           <p class="hero-greeting">
-            <img src="/images/jian-v2.png" alt="靖" class="hand-char">好歲月　都<img src="/images/yu-final.png" alt="瑜" class="hand-char">你
+            <img src="/images/jian-v2.png" alt="靖" class="hand-char">好歲月 都<img src="/images/yu-final.png" alt="瑜" class="hand-char">你
           </p>
           <p class="hero-greeting-sub">我們想，把接下來的日子都寫在一起</p>
           <img src="/images/heart-gold.png" alt="" class="hero-elegant-heart">
@@ -830,9 +810,43 @@
       </div>
     </section>
 
-    <!-- ============================================
-         第一章・海(台東)—— 真正的故事開始,獨立畫面
-         ============================================ -->
+    <section class="chapter fade-up" id="portraits">
+      <div class="chapter-bg-motion"></div>
+      <div class="chapter-grain"></div>
+      <span class="ghost-word">Us</span>
+
+      <div class="chapter-inner">
+        <span class="chapter-title-en">Two, Become One</span>
+        <span class="chapter-title-zh">人物介紹</span>
+        <svg class="squiggle" viewBox="0 0 90 18" style="color: var(--gold-light);">
+          <path d="M2,9 C15,2 20,16 33,9 C46,2 51,16 64,9 C72,5 80,12 88,9"
+                fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <p class="chapter-story" style="color: rgba(255,255,255,0.9);">
+          這是新郎唐靖軒，還有新娘林子瑜
+          
+        </p>
+      </div>
+
+      <div class="portrait-collage">
+        <div class="portrait-photo portrait-bride">
+          <div class="photo-frame">
+            <img src="/images/portrait-groom.jpg" alt="新郎獨照">
+          </div>
+        </div>
+        <div class="portrait-photo portrait-groom">
+          <div class="photo-frame">
+            <img src="/images/portrait-bride.jpg" alt="新娘獨照">
+          </div>
+        </div>
+      </div>
+              <div class="street-photo photo-c portrait-together">
+          <div class="photo-frame">
+            <img src="/images/tainan-togother.jpg" alt="">
+          </div>
+        </div>
+    </section>
+
     <section class="chapter" id="chapter1">
       <div class="chapter-bg-motion"></div>
       <div class="chapter-grain"></div>
@@ -840,38 +854,33 @@
 
       <div class="chapter-inner">
         <span class="chapter-title-en">Horizon</span>
-        <span class="chapter-title-zh">台東・海</span>
+        <span class="chapter-title-zh">台東</span>
         <svg class="squiggle" viewBox="0 0 90 18" style="color: var(--gold-light);">
           <path d="M2,9 C15,2 20,16 33,9 C46,2 51,16 64,9 C72,5 80,12 88,9"
                 fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
         </svg>
         <p class="chapter-story" style="color: rgba(255,255,255,0.9);">
-          那年，我去了一趟台東，第一次看懂什麼是<br>「台東藍」。<br>
-          我們的故事，就從那片藍開始說起。
+          那年，我去了一趟台東，第一次看懂人家說的<br>「台東藍」。<br>
         </p>
       </div>
 
-      <!-- 移出 560px 窄欄,照片才能吃滿整個章節寬度,不再兩側留白 -->
       <div class="taitung-gallery">
         <div class="tt-photo tt-1">
           <div class="photo-frame">
-            <!-- TODO: 換成正式檔案 -->
             <img src="/images/taitung-1-sign.jpg" alt="">
           </div>
-          <span class="tt-caption">台東，好美。</span>
+          <span class="tt-caption">台東，每一次來都好美。</span>
         </div>
 
-        <!-- 豔陽正好 —— 獨立滿版一頁,不再跟其他照片擠在同一個堆疊列表裡 -->
         <div class="tt-spotlight fade-up" data-carousel>
           <img src="/images/taitung-2-bridge.jpg" alt="" class="duo-slide active">
           <img src="/images/taitung-2b-bridge.jpg" alt="" class="duo-slide">
           <div class="tt-spotlight-overlay"></div>
-          <span class="tt-spotlight-caption">太陽好大。</span>
+          <span class="tt-spotlight-caption">太陽大到睜不開眼</span>
         </div>
 
         <div class="tt-photo tt-3">
           <div class="photo-frame tt-duo" data-carousel>
-            <!-- TODO: 換成正式檔案。兩張輪播,3.5 秒交叉淡出淡入 -->
             <img src="/images/taitung-3-sunflower.jpg" alt="" class="duo-slide active">
             <img src="/images/taitung-3b-sunflower.jpg" alt="" class="duo-slide">
           </div>
@@ -880,7 +889,6 @@
 
         <div class="tt-photo tt-4">
           <div class="photo-frame">
-            <!-- TODO: 換成正式檔案 -->
             <img src="/images/taitung-4-frown.jpg" alt="">
           </div>
           <span class="tt-caption">他又講了一個不好笑的笑話</span>
@@ -888,19 +896,13 @@
       </div>
     </section>
 
-    <!-- ============================================
-         第二章・街(台南街景)
-         照片先用你現有的飯店照片頂著(路徑錯落排版),
-         等台南街景婚紗照來了直接換 src
-         保留你原本 GAYA 飯店介紹文字 + 名稱卡片
-         ============================================ -->
     <section class="chapter fade-up" id="chapter2">
       <div class="chapter-bg-motion"></div>
       <div class="chapter-grain"></div>
       <span class="ghost-word">Tainan</span>
       <div class="chapter-inner">
         <span class="chapter-title-en">Wander, With You</span>
-        <span class="chapter-title-zh">台南・街</span>
+        <span class="chapter-title-zh">台南</span>
         <svg class="squiggle" viewBox="0 0 90 18" style="color: #8a6a2e;">
           <path d="M2,9 C15,2 20,16 33,9 C46,2 51,16 64,9 C72,5 80,12 88,9"
                 fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
@@ -910,40 +912,44 @@
         </p>
       </div>
 
-      <!-- 移出 chapter-inner 的 560px 窄欄,改用整個章節寬度,貼邊才會真的貼到邊 -->
       <div class="street-gallery">
         <div class="street-photo photo-a">
           <div class="photo-frame">
-            <!-- TODO: 台南街景照片來了記得換掉 -->
-            <img src="/images/street-a-walk.jpg" alt="">
+            <img src="/images/tainan-sweet.jpg" alt="">
           </div>
-          <!-- TODO: 照片確定後再補文字 -->
-          <span class="vcaption">後面的草有點多</span>
+          <span class="vcaption">台南，空氣都是甜的</span>
         </div>
         <div class="street-photo photo-b">
-          <!-- TODO: 照片確定後再補文字 -->
-          <span class="vcaption">滿好看的><</span>
+          <span class="vcaption">那天天氣不太好，馬路好濕</span>
           <div class="photo-frame">
-            <!-- TODO: 台南街景照片來了記得換掉 -->
-            <img src="/images/street-b-portrait.jpg" alt="">
+            <img src="/images/tainan-signs.jpg" alt="">
           </div>
         </div>
         <div class="street-photo photo-c">
-          <!-- TODO: 照片確定後再補文字 -->
-          <span class="vcaption">陽光好刺眼...</span>
+          <span class="vcaption">看起來像在代言</span>
           <div class="photo-frame">
-            <!-- TODO: 台南街景照片來了記得換掉 -->
+            <img src="/images/tainan-tea.jpg" alt="">
+          </div>
+        </div>
+
+        <div class="street-photo photo-d">
+          <div class="photo-frame">
+            <img src="/images/street-b-portrait.jpg" alt="">
+          </div>
+        </div>
+        <div class="street-photo photo-e">
+          <div class="photo-frame">
+            <img src="/images/street-a-walk.jpg" alt="">
+          </div>
+        </div>
+        <div class="street-photo photo-f">
+          <div class="photo-frame">
             <img src="/images/street-c-sunflower.jpg" alt="">
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ============================================
-         第三章・光陰(台南棚拍復古)
-         照片先用飯店照片頂著,套泛黃濾鏡 + 金色相角,
-         保留你原本交通停車三條資訊 + 地圖
-         ============================================ -->
     <section class="chapter fade-up" id="chapter3">
       <div class="chapter-bg-motion"></div>
       <div class="chapter-grain"></div>
@@ -956,14 +962,12 @@
                 fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
         </svg>
 
-        <!-- 主句放在標題下方,置中,正常大小的文字 -->
         <p class="chapter-story">
           婚姻是承諾，是責任，更是一種選擇。<br>
           我們想把彼此，放進生命中最重要的選擇裡。
         </p>
       </div>
 
-      <!-- 移出 560px 窄欄,照片改成上下堆疊(照片上、文字下),跟第一章邏輯一致 -->
       <div class="vintage-collage">
         <div class="vc-photo vc-big">
           <div class="vintage-frame">
@@ -993,7 +997,6 @@
       </div>
     </section>
 
-    <!-- ============ RSVP 出席登記表單(跟留影用同一種動態漸層,視覺融合成一體) ============ -->
     <section id="rsvp" class="rsvp-section fade-up">
       <div class="chapter-bg-motion"></div>
       <div class="chapter-grain"></div>
@@ -1065,7 +1068,6 @@
       </div>
     </section>
 
-    <!-- ============ 婚禮・於此(飯店介紹) —— 從台南街景移到這裡,出席登記跟台東見中間 ============ -->
     <div class="venue-standalone-wrap">
       <div class="venue-immersive venue-standalone">
         <div class="venue-bg active" style="background-image: url('/images/S__20357193_0.jpg');"></div>
@@ -1076,7 +1078,7 @@
           <span class="chapter-title-en" style="font-size: 1.8rem; color: var(--gold-light);">The Celebration</span>
           <span class="chapter-title-zh" style="color: var(--gold-light); opacity:0.9;">婚禮・於此</span>
           <p class="chapter-story" style="color: rgba(255,255,255,0.9); margin-top: 1rem;">
-            我們特地選在可眺望台東市景的潮渡假酒店舉辦婚禮，<br>
+            婚禮特地選在可眺望台東市景的潮酒店舉辦，<br>
             沒有繁瑣的儀式，只想邀請最重要的你，<br>
             與我們一同分享這份喜悅與幸福。
           </p>
@@ -1095,7 +1097,6 @@
       </div>
     </div>
 
-    <!-- ============ 結語:手寫「台東見」 ============ -->
     <section class="closing">
       <div class="closing-bg" style="background-image: url('/images/hero-2611.jpg');"></div>
       <div class="closing-overlay"></div>
@@ -1105,21 +1106,33 @@
       </div>
     </section>
 
-  </div> <!-- page-wrapper 結束 -->
+  </div>
 
   <script>
-    // 禁用右鍵選單
     document.addEventListener('contextmenu', e => e.preventDefault());
+    let wasPlayingBeforeHidden = false;
 
-    // ---------- 地圖嵌入 ----------
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        wasPlayingBeforeHidden = isPlaying;
+        if (isPlaying) {
+          bgMusic.pause();
+          musicIcon.classList.remove('playing');
+        }
+      } else {
+        if (wasPlayingBeforeHidden) {
+          bgMusic.play().then(() => {
+            musicIcon.classList.add('playing');
+          }).catch(() => {});
+        }
+      }
+    });
     document.getElementById('map').src =
       'https://www.google.com/maps?q=' +
       encodeURIComponent('The GAYA Hotel 潮渡假酒店 台東縣台東市新生路169號') +
       '&output=embed';
 
-    // ---------- 捲動浮現動畫 ----------
     document.addEventListener("DOMContentLoaded", function() {
-      // 留影照片捲動入場的角度動畫
       const vcPhotos = document.querySelectorAll('.vc-photo');
       const vcObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
@@ -1141,7 +1154,18 @@
       }, { threshold: 0.1 });
       document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
 
-      // 街景照片依序浮現(不是同時出現,製造節奏感)
+      const portraitPhotos = document.querySelectorAll('.portrait-photo');
+      const portraitObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if(entry.isIntersecting){
+            const order = Array.from(portraitPhotos).indexOf(entry.target);
+            setTimeout(() => entry.target.classList.add('in-view'), order * 260);
+            portraitObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      portraitPhotos.forEach(el => portraitObserver.observe(el));
+
       const streetPhotos = document.querySelectorAll('.street-photo');
       const photoObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry, i) => {
@@ -1154,7 +1178,6 @@
       }, { threshold: 0.2 });
       streetPhotos.forEach(el => photoObserver.observe(el));
 
-      // 第一章照片依序浮現
       const ttPhotos = document.querySelectorAll('.tt-photo');
       const ttObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
@@ -1167,7 +1190,6 @@
       ttPhotos.forEach(el => ttObserver.observe(el));
     });
 
-    // ---------- 第一章背景照片輪播 ----------
     let currentHero = 0;
     const heroSlides = document.querySelectorAll('.hero-bg-slide');
     function changeHero() {
@@ -1178,7 +1200,6 @@
     }
     setInterval(changeHero, 5000);
 
-    // ---------- 飯店介紹背景照片輪播 ----------
     let currentVenue = 0;
     const venueSlides = document.querySelectorAll('.venue-bg');
     function changeVenue() {
@@ -1189,7 +1210,6 @@
     }
     setInterval(changeVenue, 6000);
 
-    // ---------- 各種雙圖輪播(太陽好大 / 偶爾耍廢 / 留影第二張) ----------
     document.querySelectorAll('[data-carousel]').forEach(container => {
       const slides = container.querySelectorAll('.duo-slide');
       if (slides.length < 2) return;
@@ -1201,7 +1221,6 @@
       }, 3500);
     });
 
-    // ---------- 音樂播放(全站統一一首歌,不再依章節切換) ----------
     const bgMusic = document.getElementById('bgMusic');
     const musicToggle = document.getElementById('musicToggle');
     const musicIcon = musicToggle.querySelector('.music-icon');
@@ -1216,9 +1235,7 @@
       bgMusic.play().then(() => {
         isPlaying = true;
         musicIcon.classList.add('playing');
-      }).catch(() => {
-        // 瀏覽器擋下自動播放,等使用者第一次互動時會再嘗試
-      });
+      }).catch(() => {});
     }
 
     function stopMusic(){
@@ -1227,11 +1244,8 @@
       musicIcon.classList.remove('playing');
     }
 
-    // 頁面載入時先嘗試自動播放
     startMusic();
 
-    // 若被瀏覽器擋下,使用者第一次滑動/點擊/觸碰畫面時自動補播放,
-    // 不需要特地點音樂符號
     ['scroll', 'touchstart', 'click'].forEach(evt => {
       document.addEventListener(evt, function firstInteraction(){
         startMusic();
@@ -1246,7 +1260,6 @@
       }
     });
 
-    // ---------- RSVP 表單計數邏輯 ----------
     const counts = { rsvpAdults: 1, rsvpKids: 0, rsvpVeg: 1 };
     function stepCount(id, delta){
       const min = id === 'rsvpAdults' ? 1 : 0;
@@ -1261,7 +1274,6 @@
     }
     window.toggleVeg = toggleVeg;
 
-    // ---------- RSVP 送出(串接 Google Apps Script) ----------
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNkz5i5FCrU7cea06DDt7Nw3_LcHCWLeKNrABCd-8LpSt8lE3xmeDkRK1k3AtgMdPL8g/exec';
 
     async function submitRSVP(){
@@ -1298,6 +1310,5 @@
     }
     window.submitRSVP = submitRSVP;
   </script>
-
 </body>
 </html>
