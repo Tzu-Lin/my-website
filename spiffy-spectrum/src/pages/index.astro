@@ -486,6 +486,14 @@
     .photo-a{ width: 90%; align-self: flex-start; }
     .photo-a .photo-frame img{ aspect-ratio: 4/3; }
     .photo-b{ width: 65%; align-self: flex-end; }
+    /* ✅ 新增：延續日常主題的橫式照片 */
+    .photo-daily { 
+      width: 92%; 
+      align-self: flex-start; /* 靠左排列，與上一張錯開 */
+      margin-top: -0.5rem; 
+    }
+    .photo-daily .photo-frame { aspect-ratio: 4/3; } /* 設定為橫式比例 */
+    .photo-daily .photo-frame img { aspect-ratio: 4/3; }
     .photo-b .photo-frame img{ aspect-ratio: 3/4; }
     .photo-c { 
       width: calc(100% + 2.4rem); 
@@ -946,7 +954,7 @@
             <img src="/images/taitung-3-sunflower.jpg" alt="" class="duo-slide active">
             <img src="/images/taitung-3b-sunflower.jpg" alt="" class="duo-slide">
           </div>
-          <span class="tt-caption">( 0.0 )♡(^ε^)</span>
+          <span class="tt-caption">（0.0）<br>　 ♥<br>（^ε^）</span>
         </div>
 
         <div class="tt-photo tt-4">
@@ -985,6 +993,13 @@
           <span class="vcaption">街頭巷尾乘載了我們的日常</span>
           <div class="photo-frame">
             <img src="/images/tainan-signs.jpg" alt="">
+          </div>
+        </div>
+        <!-- 加上 reverse 類別，會讓文字自動跑到照片右邊，與上一張左邊的文字錯開 -->
+        <div class="street-photo photo-daily reverse">
+          <span class="vcaption">平淡卻很踏實</span> <!-- 這裡可替換成你要的文字，不需要可整行刪除 -->
+          <div class="photo-frame">
+            <img src="/images/tainan-sweet2.jpg" alt="" loading="lazy">
           </div>
         </div>
         <div class="street-photo photo-c">
