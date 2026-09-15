@@ -283,19 +283,53 @@
       background-image: repeating-linear-gradient(90deg, rgba(232,208,140,0.5) 0 5px, transparent 5px 10px);
     }
 
-    /* ============ 人物介紹 (無白邊、優雅淡入) ============ */
     .portrait-collage{
       display: flex;
       align-items: flex-start;
       justify-content: center;
+      gap: 8%; /* 撐開兩張照片 */
       width: 100%;
-      margin: 2.8rem 0 1rem;
+      margin: 1rem 0 1rem;
+      position: relative;
     }
+
+    /* ✅ SVG 動態金線定位與樣式 */
+    .connection-line {
+      position: absolute;
+      top: 36%;
+      left: 38%;
+      width: 24%;
+      height: 60px;
+      z-index: 0;
+      color: var(--dusk-gold);
+      opacity: 0.85;
+      pointer-events: none;
+      overflow: visible;
+    }
+    .line-path {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8px;
+      stroke-linecap: round;
+      /* 讓線條預設隱藏，準備執行動畫 */
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+    }
+    /* 當左側照片(bride)進場時，自動觸發畫線動畫 (延遲 0.6 秒等照片先浮現) */
+    .portrait-bride.in-view + .connection-line .line-path {
+      animation: drawLine 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.6s forwards;
+    }
+    @keyframes drawLine {
+      to { stroke-dashoffset: 0; }
+    }
+
     .portrait-photo{
       width: 42%;
       opacity: 0;
       transform: translateY(24px) scale(0.96);
       transition: opacity 1s ease, transform 1s ease;
+      position: relative; 
+      z-index: 2; /* 確保照片在金線上方 */
     }
     .portrait-photo.in-view{ opacity: 1; transform: translateY(0) scale(1); }
     .portrait-photo .photo-frame{ overflow: hidden; border-radius: 3px; aspect-ratio: 3/4; }
@@ -303,8 +337,9 @@
       display: block; width: 100%; height: 100%; object-fit: cover;
       box-shadow: 0 14px 30px -14px rgba(0,0,0,0.55);
     }
-    .portrait-bride{ z-index: 1; margin-right: -3%; }
-    .portrait-groom{ z-index: 2; margin-left: -3%; margin-top: 4rem; }
+    
+    .portrait-bride{ margin-top: 0; }
+    .portrait-groom{ margin-top: 4rem; }
 
     /* ✅ 合照乾淨淡入 - 改回橫式與原本尺寸 */
     .portrait-together {
@@ -348,7 +383,7 @@
       align-items: flex-end;
       gap: 1rem;
     }
-    .tt-photo.tt-3 .tt-caption{ font-size: 1.8rem; font-style: normal; }
+    .tt-photo.tt-3 .tt-caption{ font-size: 1.4rem; font-style: normal; }
     .tt-photo.tt-3 .photo-frame{ width: 62%; flex-shrink: 0; }
     .tt-4{ width: 70%; align-self: flex-end; }
     
@@ -385,7 +420,7 @@
       text-align: center;
       font-family: 'Noto Serif TC', serif;
       font-style: italic;
-      font-size: 1.4rem;
+      font-size: 1rem;
       color: #fff;
       letter-spacing: 0.05em;
       text-shadow: 0 2px 12px rgba(0,0,0,0.5);
@@ -452,8 +487,20 @@
     .photo-a .photo-frame img{ aspect-ratio: 4/3; }
     .photo-b{ width: 65%; align-self: flex-end; }
     .photo-b .photo-frame img{ aspect-ratio: 3/4; }
-    .photo-c{ width: 90%; align-self: center; }
-    .photo-c .photo-frame img{ aspect-ratio: 5/4; }
+    .photo-c { 
+      width: calc(100% + 2.4rem); 
+      margin-left: -1.2rem; 
+      margin-right: -1.2rem; 
+      margin-bottom: -3rem;
+      align-self: center; 
+    }
+    .photo-c .photo-frame { 
+      border-radius: 0; /* 全幅照片不加圓角比較好看 */
+      aspect-ratio: 4/3; /* 改為較寬的橫式比例 */
+    }
+    .photo-c .photo-frame img { 
+      aspect-ratio: 4/3; 
+    }
 
     .photo-frame{ overflow: hidden; border-radius: 3px; }
     .photo-frame img{
@@ -835,11 +882,18 @@
       </div>
 
       <div class="portrait-collage">
+        
         <div class="portrait-photo portrait-bride">
           <div class="photo-frame">
             <img src="/images/portrait-groom.jpg" alt="新郎獨照">
           </div>
         </div>
+
+        <!-- ✅ 這是新增的：帶有優雅弧度的 SVG 動態繪製金線 -->
+        <svg class="connection-line" viewBox="0 0 100 50" preserveAspectRatio="none">
+          <path class="line-path" d="M -5,10 Q 40,70 105,35" pathLength="1" />
+        </svg>
+
         <div class="portrait-photo portrait-groom">
           <div class="photo-frame">
             <img src="/images/portrait-bride.jpg" alt="新娘獨照">
@@ -852,7 +906,7 @@
         </div>
       </div>
     </section>
-
+    
     <section class="chapter" id="chapter1">
       <div class="chapter-bg-motion"></div>
       <div class="chapter-grain"></div>
@@ -926,15 +980,15 @@
           <span class="vcaption">台南，空氣都是甜的</span>
         </div>
         <div class="street-photo photo-b">
-          <span class="vcaption">那天天氣不太好，馬路好濕</span>
+          <span class="vcaption">那天天氣不太好</span>
           <div class="photo-frame">
             <img src="/images/tainan-signs.jpg" alt="">
           </div>
         </div>
         <div class="street-photo photo-c">
-          <span class="vcaption">看起來像在代言</span>
-          <div class="photo-frame">
-            <img src="/images/tainan-tea.jpg" alt="">
+          <div class="photo-frame tt-duo" data-carousel>
+            <img src="/images/tainan-tea.jpg" alt="" class="duo-slide active">
+            <img src="/images/tainan-tea2.jpg" alt="" class="duo-slide">
           </div>
         </div>
       </div>
@@ -963,7 +1017,10 @@
           <div class="vintage-frame">
             <span class="corner tl"></span><span class="corner tr"></span>
             <span class="corner bl"></span><span class="corner br"></span>
-            <img src="/images/vintage-a.jpg" alt="">
+            <div class="vintage-duo" data-carousel>
+              <img src="/images/street-a-walk.jpg" alt="" class="duo-slide active">
+              <img src="/images/street-c-sunflower.jpg" alt="" class="duo-slide">
+            </div>
           </div>
         </div>
         <div class="vc-photo vc-small">
