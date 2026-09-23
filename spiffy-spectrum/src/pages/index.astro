@@ -6,6 +6,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>唐靖軒 · 林子瑜 婚禮邀請</title>
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate icon" href="/favicon.ico">
+
+  <meta name="description" content="唐靖軒 · 林子瑜 誠摯邀請您 2026.11.22 蒞臨台東 THE GAYA HOTEL，一同見證我們的婚禮。">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="唐靖軒 · 林子瑜 婚禮邀請">
+  <meta property="og:description" content="2026.11.22 SUNDAY · THE GAYA HOTEL 10F KI-PA · 誠摯邀請您與我們一同分享這份喜悅">
+  <meta property="og:image" content="https://my-website-theta-ruby-23.vercel.app/images/og-cover.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://my-website-theta-ruby-23.vercel.app/">
+  <meta property="og:locale" content="zh_TW">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="唐靖軒 · 林子瑜 婚禮邀請">
+  <meta name="twitter:description" content="2026.11.22 SUNDAY · THE GAYA HOTEL 10F KI-PA">
+  <meta name="twitter:image" content="https://my-website-theta-ruby-23.vercel.app/images/og-cover.jpg">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Noto+Serif+TC:wght@300;400;600;700&family=LXGW+WenKai+TC&display=swap" rel="stylesheet">
@@ -232,6 +250,48 @@
       0%, 100% { transform: scale(1); opacity: 0.85; }
       50% { transform: scale(1.12); opacity: 1; }
     }
+
+    .scroll-hint{
+      position: absolute;
+      left: 50%; bottom: 10px;
+      transform: translateX(-50%);
+      z-index: 3;
+      background: none; border: none; padding: 10px;
+      color: var(--gold-light);
+      opacity: 0.85;
+      cursor: pointer;
+      animation: scrollHintFloat 2.4s ease-in-out infinite;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .scroll-hint-arrow{ width: 22px; height: 22px; display: block; filter: drop-shadow(0 1px 4px rgba(0,0,0,0.35)); }
+    @keyframes scrollHintFloat {
+      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.75; }
+      50% { transform: translateX(-50%) translateY(8px); opacity: 1; }
+    }
+
+    .rsvp-float-btn{
+      position: fixed;
+      right: 18px; bottom: 18px;
+      z-index: 40;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 2px;
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--lace);
+      border: 1px solid rgba(197,155,71,0.55);
+      box-shadow: 0 4px 16px rgba(11,25,31,0.22);
+      color: var(--dusk-gold);
+      text-decoration: none;
+      font-family: 'Noto Serif TC', serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.05em;
+      opacity: 0;
+      transform: translateY(12px) scale(0.9);
+      pointer-events: none;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .rsvp-float-btn.visible{ opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+    .rsvp-float-icon{ width: 18px; height: 18px; }
 
     .clean-card {
       background: rgba(255, 253, 248, 0.62);
@@ -870,6 +930,12 @@
           <div class="date">18:30 開席</div>
           <div class="place">THE GAYA HOTEL · 10F KI-PA</div>
         </div>
+
+        <button class="scroll-hint" id="scrollHint" aria-label="往下滑看更多">
+          <svg viewBox="0 0 24 24" class="scroll-hint-arrow">
+            <path d="M12 4v15M12 19l-6-6M12 19l6-6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
       </div>
     </section>
 
@@ -893,7 +959,7 @@
         
         <div class="portrait-photo portrait-bride">
           <div class="photo-frame">
-            <img src="/images/portrait-groom.jpg" alt="新郎獨照">
+            <img loading="lazy" src="/images/portrait-groom.jpg" alt="新郎獨照">
           </div>
         </div>
 
@@ -904,13 +970,13 @@
 
         <div class="portrait-photo portrait-groom">
           <div class="photo-frame">
-            <img src="/images/portrait-bride.jpg" alt="新娘獨照">
+            <img loading="lazy" src="/images/portrait-bride.jpg" alt="新娘獨照">
           </div>
         </div>
       </div>
       <div class="portrait-together fade-up">
         <div class="photo-frame">
-          <img src="/images/tainan-togother.jpg" alt="兩人合照">
+          <img loading="lazy" src="/images/tainan-togother.jpg" alt="兩人合照">
           <p class="chapter-story" style="color: rgba(255,255,255,0.9);">
           兩個原本不會交集的平行線相遇了</p>
         </div>
@@ -937,29 +1003,29 @@
       <div class="taitung-gallery">
         <div class="tt-photo tt-1">
           <div class="photo-frame">
-            <img src="/images/taitung-1-sign.jpg" alt="">
+            <img loading="lazy" src="/images/taitung-1-sign.jpg" alt="">
           </div>
           <span class="tt-caption">台東，每一次來都好美。</span>
         </div>
 
         <div class="tt-spotlight fade-up" data-carousel>
-          <img src="/images/taitung-2-bridge.jpg" alt="" class="duo-slide active">
-          <img src="/images/taitung-2b-bridge.jpg" alt="" class="duo-slide">
+          <img loading="lazy" src="/images/taitung-2-bridge.jpg" alt="" class="duo-slide active">
+          <img loading="lazy" src="/images/taitung-2b-bridge.jpg" alt="" class="duo-slide">
           <div class="tt-spotlight-overlay"></div>
           <span class="tt-spotlight-caption">太陽大到睜不開眼</span>
         </div>
 
         <div class="tt-photo tt-3">
           <div class="photo-frame tt-duo" data-carousel>
-            <img src="/images/taitung-3-sunflower.jpg" alt="" class="duo-slide active">
-            <img src="/images/taitung-3b-sunflower.jpg" alt="" class="duo-slide">
+            <img loading="lazy" src="/images/taitung-3-sunflower.jpg" alt="" class="duo-slide active">
+            <img loading="lazy" src="/images/taitung-3b-sunflower.jpg" alt="" class="duo-slide">
           </div>
           <span class="tt-caption">（0.0）<br>　 ♥<br>（^ε^）</span>
         </div>
 
         <div class="tt-photo tt-4">
           <div class="photo-frame">
-            <img src="/images/taitung-4-frown.jpg" alt="">
+            <img loading="lazy" src="/images/taitung-4-frown.jpg" alt="">
           </div>
           <span class="tt-caption">他又講了一個不好笑的笑話</span>
         </div>
@@ -985,14 +1051,14 @@
       <div class="street-gallery">
         <div class="street-photo photo-a">
           <div class="photo-frame">
-            <img src="/images/tainan-sweet.jpg" alt="">
+            <img loading="lazy" src="/images/tainan-sweet.jpg" alt="">
           </div>
           <span class="vcaption">台南，空氣都是甜的</span>
         </div>
         <div class="street-photo photo-b">
           <span class="vcaption">街頭巷尾乘載了我們的日常</span>
           <div class="photo-frame">
-            <img src="/images/tainan-signs.jpg" alt="">
+            <img loading="lazy" src="/images/tainan-signs.jpg" alt="">
           </div>
         </div>
         <!-- 加上 reverse 類別，會讓文字自動跑到照片右邊，與上一張左邊的文字錯開 -->
@@ -1004,8 +1070,8 @@
         </div>
         <div class="street-photo photo-c">
           <div class="photo-frame tt-duo" data-carousel>
-            <img src="/images/tainan-tea.jpg" alt="" class="duo-slide active">
-            <img src="/images/tainan-tea2.jpg" alt="" class="duo-slide">
+            <img loading="lazy" src="/images/tainan-tea.jpg" alt="" class="duo-slide active">
+            <img loading="lazy" src="/images/tainan-tea2.jpg" alt="" class="duo-slide">
           </div>
         </div>
       </div>
@@ -1035,9 +1101,9 @@
             <span class="corner tl"></span><span class="corner tr"></span>
             <span class="corner bl"></span><span class="corner br"></span>
             <div class="vintage-duo" data-carousel>
-              <img src="/images/street-a-walk.jpg" alt="" class="duo-slide active">
-              <img src="/images/vintage-a.jpg" alt="" class="duo-slide">
-              <img src="/images/street-c-sunflower.jpg" alt="" class="duo-slide">
+              <img loading="lazy" src="/images/street-a-walk.jpg" alt="" class="duo-slide active">
+              <img loading="lazy" src="/images/vintage-a.jpg" alt="" class="duo-slide">
+              <img loading="lazy" src="/images/street-c-sunflower.jpg" alt="" class="duo-slide">
             </div>
           </div>
         </div>
@@ -1046,9 +1112,9 @@
             <span class="corner tl"></span><span class="corner tr"></span>
             <span class="corner bl"></span><span class="corner br"></span>
             <div class="vintage-duo" data-carousel>
-              <img src="/images/tainan3-1.jpg" alt="" class="duo-slide active">
-              <img src="/images/tainan3-3.jpg" alt="" class="duo-slide">
-              <img src="/images/tainan3-2.jpg" alt="" class="duo-slide">
+              <img loading="lazy" src="/images/tainan3-1.jpg" alt="" class="duo-slide active">
+              <img loading="lazy" src="/images/tainan3-3.jpg" alt="" class="duo-slide">
+              <img loading="lazy" src="/images/tainan3-2.jpg" alt="" class="duo-slide">
             </div>
           </div>
         </div>
@@ -1174,6 +1240,13 @@
 
   </div>
 
+  <a href="#rsvp" id="rsvpFloatBtn" class="rsvp-float-btn" aria-label="直接前往出席登記">
+    <svg viewBox="0 0 24 24" class="rsvp-float-icon">
+      <path d="M4 12l6 6L20 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span>登記</span>
+  </a>
+
   <script>
     document.addEventListener('contextmenu', e => e.preventDefault());
     let wasPlayingBeforeHidden = false;
@@ -1256,6 +1329,35 @@
       ttPhotos.forEach(el => ttObserver.observe(el));
     });
 
+    const scrollHintBtn = document.getElementById('scrollHint');
+    if (scrollHintBtn) {
+      scrollHintBtn.addEventListener('click', () => {
+        const heroSection = document.getElementById('hero-open');
+        const next = heroSection && heroSection.nextElementSibling;
+        if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+
+    const rsvpFloatBtn = document.getElementById('rsvpFloatBtn');
+    const rsvpTargetSection = document.getElementById('rsvp');
+    const heroOpenSection = document.getElementById('hero-open');
+    if (rsvpFloatBtn && rsvpTargetSection && heroOpenSection) {
+      let pastHero = false;
+      let inRsvp = false;
+      const updateRsvpBtn = () => {
+        rsvpFloatBtn.classList.toggle('visible', pastHero && !inRsvp);
+      };
+      new IntersectionObserver((entries) => {
+        entries.forEach((entry) => { pastHero = !entry.isIntersecting; });
+        updateRsvpBtn();
+      }, { threshold: 0 }).observe(heroOpenSection);
+
+      new IntersectionObserver((entries) => {
+        entries.forEach((entry) => { inRsvp = entry.isIntersecting; });
+        updateRsvpBtn();
+      }, { threshold: 0.15 }).observe(rsvpTargetSection);
+    }
+
     let currentHero = 0;
     const heroSlides = document.querySelectorAll('.hero-bg-slide');
     function changeHero() {
@@ -1264,7 +1366,7 @@
       currentHero = (currentHero + 1) % heroSlides.length;
       heroSlides[currentHero].classList.add('active');
     }
-    setInterval(changeHero, 5000);
+    setInterval(changeHero, 3000);
 
     let currentVenue = 0;
     const venueSlides = document.querySelectorAll('.venue-bg');
@@ -1274,7 +1376,7 @@
       currentVenue = (currentVenue + 1) % venueSlides.length;
       venueSlides[currentVenue].classList.add('active');
     }
-    setInterval(changeVenue, 6000);
+    setInterval(changeVenue, 3500);
 
     document.querySelectorAll('[data-carousel]').forEach(container => {
       const slides = container.querySelectorAll('.duo-slide');
@@ -1284,7 +1386,7 @@
         slides[idx].classList.remove('active');
         idx = (idx + 1) % slides.length;
         slides[idx].classList.add('active');
-      }, 3500);
+      }, 2200);
     });
 
     const bgMusic = document.getElementById('bgMusic');
