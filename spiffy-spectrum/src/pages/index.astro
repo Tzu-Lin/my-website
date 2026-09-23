@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>唐靖軒 · 林子瑜 婚禮邀請</title>
 
+  <link rel="preload" as="image" href="/images/07231.jpg">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate icon" href="/favicon.ico">
 
@@ -1446,7 +1447,15 @@
     const counts = { rsvpAdults: 1, rsvpKids: 0, rsvpVeg: 1 };
     function stepCount(id, delta){
       const min = id === 'rsvpAdults' ? 1 : 0;
+      // 計算當前按鈕的新數值
       counts[id] = Math.max(min, counts[id] + delta);
+
+      // 強制讓素食人數不大於總出席人數
+      const totalGuests = counts.rsvpAdults + counts.rsvpKids;
+      counts.rsvpVeg = Math.min(counts.rsvpVeg, totalGuests);
+      
+      // 更新畫面
+      document.getElementById('rsvpVeg').textContent = counts.rsvpVeg;
       document.getElementById(id).textContent = counts[id];
     }
     window.stepCount = stepCount;
