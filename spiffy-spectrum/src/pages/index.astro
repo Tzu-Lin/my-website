@@ -15,7 +15,7 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="唐靖軒 · 林子瑜 婚禮邀請">
   <meta property="og:description" content="2026.11.22 SUNDAY · THE GAYA HOTEL 10F KI-PA · 誠摯邀請您與我們一同分享這份喜悅">
-  <meta property="og:image" content="https://my-website-theta-ruby-23.vercel.app/images/og-cover.jpg">
+  <meta property="og:image" content="https://my-website-theta-ruby-23.vercel.app/images/og-cover-wedding.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://my-website-theta-ruby-23.vercel.app/">
@@ -23,7 +23,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="唐靖軒 · 林子瑜 婚禮邀請">
   <meta name="twitter:description" content="2026.11.22 SUNDAY · THE GAYA HOTEL 10F KI-PA">
-  <meta name="twitter:image" content="https://my-website-theta-ruby-23.vercel.app/images/og-cover.jpg">
+  <meta name="twitter:image" content="https://my-website-theta-ruby-23.vercel.app/images/og-cover-wedding.jpg">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -255,7 +255,7 @@
 
     .scroll-hint{
       position: absolute;
-      left: 50%; 
+      left: 50%;
       bottom: 25px;
       transform: translateX(-50%);
       z-index: 3;
@@ -286,10 +286,6 @@
       font-size: 0.62rem; letter-spacing: 0.15em;
       text-shadow: 0 1px 4px rgba(0,0,0,0.5);
       opacity: 0.9;
-    }
-    @keyframes scrollHintFloat {
-      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.9; }
-      50% { transform: translateX(-50%) translateY(9px); opacity: 1; }
     }
 
     .rsvp-float-btn{
@@ -366,24 +362,61 @@
       background-image: repeating-linear-gradient(90deg, rgba(232,208,140,0.5) 0 5px, transparent 5px 10px);
     }
 
-    .portrait-collage{
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      gap: 8%; /* 撐開兩張照片 */
+    /* ===== 新的人物介紹：錯落式無框編排與金線 ===== */
+    .portraits-elegant-wrap {
       width: 100%;
-      margin: 1rem 0 1rem;
+      max-width: 600px;
+      margin: 2.5rem auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2.2rem;
+      position: relative;
+      z-index: 2;
+    }
+    .pe-row {
+      display: flex;
+      width: 100%;
       position: relative;
     }
+    .pe-row.duo {
+      justify-content: space-between;
+      gap: 8%;
+    }
+    .pe-photo {
+      width: 100%;
+      position: relative;
+      z-index: 2;
+    }
+    .pe-row.duo .pe-photo {
+      width: 46%;
+    }
+    .pe-photo .photo-frame {
+      overflow: hidden;
+      border-radius: 4px; /* 輕微圓角 */
+      box-shadow: 0 18px 36px -12px rgba(0,0,0,0.65); /* 取代白框，用優雅陰影托出照片 */
+    }
+    .pe-photo img {
+      display: block; 
+      width: 100%; 
+      height: auto; 
+      object-fit: cover;
+    }
+    .pe-row.duo .pe-photo img {
+      aspect-ratio: 3/4;
+    }
 
-    /* ✅ SVG 動態金線定位與樣式 */
+    /* 調整錯落感 */
+    .pe-groom-photo { margin-top: 3rem; }
+    .pe-bride-photo { margin-top: 0; }
+
+    /* SVG 動態金線 */
     .connection-line {
       position: absolute;
-      top: 36%;
-      left: 38%;
-      width: 24%;
+      top: 40%;           /* 依據新弧度微調高度 */
+      left: 32%;
+      width: 36%;         /* 稍微加寬讓線條更流暢 */
       height: 60px;
-      z-index: 0;
+      z-index: 1;         /* 確保金線在照片底層 */
       color: var(--dusk-gold);
       opacity: 0.85;
       pointer-events: none;
@@ -394,51 +427,15 @@
       stroke: currentColor;
       stroke-width: 1.8px;
       stroke-linecap: round;
-      /* 讓線條預設隱藏，準備執行動畫 */
       stroke-dasharray: 1;
       stroke-dashoffset: 1;
     }
-    /* 當左側照片(bride)進場時，自動觸發畫線動畫 (延遲 0.6 秒等照片先浮現) */
-    .portrait-bride.in-view + .connection-line .line-path {
+    /* 當左側照片進場時，觸發金線動畫 */
+    .pe-photo.visible ~ .connection-line .line-path {
       animation: drawLine 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.6s forwards;
     }
     @keyframes drawLine {
       to { stroke-dashoffset: 0; }
-    }
-
-    .portrait-photo{
-      width: 42%;
-      opacity: 0;
-      transform: translateY(24px) scale(0.96);
-      transition: opacity 1s ease, transform 1s ease;
-      position: relative; 
-      z-index: 2; /* 確保照片在金線上方 */
-    }
-    .portrait-photo.in-view{ opacity: 1; transform: translateY(0) scale(1); }
-    .portrait-photo .photo-frame{ overflow: hidden; border-radius: 3px; aspect-ratio: 3/4; }
-    .portrait-photo .photo-frame img{
-      display: block; width: 100%; height: 100%; object-fit: cover;
-      box-shadow: 0 14px 30px -14px rgba(0,0,0,0.55);
-    }
-    
-    .portrait-bride{ margin-top: 0; }
-    .portrait-groom{ margin-top: 4rem; }
-
-    /* ✅ 合照乾淨淡入 - 改回橫式與原本尺寸 */
-    .portrait-together {
-      width: 80%; /* 電腦版控制不要太大 */
-      margin: 2rem auto 0;
-    }
-    .portrait-together .photo-frame {
-      overflow: hidden;
-      border-radius: 3px;
-    }
-    .portrait-together .photo-frame img {
-      display: block; 
-      width: 100%; 
-      height: auto; /* 改為 auto 讓圖片順應原始高度 */
-      box-shadow: 0 14px 30px -14px rgba(0,0,0,0.55);
-      /* 刪除了 object-fit: cover; 與 aspect-ratio 比例限制 */
     }
 
     .taitung-gallery{
@@ -457,7 +454,7 @@
       transition: opacity 0.9s ease, transform 0.9s ease;
     }
     .tt-photo.in-view{ opacity: 1; transform: translateY(0) scale(1); }
-    
+
     .tt-1{ width: 95%; align-self: flex-start; }
     .tt-photo.tt-3{
       width: 100%;
@@ -469,7 +466,7 @@
     .tt-photo.tt-3 .tt-caption{ font-size: 1.4rem; font-style: normal; }
     .tt-photo.tt-3 .photo-frame{ width: 62%; flex-shrink: 0; }
     .tt-4{ width: 70%; align-self: flex-end; }
-    
+
     .tt-photo .photo-frame{ width: 100%; overflow: hidden; border-radius: 3px; }
     .tt-photo .photo-frame img{
       display: block; width: 100%; height: 100%; object-fit: cover;
@@ -478,7 +475,7 @@
     .tt-1 .photo-frame{ aspect-ratio: 4/3; }
     .tt-3 .photo-frame{ aspect-ratio: 3/4; }
     .tt-4 .photo-frame{ aspect-ratio: 4/3; }
-    
+
     .tt-spotlight{
       width: calc(100% + 2.4rem);
       margin: 0.5rem -1.2rem 0.5rem;
@@ -520,7 +517,7 @@
       transition: opacity 1.3s ease-in-out;
     }
     .tt-duo .duo-slide.active{ opacity: 1; }
-    
+
     .tt-caption{
       font-family: 'Noto Serif TC', serif;
       font-style: italic;
@@ -569,29 +566,22 @@
     .photo-a{ width: 90%; align-self: flex-start; }
     .photo-a .photo-frame img{ aspect-ratio: 4/3; }
     .photo-b{ width: 65%; align-self: flex-end; }
-    /* ✅ 新增：延續日常主題的橫式照片 */
-    .photo-daily { 
-      width: 92%; 
-      align-self: flex-start; /* 靠左排列，與上一張錯開 */
-      margin-top: -0.5rem; 
-    }
-    .photo-daily .photo-frame { aspect-ratio: 4/3; } /* 設定為橫式比例 */
+    .photo-daily { width: 92%; align-self: flex-start; margin-top: -0.5rem; }
+    .photo-daily .photo-frame { aspect-ratio: 4/3; } 
     .photo-daily .photo-frame img { aspect-ratio: 4/3; }
     .photo-b .photo-frame img{ aspect-ratio: 3/4; }
-    .photo-c { 
-      width: calc(100% + 2.4rem); 
-      margin-left: -1.2rem; 
-      margin-right: -1.2rem; 
+    .photo-c {
+      width: calc(100% + 2.4rem);
+      margin-left: -1.2rem;
+      margin-right: -1.2rem;
       margin-bottom: -3rem;
-      align-self: center; 
+      align-self: center;
     }
-    .photo-c .photo-frame { 
-      border-radius: 0; /* 全幅照片不加圓角比較好看 */
-      aspect-ratio: 4/3; /* 改為較寬的橫式比例 */
-    }
-    .photo-c .photo-frame img { 
-      aspect-ratio: 4/3; 
-    }
+    .photo-c .photo-frame { border-radius: 0; aspect-ratio: 4/3; }
+    .photo-c .photo-frame img { aspect-ratio: 4/3; }
+    .photo-d { width: 85%; max-width: 560px; align-self: flex-end; } /* 將 width 和 max-width 調大讓照片變大 */
+    .photo-d .photo-frame { aspect-ratio: 1 / 1; }
+    .photo-d .photo-frame img { object-position: bottom; } /* 讓照片對齊底部，這樣就會只切掉上面 */
 
     .photo-frame{ overflow: hidden; border-radius: 3px; }
     .photo-frame img{
@@ -664,7 +654,7 @@
     .vintage-frame{ position: relative; padding: 8px; background: #fff; box-shadow: 0 8px 20px -10px rgba(0,0,0,0.35); }
     .vintage-frame img{ display: block; width: 100%; object-fit: cover; aspect-ratio: 4/5; }
     .vc-big .vintage-frame img{ aspect-ratio: 4/3; }
-    
+
     .vintage-duo{
       position: relative;
       width: 100%;
@@ -679,7 +669,7 @@
       transition: opacity 1.3s ease-in-out;
     }
     .vintage-duo .duo-slide.active{ opacity: 1; }
-    
+
     .vintage-collage .hcaption{
       font-family: 'Noto Serif TC', serif;
       font-style: italic;
@@ -695,6 +685,28 @@
     .corner.tr{ top: 2px; right: 2px; border-left: none; border-bottom: none; }
     .corner.bl{ bottom: 2px; left: 2px; border-right: none; border-top: none; }
     .corner.br{ bottom: 2px; right: 2px; border-left: none; border-top: none; }
+
+    /* 留影：雙拼排版 */
+    .studio-diptych {
+      display: flex;
+      width: calc(100% + 1rem);
+      margin: 1.5rem -0.5rem 2.5rem;
+      gap: 0.8rem;
+    }
+    .diptych-photo {
+      flex: 1;
+      background: #fff;
+      padding: 6px;
+      border-radius: 4px;
+      box-shadow: 0 10px 24px -8px rgba(74,59,40,0.3);
+    }
+    .diptych-photo img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+      border-radius: 2px;
+    }
 
     .access-card{
       text-align: center;
@@ -891,12 +903,8 @@
       .page-corner.tr{ top: 10px; right: 10px; }
       .page-corner.bl{ bottom: 10px; left: 10px; }
       .page-corner.br{ bottom: 10px; right: 10px; }
-      
       .street-photo { gap: 0.8rem; }
-      .photo-b { width: 92%; } 
-      
-      /* ✅ 手機版合照寬度修正 */
-      .portrait-together { width: 92%; }
+      .photo-b { width: 92%; }
     }
 
     @media (min-width: 640px) {
@@ -910,6 +918,55 @@
         border-radius: 4px;
       }
     }
+
+    /* ===== 婚紗照 ===== */
+    .vintage-duo.portrait{ aspect-ratio: 4/5; }
+
+    .vc-photo.vc-left{
+      width: 78%;
+      align-self: flex-start;
+      margin-top: -1rem;
+      transform: rotate(-9deg) scale(0.94);
+      opacity: 0;
+      transition: transform 1.4s ease, opacity 1.4s ease;
+    }
+    .vc-photo.vc-left.settled{ transform: rotate(-4deg) scale(1); opacity: 1; }
+
+    .wedding-kiss{
+      position: relative;
+      width: calc(100% + 2.4rem);
+      margin: 2.5rem -1.2rem -5rem;
+      aspect-ratio: 3 / 2;
+      overflow: hidden;
+    }
+    .wedding-kiss .duo-slide{
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.3s ease-in-out;
+    }
+    .wedding-kiss .duo-slide.active{ opacity: 1; }
+
+    .venue-portrait{
+      width: 64%;
+      max-width: 240px;
+      margin: 0 auto 1.8rem;
+      padding: 6px;
+      border: 1px solid rgba(232,208,140,0.6);
+      border-radius: 999px 999px 4px 4px;
+      background: rgba(0,0,0,0.2);
+    }
+    .venue-portrait img{
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      object-position: center 30%;
+      border-radius: 999px 999px 2px 2px;
+    }
+
   </style>
 </head>
 <body>
@@ -935,7 +992,7 @@
             </svg>
           </button>
         </div>
-        <audio id="bgMusic" loop></audio>
+        <audio id="bgMusic" loop preload="none"></audio>
 
         <div class="hero-main">
           <p class="hero-greeting">
@@ -962,7 +1019,7 @@
           </span>
           <span class="scroll-hint-label">SCROLL</span>
         </button>
-      
+
     </section>
 
     <section class="chapter fade-up" id="portraits">
@@ -978,37 +1035,55 @@
                 fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
         </svg>
         <p class="chapter-story" style="color: rgba(255,255,255,0.9);">
-          這是新郎唐靖軒，還有新娘林子瑜</p>
+          這是新郎唐靖軒，還有新娘林子瑜
+        </p>
       </div>
 
-      <div class="portrait-collage">
+      <!-- 無框優雅排版與金線 -->
+      <div class="portraits-elegant-wrap fade-up">
         
-        <div class="portrait-photo portrait-bride">
-          <div class="photo-frame">
-            <img loading="lazy" src="/images/portrait-groom.jpg" alt="新郎獨照">
+        <!-- 第一組：左右獨照 + 中間連線 -->
+        <div class="pe-row duo">
+          <div class="pe-photo pe-groom-photo fade-up">
+            <div class="photo-frame"><img loading="lazy" src="/images/portrait-groom.jpg" alt="新郎獨照"></div>
+          </div>
+
+          <svg class="connection-line" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true">
+            <!-- d="M 0,50 Q 50,-10 100,15" 代表從左下(0,50)出發，往右上(100,15)拉出弧線 -->
+            <path class="line-path" d="M 0,50 Q 50,-10 100,15" pathLength="1" />
+          </svg>
+
+          <div class="pe-photo pe-bride-photo fade-up">
+            <div class="photo-frame"><img loading="lazy" src="/images/portrait-bride.jpg" alt="新娘獨照"></div>
+          </div>
+        </div>
+        
+        <!-- 第二組：滿版大合照 -->
+        <div class="pe-row single fade-up">
+          <div class="pe-photo">
+            <div class="photo-frame"><img loading="lazy" src="/images/tainan-togother.jpg" alt="兩人合照"></div>
           </div>
         </div>
 
-        <!-- ✅ 這是新增的：帶有優雅弧度的 SVG 動態繪製金線 -->
-        <svg class="connection-line" viewBox="0 0 100 50" preserveAspectRatio="none">
-          <path class="line-path" d="M -5,10 Q 40,70 105,35" pathLength="1" />
-        </svg>
-
-        <div class="portrait-photo portrait-groom">
-          <div class="photo-frame">
-            <img loading="lazy" src="/images/portrait-bride.jpg" alt="新娘獨照">
+        <!-- 第三組：高低錯落 -->
+        <div class="pe-row duo fade-up" style="align-items: flex-end;">
+          <div class="pe-photo" style="width: 48%;">
+            <div class="photo-frame"><img loading="lazy" src="/images/wedding-10-garden-lean.webp" alt=""></div>
+          </div>
+          <div class="pe-photo" style="width: 42%;">
+            <div class="photo-frame"><img loading="lazy" src="/images/wedding-07-garden.webp" alt=""></div>
           </div>
         </div>
+
       </div>
-      <div class="portrait-together fade-up">
-        <div class="photo-frame">
-          <img loading="lazy" src="/images/tainan-togother.jpg" alt="兩人合照">
-          <p class="chapter-story" style="color: rgba(255,255,255,0.9);">
-          兩個原本不會交集的平行線相遇了</p>
-        </div>
+      
+      <div class="chapter-inner fade-up" style="margin-top: 1rem;">
+        <p class="chapter-story" style="color: rgba(255,255,255,0.9);">
+          兩個原本不會交集的平行線相遇了
+        </p>
       </div>
     </section>
-    
+
     <section class="chapter" id="chapter1">
       <div class="chapter-bg-motion"></div>
       <div class="chapter-grain"></div>
@@ -1046,7 +1121,7 @@
             <img loading="lazy" src="/images/taitung-3-sunflower.jpg" alt="" class="duo-slide active">
             <img loading="lazy" src="/images/taitung-3b-sunflower.jpg" alt="" class="duo-slide">
           </div>
-          <span class="tt-caption">（0.0）<br>　 ♥<br>（^ε^）</span>
+          <span class="tt-caption">（0.0）<br>  ♥<br>（^ε^）</span>
         </div>
 
         <div class="tt-photo tt-4">
@@ -1081,15 +1156,16 @@
           </div>
           <span class="vcaption">台南，空氣都是甜的</span>
         </div>
-        <div class="street-photo photo-b">
+          <div class="street-photo photo-d">
           <span class="vcaption">街頭巷尾乘載了我們的日常</span>
-          <div class="photo-frame">
-            <img loading="lazy" src="/images/tainan-signs.jpg" alt="">
+          <div class="photo-frame tt-duo" data-carousel>
+            <img loading="lazy" src="/images/wedding-03-street-walk.webp" alt="" class="duo-slide active">
+            <img loading="lazy" src="/images/wedding-04-street-hug.webp" alt="" class="duo-slide">
+            <img loading="lazy" src="/images/tainan-signs.jpg" alt="" class="duo-slide">
           </div>
         </div>
-        <!-- 加上 reverse 類別，會讓文字自動跑到照片右邊，與上一張左邊的文字錯開 -->
         <div class="street-photo photo-daily reverse">
-          <span class="vcaption">平淡卻很踏實</span> <!-- 這裡可替換成你要的文字，不需要可整行刪除 -->
+          <span class="vcaption">平淡卻很踏實</span> 
           <div class="photo-frame">
             <img src="/images/tainan-sweet2.jpg" alt="" loading="lazy">
           </div>
@@ -1141,8 +1217,18 @@
               <img loading="lazy" src="/images/tainan3-1.jpg" alt="" class="duo-slide active">
               <img loading="lazy" src="/images/tainan3-3.jpg" alt="" class="duo-slide">
               <img loading="lazy" src="/images/tainan3-2.jpg" alt="" class="duo-slide">
+              <img loading="lazy" src="/images/wedding-02-studio-crouch.webp" alt="" class="duo-slide" style="object-position: 30% center;">
             </div>
           </div>
+        </div>
+      </div>
+
+      <div class="studio-diptych fade-up">
+        <div class="diptych-photo">
+          <img loading="lazy" src="/images/wedding-06-studio-back.webp" alt="">
+        </div>
+        <div class="diptych-photo">
+          <img loading="lazy" src="/images/wedding-08-shutter.webp" alt="">
         </div>
       </div>
 
@@ -1152,6 +1238,11 @@
           不是因為對方是最好的，而是我們都知道，<br>
           彼此是最願意並肩走下去的那個人。
         </blockquote>
+      </div>
+
+      <div class="wedding-kiss fade-up" data-carousel>
+        <img loading="lazy" src="/images/wedding-05-kiss.webp" alt="" class="duo-slide active">
+        <img loading="lazy" src="/images/wedding-09-veil-back.webp" alt="" class="duo-slide">
       </div>
     </section>
 
@@ -1233,6 +1324,9 @@
         <div class="venue-bg" style="background-image: url('/images/S__20357195_0.jpg');"></div>
         <div class="venue-overlay"></div>
         <div class="venue-content">
+          <div class="venue-portrait">
+            <img loading="lazy" src="/images/wedding-01-studio-bouquet.webp" alt="">
+          </div>
           <span class="chapter-title-en" style="font-size: 1.8rem; color: var(--gold-light);">The Celebration</span>
           <span class="chapter-title-zh" style="color: var(--gold-light); opacity:0.9;">婚禮・於此</span>
           <p class="chapter-story" style="color: rgba(255,255,255,0.9); margin-top: 1rem;">
@@ -1309,6 +1403,7 @@
         });
       }, { threshold: 0.2 });
       vcPhotos.forEach(el => vcObserver.observe(el));
+      
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -1318,18 +1413,6 @@
         });
       }, { threshold: 0.1 });
       document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
-
-      const portraitPhotos = document.querySelectorAll('.portrait-photo');
-      const portraitObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if(entry.isIntersecting){
-            const order = Array.from(portraitPhotos).indexOf(entry.target);
-            setTimeout(() => entry.target.classList.add('in-view'), order * 260);
-            portraitObserver.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.2 });
-      portraitPhotos.forEach(el => portraitObserver.observe(el));
 
       const streetPhotos = document.querySelectorAll('.street-photo');
       const photoObserver = new IntersectionObserver((entries) => {
@@ -1447,14 +1530,9 @@
     const counts = { rsvpAdults: 1, rsvpKids: 0, rsvpVeg: 1 };
     function stepCount(id, delta){
       const min = id === 'rsvpAdults' ? 1 : 0;
-      // 計算當前按鈕的新數值
       counts[id] = Math.max(min, counts[id] + delta);
-
-      // 強制讓素食人數不大於總出席人數
       const totalGuests = counts.rsvpAdults + counts.rsvpKids;
       counts.rsvpVeg = Math.min(counts.rsvpVeg, totalGuests);
-      
-      // 更新畫面
       document.getElementById('rsvpVeg').textContent = counts.rsvpVeg;
       document.getElementById(id).textContent = counts[id];
     }
