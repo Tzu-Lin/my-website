@@ -130,9 +130,6 @@
     #chapter3 .chapter-bg-motion{
       background-image: linear-gradient(135deg, #DED0AE 0%, #E8DCC4 40%, #F2E9D2 70%, #E8DCC4 100%);
     }
-    section.rsvp-section .chapter-bg-motion{
-      background-image: linear-gradient(135deg, #DED0AE 0%, #E8DCC4 40%, #F2E9D2 70%, #E8DCC4 100%);
-    }
     .chapter-grain{
       position: absolute; inset: 0; z-index: 1; opacity: 0.06; mix-blend-mode: overlay;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -287,30 +284,6 @@
       text-shadow: 0 1px 4px rgba(0,0,0,0.5);
       opacity: 0.9;
     }
-
-    .rsvp-float-btn{
-      position: fixed;
-      right: 18px; bottom: 18px;
-      z-index: 40;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 2px;
-      width: 56px; height: 56px;
-      border-radius: 50%;
-      background: var(--lace);
-      border: 1px solid rgba(197,155,71,0.55);
-      box-shadow: 0 4px 16px rgba(11,25,31,0.22);
-      color: var(--dusk-gold);
-      text-decoration: none;
-      font-family: 'Noto Serif TC', serif;
-      font-size: 0.68rem;
-      letter-spacing: 0.05em;
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      pointer-events: auto;
-      transition: opacity 0.4s ease, transform 0.4s ease;
-    }
-    .rsvp-float-btn.hidden-by-rsvp{ opacity: 0; transform: translateY(12px) scale(0.9); pointer-events: none; }
-    .rsvp-float-icon{ width: 18px; height: 18px; }
 
     .clean-card {
       background: rgba(255, 253, 248, 0.62);
@@ -742,71 +715,6 @@
 
     .section-eyebrow{ font-size: 0.85rem; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1rem; font-family: 'Cormorant Garamond', serif; opacity: 0.85; }
 
-    section.rsvp-section {
-      padding: 4rem 1.5rem;
-      width: 100%;
-      position: relative;
-      overflow: hidden;
-      background: #E8DCC4;
-    }
-    .rsvp-inner{
-      position: relative;
-      z-index: 2;
-    }
-    .rsvp-card{
-      padding: 3rem 2.5rem;
-      text-align: left;
-      background: #FBF6E8;
-      border: 1px solid rgba(138,106,46,0.3);
-      box-shadow: 0 15px 35px -10px rgba(74,59,40,0.25);
-      border-radius: 3px;
-      max-width: 650px;
-      margin: 0 auto;
-    }
-    .field{ margin-bottom: 1.8rem; }
-    .field label{ display: block; font-size: 0.85rem; letter-spacing: 0.15em; color: #6b4a1f; margin-bottom: 0.8rem; font-weight: 600; }
-    .field input[type="text"]{
-      width: 100%; border: none; border-bottom: 1.5px solid rgba(53,130,125,0.3);
-      background: transparent; padding: 0.6rem 0.2rem; font-family: 'Noto Serif TC', serif;
-      font-size: 1.05rem; color: var(--ink-navy); outline: none; transition: 0.3s;
-    }
-    .field input:focus{ border-color: var(--dusk-gold); }
-    .counter-row{ display: flex; gap: 1.5rem; }
-    .counter-field{ flex: 1; min-width: 0; }
-    .stepper{ display: flex; align-items: center; justify-content: space-between; border: 1.5px solid rgba(53,130,125,0.3); border-radius: 6px; padding: 0.5rem 0.8rem; background: #fff; width: 100%; box-sizing: border-box; }
-    .stepper button{ width: 28px; height: 28px; border: none; background: #EFE6D0; color: #6b4a1f; font-size: 1.1rem; border-radius: 50%; cursor: pointer; line-height: 1; transition: 0.2s; }
-    .stepper span{ font-size: 1.1rem; min-width: 24px; text-align: center; color: #6b4a1f; font-weight: 600; }
-    .veg-toggle{ display: flex; align-items: center; gap: 0.8rem; font-size: 1rem; color: var(--ink-navy); }
-    .veg-toggle input{ width: 20px; height: 20px; accent-color: #8a6a2e; cursor: pointer; }
-    .btn-submit{
-      width: 100%; margin-top: 1rem; padding: 1rem; border: none; border-radius: 999px;
-      background: linear-gradient(135deg, #6b4a1f, #8a6a2e); color: #FBF6E8;
-      font-size: 1.1rem; letter-spacing: 0.1em; cursor: pointer;
-      box-shadow: 0 6px 15px rgba(74,59,40,0.3);
-      transition: all 0.3s;
-    }
-    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(74,59,40,0.4); }
-    .btn-submit:disabled{ opacity: 0.6; pointer-events: none; }
-
-    .thank-you{ display: none; text-align: center; padding: 4rem 0.5rem; }
-    .thank-you .big{
-      font-family: 'Noto Serif TC', serif;
-      font-style: italic;
-      font-size: 1.8rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      background: linear-gradient(135deg, #E8D08C 0%, #C59B47 50%, #9A7326 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 1.2rem;
-    }
-    .thank-you .sub{
-      font-family: 'Noto Serif TC', serif;
-      color: var(--ink-soft);
-      letter-spacing: 0.08em;
-      font-size: 1.1rem;
-    }
-
     .venue-standalone-wrap{
       width: 100%;
       padding: 0 1.2rem;
@@ -967,9 +875,102 @@
       border-radius: 999px 999px 2px 2px;
     }
 
+
+  </style>
+  <style is:global>
+    /* ===== 座位查詢 ===== */
+    html.gate-open, html.gate-open body{ overflow: hidden; height: 100%; }
+    #seatGate{
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 3.5vh 1.2rem 1.2rem;
+      overflow-y: auto; -webkit-overflow-scrolling: touch;
+      background: linear-gradient(160deg, #223C3E 0%, #2A4A4D 45%, #375D5D 100%);
+      color: var(--lace);
+      transition: opacity .6s ease, transform .6s ease;
+      -webkit-user-select: text; user-select: text;
+    }
+    #seatGate.leaving{ opacity: 0; transform: translateY(-16px); pointer-events: none; }
+    #seatGate .sg-eyebrow{ font-family: 'Cormorant Garamond', serif; font-size: .75rem; letter-spacing: .5em; color: var(--gold-light); opacity: .9; }
+    #seatGate h1{ font-family: 'Parisienne', cursive; font-weight: 400; font-size: 2.4rem; line-height: 1.1; margin: .4rem 0 .2rem; color: var(--gold-light); }
+    #seatGate .sg-sub{ font-size: .9rem; letter-spacing: .15em; opacity: .85; }
+    #seatGate .sg-box{ width: 100%; max-width: 420px; margin-top: .8rem; }
+    #seatGate input{
+      width: 100%; padding: .9rem 1.1rem; font-size: 16px;
+      font-family: inherit; letter-spacing: .08em; text-align: center;
+      color: var(--lace); background: rgba(255,255,255,.08);
+      border: 1px solid rgba(232,208,140,.55); border-radius: 999px; outline: none;
+    }
+    #seatGate input::placeholder{ color: rgba(255,253,248,.55); }
+    #seatGate input:focus{ border-color: var(--gold-light); background: rgba(255,255,255,.12); }
+    #sgResults{ margin-top: .9rem; display: flex; flex-direction: column; gap: .55rem; max-height: 15vh; overflow-y: auto; }
+    .sg-card{
+      display: flex; justify-content: space-between; align-items: center; gap: .8rem;
+      padding: .7rem 1.1rem; border-radius: 14px; cursor: pointer; font-family: inherit; text-align: left;
+      background: rgba(255,253,248,.14); color: var(--lace);
+      border: 1.5px solid transparent;
+    }
+    .sg-card.sel{ background: rgba(255,253,248,.96); color: var(--ink-navy); border-color: var(--gold-light); box-shadow: 0 6px 18px rgba(0,0,0,.2); }
+    .sg-card .sg-name{ font-size: 1.05rem; letter-spacing: .1em; }
+    .sg-card .sg-table{ font-size: 1.25rem; font-weight: 600; color: var(--gold-light); white-space: nowrap; }
+    .sg-card.sel .sg-table{ color: var(--dusk-gold); }
+    .sg-msg{ text-align: center; font-size: .85rem; line-height: 1.8; opacity: .8; padding: .4rem; }
+    .sg-hint{ text-align: center; font-size: .72rem; letter-spacing: .1em; opacity: .65; margin-top: .1rem; }
+
+    #sgMap{ width: 100%; max-width: 400px; margin-top: .6rem; }
+    #sgMap svg{ width: 100%; height: auto; display: block; }
+    #sgMap .stage rect{ fill: rgba(232,208,140,.16); stroke: rgba(232,208,140,.6); stroke-width: 1; }
+    #sgMap .carpet{ fill: rgba(197,155,71,.28); stroke: rgba(232,208,140,.45); stroke-width: 1; }
+    #sgMap .vlabel{ fill: var(--gold-light); opacity: .6; font-size: 20px; text-anchor: middle; dominant-baseline: central; font-family: 'Noto Serif TC', serif; }
+    .tbl .chair{ fill: rgba(255,255,255,.18); transition: fill .4s; }
+    .tbl.on .chair{ fill: var(--gold-light); }
+    #sgMap .stage text, #sgMap .entry{ fill: var(--gold-light); font-size: 18px; letter-spacing: .3em; text-anchor: middle; dominant-baseline: central; font-family: 'Cormorant Garamond','Noto Serif TC',serif; opacity: .85; }
+    .tbl .body{ fill: rgba(255,255,255,.1); stroke: rgba(255,255,255,.4); stroke-width: 1.5; transition: fill .4s, stroke .4s; }
+    .tbl text{ fill: rgba(255,255,255,.75); text-anchor: middle; dominant-baseline: central; font-family: 'Cormorant Garamond','Noto Serif TC',serif; font-weight: 600; pointer-events: none; }
+    .tbl .pulse{ fill: none; stroke: var(--gold-light); stroke-width: 2; opacity: 0; transform-box: fill-box; transform-origin: center; }
+    .tbl.alt .body{ stroke: var(--gold-light); stroke-dasharray: 4 3; }
+    .tbl.on .body{ fill: var(--gold-light); stroke: #fff; stroke-width: 2; }
+    .tbl.on{ filter: drop-shadow(0 0 7px rgba(232,208,140,.95)); }
+    .tbl.on text{ fill: var(--ink-navy); }
+    .tbl .pulse{ transform-box: fill-box; }
+    .tbl.on .pulse{ animation: sgPulse 1.6s ease-out infinite; }
+    @keyframes sgPulse{ 0%{ opacity: .9; transform: scale(1); } 100%{ opacity: 0; transform: scale(1.9); } }
+
+    .sg-spacer{ flex: 1; min-height: 1.2rem; }
+    #seatFab{
+      position: fixed; right: 18px; bottom: 18px; z-index: 40;
+      display: none; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+      width: 58px; height: 58px; border-radius: 50%; cursor: pointer; padding: 0;
+      background: var(--lace); border: 1px solid rgba(197,155,71,.6);
+      box-shadow: 0 4px 16px rgba(11,25,31,.28); color: var(--dusk-gold);
+      font-family: 'Noto Serif TC', serif; font-size: .68rem; letter-spacing: .05em;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #seatFab.show{ display: flex; }
+    #seatFab svg{ width: 20px; height: 20px; }
+    #sgEnter{
+      padding: .8rem 2.2rem; font-family: inherit; font-size: .92rem;
+      letter-spacing: .25em; color: var(--gold-light); background: none; cursor: pointer;
+      border: 1px solid rgba(232,208,140,.6); border-radius: 999px;
+    }
+    #sgEnter:hover{ background: rgba(232,208,140,.12); }
   </style>
 </head>
 <body>
+
+  <div id="seatGate" role="dialog" aria-label="座位查詢">
+    <span class="sg-eyebrow">SEATING</span>
+    <h1>Find Your Seat</h1>
+    <p class="sg-sub">輸入姓名，您的桌位會在座位圖上亮起</p>
+    <div class="sg-box">
+      <input id="sgInput" type="text" inputmode="text" autocomplete="off" autocapitalize="off"
+             placeholder="請輸入姓名（輸入姓氏也可以）">
+      <div id="sgResults"></div>
+    </div>
+    <div id="sgMap"></div>
+    <div class="sg-spacer"></div>
+    <button id="sgEnter" type="button">看喜帖內容</button>
+  </div>
 
   <div class="page-wrapper">
     <span class="page-corner tl"></span>
@@ -1246,77 +1247,6 @@
       </div>
     </section>
 
-    <section id="rsvp" class="rsvp-section fade-up">
-      <div class="chapter-bg-motion"></div>
-      <div class="chapter-grain"></div>
-      <div class="rsvp-inner">
-        <div style="text-align: center; margin-bottom: 2.5rem;">
-          <p class="section-eyebrow" style="color: #8a6a2e;">RSVP</p>
-          <h2 style="font-size: 1.8rem; color: #4a3b28; letter-spacing: 0.1em;">出席登記</h2>
-          <svg class="squiggle" viewBox="0 0 90 18" style="color: #8a6a2e; margin-top: 0.6rem;">
-            <path d="M2,9 C15,2 20,16 33,9 C46,2 51,16 64,9 C72,5 80,12 88,9"
-                  fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-          </svg>
-        </div>
-
-        <div class="rsvp-card">
-          <form id="rsvpForm" onsubmit="return false;">
-            <div class="field">
-              <label>姓名 / 稱謂 *</label>
-              <input type="text" id="rsvpName" placeholder="請輸入您的姓名">
-            </div>
-
-            <div class="field">
-              <label>出席人數</label>
-              <div class="counter-row">
-                <div class="counter-field">
-                  <div class="stepper">
-                    <button type="button" onclick="stepCount('rsvpAdults',-1)">−</button>
-                    <span id="rsvpAdults">1</span>
-                    <button type="button" onclick="stepCount('rsvpAdults',1)">+</button>
-                  </div>
-                  <div style="text-align:center;font-size:0.8rem;color:var(--ink-soft);margin-top:0.5rem;">大人</div>
-                </div>
-                <div class="counter-field">
-                  <div class="stepper">
-                    <button type="button" onclick="stepCount('rsvpKids',-1)">−</button>
-                    <span id="rsvpKids">0</span>
-                    <button type="button" onclick="stepCount('rsvpKids',1)">+</button>
-                  </div>
-                  <div style="text-align:center;font-size:0.8rem;color:var(--ink-soft);margin-top:0.5rem;">小孩</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="field">
-              <label>飲食需求</label>
-              <div class="veg-toggle">
-                <input type="checkbox" id="rsvpVegCheck" onchange="toggleVeg()">
-                <span>需要素食</span>
-              </div>
-              <div class="counter-row" id="vegCountRow" style="display:none; margin-top:1.2rem;">
-                <div class="counter-field">
-                  <div class="stepper">
-                    <button type="button" onclick="stepCount('rsvpVeg',-1)">−</button>
-                    <span id="rsvpVeg">1</span>
-                    <button type="button" onclick="stepCount('rsvpVeg',1)">+</button>
-                  </div>
-                  <div style="text-align:center;font-size:0.8rem;color:var(--ink-soft);margin-top:0.5rem;">素食人數</div>
-                </div>
-              </div>
-            </div>
-
-            <button class="btn-submit" id="rsvpSubmitBtn" onclick="submitRSVP()">確認送出</button>
-          </form>
-
-          <div class="thank-you" id="thankYou">
-            <p class="big">登記完成，謝謝您！</p>
-            <p class="sub">我們 11 月 22 日台東見</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <div class="venue-standalone-wrap">
       <div class="venue-immersive venue-standalone">
         <div class="venue-bg active" style="background-image: url('/images/S__20357193_0.jpg');"></div>
@@ -1360,14 +1290,167 @@
 
   </div>
 
-  <a href="#rsvp" id="rsvpFloatBtn" class="rsvp-float-btn" aria-label="直接前往出席登記">
-    <svg viewBox="0 0 24 24" class="rsvp-float-icon">
-      <path d="M4 12l6 6L20 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <span>登記</span>
-  </a>
+  <button id="seatFab" type="button" aria-label="查看座位表">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3.5"/><circle cx="17" cy="9" r="3"/><circle cx="12" cy="17" r="3.5"/></svg>
+    <span>座位</span>
+  </button>
+
+  <!-- 座位資料：賓客名單與桌位位置都在這裡，改桌次請改這一段 -->
+  <script is:inline type="application/json" id="seatData">{"layout":{"view":[480,150,480,710],"stage":{"x":605,"y":770,"w":190,"h":68,"label":"舞台"},"carpet":[[633,190,54,575],[460,190,200,32]],"entrance":{"x":445,"y":206},"tables":[{"id":"10","x":565,"y":292},{"id":"7","x":565,"y":420},{"id":"5","x":565,"y":550},{"id":"2","x":565,"y":685},{"id":"9","x":750,"y":240},{"id":"6","x":750,"y":398},{"id":"4","x":750,"y":535},{"id":"主桌","x":750,"y":690},{"id":"8","x":868,"y":322},{"id":"3","x":868,"y":610}]},"guests":[{"name":"唐靖軒","table":"主桌"},{"name":"林子瑜","table":"主桌"},{"name":"子瑜爸媽","table":"主桌"},{"name":"唐翊","table":"主桌"},{"name":"張月庒","table":"主桌"},{"name":"阿嬤 舅公","table":"主桌","alias":["阿嬤","舅公"]},{"name":"你大姐","table":"主桌"},{"name":"何智蓮","table":"主桌"},{"name":"杜文喜 家人","table":"2","alias":["杜文喜","家人"]},{"name":"二姨 二姨丈","table":"2","alias":["二姨","二姨丈"]},{"name":"林峰","table":"2"},{"name":"盧庭宇","table":"2"},{"name":"林士雅","table":"2"},{"name":"馬品薫","table":"5"},{"name":"李洳君","table":"5"},{"name":"凌牧珍","table":"5"},{"name":"陳怡婷","table":"5"},{"name":"陳依筠","table":"5"},{"name":"蔡云槿","table":"7"},{"name":"郭孟婷","table":"7"},{"name":"鄭朋朋","table":"7"},{"name":"李嘉慧","table":"7"},{"name":"黃柏堯","table":"7"},{"name":"胡世璋","table":"7"},{"name":"沈家菘","table":"7"},{"name":"詹仕維","table":"7"},{"name":"二阿姨","table":"3"},{"name":"大阿姨","table":"3"},{"name":"唐建清","table":"3"},{"name":"唐誼敏","table":"3"},{"name":"唐翊秀","table":"3"},{"name":"唐玗蓁","table":"3"},{"name":"高千惠","table":"4"},{"name":"陽永慶","table":"4"},{"name":"林衍光","table":"4"},{"name":"侯智升","table":"4"},{"name":"蔡昆益","table":"4"},{"name":"陳郁名","table":"4"},{"name":"胡恩誌","table":"4"},{"name":"鄭子賢","table":"4"},{"name":"邱旻杰","table":"4"},{"name":"陳世昌","table":"6"},{"name":"江俊賢","table":"6"},{"name":"陳耀宗","table":"6"},{"name":"高石濬","table":"6"},{"name":"邱智鴻","table":"6"},{"name":"張智華","table":"6"},{"name":"胡維勳","table":"6"},{"name":"徐思偉","table":"6"},{"name":"郭佳霖","table":"6"},{"name":"余俊陞","table":"9"},{"name":"陳政憲","table":"9"},{"name":"巴耀祖","table":"9"},{"name":"吳政輝","table":"9"},{"name":"方勇博","table":"9"},{"name":"田杜柏軒","table":"9"},{"name":"林震","table":"8"},{"name":"郝律緯","table":"8"},{"name":"廖沛翔","table":"8"},{"name":"林宗翰","table":"8"},{"name":"曾志齊","table":"8"},{"name":"邱中皓","table":"8"},{"name":"楊雲中","table":"8"},{"name":"陳逸然","table":"8"},{"name":"曾建智","table":"10"},{"name":"李政傑","table":"10"},{"name":"吳承皓","table":"10"},{"name":"陳志文","table":"10"},{"name":"洪雄偉","table":"10"}]}</script>
 
   <script>
+    // ===== 座位查詢 =====
+    (function(){
+      const gate = document.getElementById('seatGate');
+      const input = document.getElementById('sgInput');
+      const listEl = document.getElementById('sgResults');
+      const mapEl = document.getElementById('sgMap');
+      const root = document.documentElement;
+      let guests = [], layout = null;
+      let hits = [], sel = 0, composing = false;
+
+      const fab = document.getElementById('seatFab');
+      let hideTimer = null;
+
+      // 連結帶 hash（例如 #venue）時，直接略過座位頁
+      if (location.hash && location.hash.length > 1) {
+        gate.style.display = 'none';
+        fab.classList.add('show');
+      } else {
+        root.classList.add('gate-open');
+      }
+
+      function closeGate(){
+        gate.classList.add('leaving');
+        root.classList.remove('gate-open');
+        fab.classList.add('show');
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => { gate.style.display = 'none'; window.scrollTo(0, 0); }, 600);
+      }
+      function openGate(){
+        clearTimeout(hideTimer);
+        fab.classList.remove('show');
+        gate.style.display = 'flex';
+        gate.scrollTop = 0;
+        void gate.offsetWidth;
+        gate.classList.remove('leaving');
+        root.classList.add('gate-open');
+      }
+      document.getElementById('sgEnter').addEventListener('click', closeGate);
+      fab.addEventListener('click', openGate);
+
+      const norm = (t) => (t || '').toString().replace(/\s+/g, '').toLowerCase();
+      const isNum = (t) => /^\d+$/.test(String(t));
+      const tableLabel = (t) => isNum(t) ? '第 ' + t + ' 桌' : t;
+      const esc = (t) => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+      function buildMap(){
+        const L = layout;
+        if (!L || !L.tables) { mapEl.innerHTML = ''; return; }
+        const v = L.view;
+        let svg = '<svg viewBox="' + v.join(' ') + '" xmlns="http://www.w3.org/2000/svg">';
+        // 進場路線：畫成一個 L 形整體，不會有重疊
+        svg += '<path class="carpet" d="M460 190 H687 V765 H633 V222 H460 Z" stroke-linejoin="round"/>';
+        svg += '<text class="vlabel" x="660" y="0">' + ['進','場','路','線'].map((c,i)=>'<tspan x="660" y="'+(427+i*34)+'">'+c+'</tspan>').join('') + '</text>';
+        const st = L.stage;
+        svg += '<g class="stage"><rect x="'+st.x+'" y="'+st.y+'" width="'+st.w+'" height="'+st.h+'" rx="8"/>' +
+               '<text x="'+(st.x+st.w/2)+'" y="'+(st.y+st.h/2)+'">'+esc(st.label)+'</text></g>';
+        if (L.entrance) svg += '<text class="entry" x="486" y="172" style="text-anchor:start">ENTRANCE ›</text>';
+        L.tables.forEach(t => {
+          let chairs = '';
+          for (let i = 0; i < 10; i++) {
+            const ang = i / 10 * Math.PI * 2 - Math.PI / 2;
+            chairs += '<circle class="chair" cx="'+(t.x + 54*Math.cos(ang)).toFixed(1)+'" cy="'+(t.y + 54*Math.sin(ang)).toFixed(1)+'" r="7"/>';
+          }
+          const fs = isNum(t.id) ? 30 : 22;
+          svg += '<g class="tbl" data-t="'+esc(t.id)+'">' +
+            '<circle class="pulse" cx="'+t.x+'" cy="'+t.y+'" r="41"/>' + chairs +
+            '<circle class="body" cx="'+t.x+'" cy="'+t.y+'" r="41"/>' +
+            '<text x="'+t.x+'" y="'+t.y+'" font-size="'+fs+'">'+esc(t.id)+'</text></g>';
+        });
+        svg += '</svg>';
+        mapEl.innerHTML = svg;
+        paint();
+      }
+
+      function paint(){
+        const cur = hits[sel] ? String(hits[sel].table) : null;
+        const others = new Set(hits.map(g => String(g.table)));
+        mapEl.querySelectorAll('.tbl').forEach(el => {
+          const t = el.getAttribute('data-t');
+          el.classList.toggle('on', t === cur);
+          el.classList.toggle('alt', t !== cur && others.has(t));
+        });
+      }
+
+      function renderList(){
+        const q = norm(input.value);
+        if (!q) { listEl.innerHTML = ''; return; }
+        if (!hits.length) {
+          listEl.innerHTML = '<p class="sg-msg">找不到這個名字<br>請試試只輸入姓氏，或洽現場接待人員</p>';
+          return;
+        }
+        listEl.innerHTML = hits.map((g, i) =>
+          '<button type="button" class="sg-card' + (i === sel ? ' sel' : '') + '" data-i="' + i + '">' +
+          '<span class="sg-name">' + esc(g.name) + '</span>' +
+          '<span class="sg-table">' + esc(tableLabel(g.table)) + '</span></button>'
+        ).join('') + (hits.length > 1 ? '<p class="sg-hint">點選姓名，座位圖會跟著切換</p>' : '');
+      }
+
+      function search(){
+        const q = norm(input.value);
+        hits = q ? guests.filter(g =>
+          norm(g.name).includes(q) || (g.alias || []).some(a => norm(a).includes(q))
+        ).slice(0, 30) : [];
+        sel = 0;
+        renderList();
+        paint();
+      }
+
+      listEl.addEventListener('click', (e) => {
+        const btn = e.target.closest('.sg-card');
+        if (!btn) return;
+        sel = +btn.getAttribute('data-i');
+        renderList();
+        paint();
+      });
+
+      input.addEventListener('compositionstart', () => { composing = true; });
+      input.addEventListener('compositionend', () => { composing = false; search(); });
+      input.addEventListener('input', () => { if (!composing) search(); });
+
+      const debug = /[?&]debug\b/.test(location.search);
+      function note(msg){
+        if (!debug) return;
+        let el = document.getElementById('sgDebug');
+        if (!el) { el = document.createElement('p'); el.id = 'sgDebug'; el.className = 'sg-hint'; input.parentNode.appendChild(el); }
+        el.textContent = '[debug] ' + msg;
+      }
+      function apply(d, source){
+        guests = Array.isArray(d) ? d : (d.guests || []);
+        layout = Array.isArray(d) ? null : (d.layout || null);
+        note('資料來源：' + source + '，賓客 ' + guests.length + ' 筆，桌子 ' + (layout && layout.tables ? layout.tables.length : 0) + ' 張');
+        buildMap();
+        search();
+      }
+
+      // 優先使用網頁內嵌的資料（不需要另外下載），沒有才改用 fetch
+      let embedded = null;
+      try { embedded = JSON.parse(document.getElementById('seatData').textContent); } catch (e) { console.warn('[座位查詢] 內嵌資料讀取失敗', e); }
+      if (embedded) {
+        apply(embedded, '內嵌');
+      } else {
+        fetch('/seats.json', { cache: 'no-store' }).then(r => {
+          if (!r.ok) throw new Error('seats.json HTTP ' + r.status);
+          return r.json();
+        }).then(d => apply(d, 'fetch')).catch((err) => {
+          console.error('[座位查詢] 載入 seats.json 失敗：', err);
+          note('載入失敗：' + err.message);
+          listEl.innerHTML = '<p class="sg-msg">座位資料載入失敗，請稍後再試或洽現場接待人員</p>';
+        });
+      }
+    })();
+
     document.addEventListener('contextmenu', e => e.preventDefault());
     let wasPlayingBeforeHidden = false;
 
@@ -1447,16 +1530,6 @@
       });
     }
 
-    const rsvpFloatBtn = document.getElementById('rsvpFloatBtn');
-    const rsvpTargetSection = document.getElementById('rsvp');
-    if (rsvpFloatBtn && rsvpTargetSection) {
-      new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          rsvpFloatBtn.classList.toggle('hidden-by-rsvp', entry.isIntersecting);
-        });
-      }, { threshold: 0.15 }).observe(rsvpTargetSection);
-    }
-
     let currentHero = 0;
     const heroSlides = document.querySelectorAll('.hero-bg-slide');
     function changeHero() {
@@ -1527,58 +1600,6 @@
       }
     });
 
-    const counts = { rsvpAdults: 1, rsvpKids: 0, rsvpVeg: 1 };
-    function stepCount(id, delta){
-      const min = id === 'rsvpAdults' ? 1 : 0;
-      counts[id] = Math.max(min, counts[id] + delta);
-      const totalGuests = counts.rsvpAdults + counts.rsvpKids;
-      counts.rsvpVeg = Math.min(counts.rsvpVeg, totalGuests);
-      document.getElementById('rsvpVeg').textContent = counts.rsvpVeg;
-      document.getElementById(id).textContent = counts[id];
-    }
-    window.stepCount = stepCount;
-
-    function toggleVeg(){
-      const on = document.getElementById('rsvpVegCheck').checked;
-      document.getElementById('vegCountRow').style.display = on ? 'flex' : 'none';
-    }
-    window.toggleVeg = toggleVeg;
-
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNkz5i5FCrU7cea06DDt7Nw3_LcHCWLeKNrABCd-8LpSt8lE3xmeDkRK1k3AtgMdPL8g/exec';
-
-    async function submitRSVP(){
-      const name = document.getElementById('rsvpName').value.trim();
-      if(!name){ alert('請填寫姓名'); return; }
-
-      const adults = counts.rsvpAdults;
-      const kids = counts.rsvpKids;
-      const vegOn = document.getElementById('rsvpVegCheck').checked;
-      const veg = vegOn ? counts.rsvpVeg : 0;
-      const entry = { name, adults, kids, veg, note: '' };
-
-      const btn = document.getElementById('rsvpSubmitBtn');
-      btn.disabled = true;
-      btn.textContent = '送出中...';
-
-      try{
-        if(SCRIPT_URL){
-          await fetch(SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(entry)
-          });
-        }
-        document.getElementById('rsvpForm').style.display = 'none';
-        document.getElementById('thankYou').style.display = 'block';
-      }catch(err){
-        console.error(err);
-        alert('送出時發生問題，請稍後再試一次。');
-        btn.disabled = false;
-        btn.textContent = '確認送出';
-      }
-    }
-    window.submitRSVP = submitRSVP;
   </script>
 </body>
 </html>
