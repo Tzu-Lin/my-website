@@ -921,6 +921,7 @@
     #sgMap svg{ width: 100%; height: auto; display: block; }
     #sgMap .stage rect{ fill: rgba(232,208,140,.16); stroke: rgba(232,208,140,.6); stroke-width: 1; }
     #sgMap .carpet{ fill: rgba(197,155,71,.28); stroke: rgba(232,208,140,.45); stroke-width: 1; }
+    #sgMap .dir{ fill: none; stroke: var(--gold-light); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: .9; }
     #sgMap .vlabel{ fill: var(--gold-light); opacity: .6; font-size: 20px; text-anchor: middle; dominant-baseline: central; font-family: 'Noto Serif TC', serif; }
     .tbl .chair{ fill: rgba(255,255,255,.18); transition: fill .4s; }
     .tbl.on .chair{ fill: var(--gold-light); }
@@ -1351,6 +1352,9 @@
         let svg = '<svg viewBox="' + v.join(' ') + '" xmlns="http://www.w3.org/2000/svg">';
         // 進場路線：畫成一個 L 形整體，不會有重疊
         svg += '<path class="carpet" d="M460 190 H687 V765 H633 V222 H460 Z" stroke-linejoin="round"/>';
+        // 方向箭頭：從入口往右，再沿著路線往舞台方向走
+        [[520,206],[590,206]].forEach(a => { svg += '<polyline class="dir" points="'+(a[0]-3)+','+(a[1]-5)+' '+(a[0]+3)+','+a[1]+' '+(a[0]-3)+','+(a[1]+5)+'"/>'; });
+[290,350,600,660,720].forEach(y => { svg += '<polyline class="dir" points="655,'+(y-3)+' 660,'+(y+3)+' 665,'+(y-3)+'"/>'; });
         svg += '<text class="vlabel" x="660" y="0">' + ['進','場','路','線'].map((c,i)=>'<tspan x="660" y="'+(427+i*34)+'">'+c+'</tspan>').join('') + '</text>';
         const st = L.stage;
         svg += '<g class="stage"><rect x="'+st.x+'" y="'+st.y+'" width="'+st.w+'" height="'+st.h+'" rx="8"/>' +
