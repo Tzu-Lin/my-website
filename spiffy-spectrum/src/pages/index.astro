@@ -1434,12 +1434,51 @@
         search();
       }
 
-      // 優先使用網頁內嵌的資料（不需要另外下載），沒有才改用 fetch
+      // ===== 用手機更新座位：Google 試算表 =====
+      // 把「發佈到網路」的 CSV 連結貼在下面的引號中間，賓客名單就會改讀試算表（改完約幾分鐘內生效）。
+      // 留空、或試算表讀不到時，會自動使用下面網頁內嵌的名單，所以不會壞掉。
+      const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSUc2Av7DJUcK0mTRrwwhZs-klzz_fOJEoRaP7c143h510nBBJ_n83cKApSnSXOZ-LcJxjaQb0e7HIr/pub?gid=2014131562&single=true&output=csv';
+
+      function parseCSV(text){
+        const rows = []; let row = [], cur = '', q = false;
+        text = text.replace(/^\uFEFF/, '');
+        for (let i = 0; i < text.length; i++) {
+          const c = text[i];
+          if (q) {
+            if (c === '"') { if (text[i+1] === '"') { cur += '"'; i++; } else q = false; }
+            else cur += c;
+          } else if (c === '"') q = true;
+          else if (c === ',') { row.push(cur); cur = ''; }
+          else if (c === '\n' || c === '\r') {
+            if (c === '\r' && text[i+1] === '\n') i++;
+            row.push(cur); cur = ''; rows.push(row); row = [];
+          } else cur += c;
+        }
+        if (cur !== '' || row.length) { row.push(cur); rows.push(row); }
+        return rows;
+      }
+      function guestsFromCSV(text){
+        const out = [];
+        parseCSV(text).forEach((r, i) => {
+          const name = (r[0] || '').trim();
+          let table = (r[1] || '').trim().replace(/^第\s*/, '').replace(/\s*桌$/, '');
+          if (!name || !table) return;
+          if (i === 0 && /姓名|name/i.test(name)) return;   // 跳過標題列
+          if (table === '主') table = '主桌';
+          const g = { name: name, table: table };
+          const alias = (r[2] || '').split(/[、,，\s]+/).map(a => a.trim()).filter(Boolean);
+          if (alias.length) g.alias = alias;
+          out.push(g);
+        });
+        return out;
+      }
+
+      // 先用網頁內嵌的資料立刻顯示，再嘗試用試算表更新
       let embedded = null;
       try { embedded = JSON.parse(document.getElementById('seatData').textContent); } catch (e) { console.warn('[座位查詢] 內嵌資料讀取失敗', e); }
       if (embedded) {
         apply(embedded, '內嵌');
-      } else {
+      } else if (!SHEET_CSV_URL) {
         fetch('/seats.json', { cache: 'no-store' }).then(r => {
           if (!r.ok) throw new Error('seats.json HTTP ' + r.status);
           return r.json();
@@ -1447,6 +1486,22 @@
           console.error('[座位查詢] 載入 seats.json 失敗：', err);
           note('載入失敗：' + err.message);
           listEl.innerHTML = '<p class="sg-msg">座位資料載入失敗，請稍後再試或洽現場接待人員</p>';
+        });
+      }
+      if (SHEET_CSV_URL) {
+        const sep = SHEET_CSV_URL.indexOf('?') > -1 ? '&' : '?';
+        fetch(SHEET_CSV_URL + sep + 't=' + Date.now(), { cache: 'no-store' }).then(r => {
+          if (!r.ok) throw new Error('試算表 HTTP ' + r.status);
+          return r.text();
+        }).then(text => {
+          const list = guestsFromCSV(text);
+          if (!list.length) throw new Error('試算表沒有讀到任何賓客');
+          guests = list;
+          note('資料來源：Google 試算表，賓客 ' + guests.length + ' 筆');
+          search();
+        }).catch(err => {
+          console.warn('[座位查詢] 試算表讀取失敗，改用內嵌名單：', err);
+          note('試算表讀取失敗，使用內嵌名單：' + err.message);
         });
       }
     })();
