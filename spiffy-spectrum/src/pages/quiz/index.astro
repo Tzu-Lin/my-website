@@ -1,0 +1,456 @@
+---
+// src/pages/quiz/index.astro — 賓客手機作答頁（掃 QR code 進來）
+---
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <title>婚禮問答 · 唐靖軒 &amp; 林子瑜</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate icon" href="/favicon.ico">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+TC:wght@300;400;600;700&family=LXGW+WenKai+TC&display=swap" rel="stylesheet">
+
+  <!-- is:global：畫面是用程式動態產生的，必須用全域樣式才會生效 -->
+  <style is:global>
+    :root{
+      --dusk-gold:#C59B47;
+      --gold-light:#E8D08C;
+      --ink-navy:#0B191F;
+      --sand:#F3EEE3;
+      --ok:#8fdcaa;
+      --bad:#f0a39a;
+    }
+    *{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+    body{
+      min-height:100vh; min-height:100dvh;
+      background: linear-gradient(160deg,#223C3E 0%,#2A4A4D 40%,#375D5D 100%);
+      background-attachment: fixed;
+      color: var(--sand);
+      font-family:'Noto Serif TC', serif;
+      font-weight:400;
+      letter-spacing:0.03em;
+      overflow-x:hidden;
+    }
+    .wrap{ max-width:520px; margin:0 auto; padding:1.6rem 1.1rem calc(3rem + env(safe-area-inset-bottom)); }
+
+    .brand{ text-align:center; margin-bottom:1.3rem; }
+    .title-en{ font-family:'Parisienne', cursive; font-size:2.1rem; color:var(--gold-light); line-height:1.1; display:block; }
+    .title-zh{ font-family:'Cormorant Garamond', serif; font-size:0.72rem; letter-spacing:0.5em; color:var(--gold-light); opacity:0.85; margin-top:0.35rem; display:block; }
+
+    .card{
+      border:1px dashed rgba(232,208,140,0.6);
+      background:rgba(11,25,31,0.35);
+      padding:1.6rem 1.2rem;
+      margin-bottom:1rem;
+    }
+    .center{ text-align:center; }
+    .lead{ font-family:'LXGW WenKai TC','Noto Serif TC',serif; font-size:1.1rem; line-height:2; }
+    .hi{ font-size:1.25rem; color:var(--gold-light); margin-bottom:0.4rem; }
+    .small{ font-size:0.8rem; opacity:0.7; margin-top:0.8rem; }
+    .linkbtn{ appearance:none; background:none; border:0; color:var(--gold-light); font:inherit; font-size:0.8rem; text-decoration:underline; cursor:pointer; margin-top:0.8rem; }
+
+    input#nameInput{
+      width:100%; margin:1rem 0 0.5rem; padding:0.9rem 1rem; font:inherit; font-size:1.05rem;
+      color:var(--ink-navy); background:#FFFDF8; border:1px solid var(--dusk-gold); border-radius:10px;
+      -webkit-user-select:text; user-select:text; text-align:center;
+    }
+    .err{ min-height:1.3em; font-size:0.85rem; color:var(--bad); margin-bottom:0.6rem; }
+    .btn{
+      appearance:none; border:1px solid var(--dusk-gold);
+      background:var(--dusk-gold); color:var(--ink-navy);
+      font-family:inherit; font-weight:700; font-size:1.05rem; letter-spacing:0.12em;
+      padding:0.85rem 2.4rem; cursor:pointer; border-radius:999px;
+    }
+    .btn:active{ transform:scale(0.97); }
+    .btn[disabled]{ opacity:0.55; }
+
+    .qhead{ display:flex; align-items:center; justify-content:space-between; gap:0.6rem; font-size:0.85rem; color:var(--gold-light); margin-bottom:0.7rem; letter-spacing:0.1em; }
+    .tag{ font-size:0.72rem; border:1px solid rgba(232,208,140,0.6); border-radius:999px; padding:0.15rem 0.7rem; }
+
+    .timer{ display:flex; align-items:center; gap:0.8rem; margin-bottom:1.1rem; }
+    .tbar{ flex:1; height:8px; background:rgba(255,255,255,0.15); border-radius:4px; overflow:hidden; }
+    .tbar > i{ display:block; height:100%; width:100%; background:var(--gold-light); transition:width .25s linear; }
+    .tbar.warn > i{ background:var(--bad); }
+    #tnum{ font-family:'Cormorant Garamond', serif; font-size:1.8rem; min-width:2.2rem; text-align:right; }
+
+    .qtext{ font-size:1.35rem; line-height:1.7; font-weight:600; margin-bottom:1.1rem; }
+
+    .opts{ display:grid; gap:0.7rem; }
+    .opt{
+      appearance:none; width:100%; text-align:left; cursor:pointer; font:inherit; font-size:1.1rem;
+      color:var(--sand); background:rgba(11,25,31,0.45); border:1px solid rgba(232,208,140,0.7);
+      border-radius:14px; padding:0.95rem 1rem; min-height:62px;
+      display:flex; align-items:center; gap:0.85rem;
+    }
+    .opt:active{ transform:scale(0.98); }
+    .opt[disabled]{ cursor:default; }
+    .opt.picked{ background:var(--dusk-gold); color:var(--ink-navy); border-color:var(--dusk-gold); font-weight:700; }
+    .opt.dim{ opacity:0.4; }
+    .letter{
+      flex:none; width:2rem; height:2rem; border-radius:50%; display:grid; place-items:center;
+      border:1px solid currentColor; font-family:'Cormorant Garamond', serif; font-size:1.05rem; font-weight:600;
+    }
+
+    .status{ margin-top:1.1rem; text-align:center; font-size:0.95rem; opacity:0.9; min-height:1.5em; }
+    .banner{ text-align:center; color:var(--gold-light); margin-bottom:0.9rem; font-size:1rem; letter-spacing:0.15em; }
+
+    .bars{ display:grid; gap:0.6rem; }
+    .bar-row{
+      position:relative; overflow:hidden; border-radius:12px;
+      border:1px solid rgba(232,208,140,0.5); background:rgba(11,25,31,0.45);
+    }
+    .bar-row .fill{ position:absolute; inset:0 auto 0 0; width:0; background:rgba(232,208,140,0.28); transition:width .6s ease; }
+    .bar-row .row-in{ position:relative; display:flex; align-items:center; gap:0.7rem; padding:0.75rem 0.9rem; }
+    .bar-row .otext{ flex:1; font-size:1rem; line-height:1.4; }
+    .bar-row .cnt{ flex:none; font-size:0.8rem; opacity:0.85; text-align:right; }
+    .bar-row.picked{ border-color:var(--gold-light); border-width:2px; }
+    .bar-row .mark{ flex:none; font-size:0.78rem; padding:0.1rem 0.55rem; border-radius:999px; border:1px solid currentColor; }
+    .bar-row.correct{ border-color:var(--ok); }
+    .bar-row.correct .fill{ background:rgba(143,220,170,0.3); }
+    .bar-row.correct .mark{ color:var(--ok); }
+    .bar-row.half{ border-color:var(--gold-light); }
+    .bar-row.half .mark{ color:var(--gold-light); }
+    .bar-row.wrong{ opacity:0.55; }
+
+    .result{ margin-top:1.1rem; text-align:center; }
+    .result .big{ font-family:'Cormorant Garamond', serif; font-size:2.4rem; color:var(--gold-light); line-height:1.2; }
+    .result .gain{ font-size:1.05rem; margin-bottom:0.2rem; }
+    .result.good .gain{ color:var(--ok); }
+
+    .top{ list-style:none; display:grid; gap:0.5rem; margin-top:0.6rem; }
+    .top li{ display:flex; align-items:center; gap:0.7rem; padding:0.6rem 0.9rem; border:1px solid rgba(232,208,140,0.35); border-radius:12px; background:rgba(11,25,31,0.35); }
+    .top .rk{ flex:none; width:2rem; text-align:center; font-family:'Cormorant Garamond', serif; font-size:1.2rem; color:var(--gold-light); }
+    .top .nm{ flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .top .sc{ flex:none; font-size:0.9rem; opacity:0.9; }
+    .top li.me{ border-color:var(--gold-light); background:rgba(232,208,140,0.15); }
+    .sub-title{ margin-top:1.3rem; font-size:0.85rem; color:var(--gold-light); letter-spacing:0.2em; text-align:center; }
+
+    .net{ position:fixed; left:50%; bottom:calc(14px + env(safe-area-inset-bottom)); transform:translateX(-50%);
+      background:rgba(5,12,15,0.9); color:#fff; font-size:0.82rem; padding:0.5rem 1rem; border-radius:999px; z-index:10; }
+    .net[hidden]{ display:none; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="brand">
+      <span class="title-en">Wedding Quiz</span>
+      <span class="title-zh">婚禮問答</span>
+    </header>
+    <section id="screen" aria-live="polite">
+      <div class="card center"><p class="lead">連線中…</p></div>
+    </section>
+  </main>
+  <p id="net" class="net" hidden></p>
+
+  <script>
+    type Q = { text: string; options: string[]; practice: boolean; duration: number };
+    type Row = { name: string; score: number; rank: number };
+    type State = {
+      gid: string; phase: 'lobby' | 'open' | 'closed' | 'reveal' | 'final';
+      total: number; playerCount: number; q?: number; startedAt?: number; endsAt?: number;
+      question?: Q; counts?: number[]; answered?: number; points?: number[]; top?: Row[];
+    };
+    type Me = { joined: boolean; name?: string; gid?: string; score?: number; rank?: number; playerCount?: number; q?: number; answer?: number | null };
+
+    const screenEl = document.getElementById('screen')!;
+    const netEl = document.getElementById('net')!;
+    const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+    const lsGet = (k: string) => { try { return localStorage.getItem(k); } catch { return null; } };
+    const lsSet = (k: string, v: string) => { try { localStorage.setItem(k, v); } catch {} };
+
+    const esc = (s: unknown) =>
+      String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string));
+    const fmt = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
+
+    let pid = lsGet('quizPid') || '';
+    let myName = lsGet('quizName') || '';
+    let joined = false;
+    let editingName = false;
+    let S: State | null = null;
+    let me: Me | null = null;
+    let myAnswer: number | null = null;
+    let answerQ = -1;
+    let missed = false;
+    let localClosed = false;
+    let joinError = '';
+    let offset = 0;
+    let lastKey = '';
+    let netTimer = 0;
+
+    const serverNow = () => Date.now() + offset;
+
+    function setNet(msg: string, ms = 0) {
+      netEl.textContent = msg;
+      netEl.hidden = !msg;
+      clearTimeout(netTimer);
+      if (msg && ms) netTimer = window.setTimeout(() => setNet(''), ms);
+    }
+
+    // ---- 校正手機和伺服器的時間差，倒數才準 ----
+    async function syncClock(rounds = 3) {
+      let best = Infinity;
+      for (let i = 0; i < rounds; i++) {
+        const t0 = Date.now();
+        try {
+          const r = await fetch('/api/quiz/time', { cache: 'no-store' });
+          const j = await r.json();
+          const t1 = Date.now();
+          const rtt = t1 - t0;
+          if (rtt < best) { best = rtt; offset = j.now + rtt / 2 - t1; }
+        } catch {}
+      }
+    }
+
+    async function fetchMe() {
+      if (!pid) { joined = false; me = null; return; }
+      try {
+        const r = await fetch('/api/quiz/me?pid=' + encodeURIComponent(pid), { cache: 'no-store' });
+        const j: Me = await r.json();
+        me = j;
+        joined = !!j.joined;
+        if (j.joined) {
+          if (j.name) { myName = j.name; lsSet('quizName', j.name); }
+          if (j.answer !== null && j.answer !== undefined && j.q !== undefined) { myAnswer = j.answer; answerQ = j.q; }
+        }
+      } catch {}
+    }
+
+    // ---- 加入 / 作答 ----
+    async function join(name: string) {
+      joinError = '';
+      try {
+        const r = await fetch('/api/quiz/join', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, pid }),
+        });
+        const j = await r.json();
+        if (!r.ok || !j.ok) { joinError = j.error || '加入失敗，請再試一次'; draw(true); return; }
+        pid = j.pid; myName = j.name;
+        lsSet('quizPid', pid); lsSet('quizName', myName);
+        editingName = false;
+        await fetchMe();
+        draw(true);
+      } catch {
+        joinError = '網路不穩，請再試一次';
+        draw(true);
+      }
+    }
+
+    async function pick(i: number) {
+      if (!S || S.phase !== 'open' || myAnswer !== null || localClosed) return;
+      const q = S.q as number;
+      myAnswer = i; answerQ = q; missed = false;
+      draw();
+      try {
+        const r = await fetch('/api/quiz/answer', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pid, q, option: i }),
+        });
+        const j = await r.json().catch(() => ({}));
+        if (r.ok && j.ok) return;
+        if (r.ok && j.already) { myAnswer = j.option; draw(); return; }
+        if (r.status === 404) { joined = false; myAnswer = null; answerQ = -1; draw(true); return; }
+        if (r.status === 409) { myAnswer = null; answerQ = -1; missed = true; draw(); return; }
+        throw new Error('bad');
+      } catch {
+        myAnswer = null; answerQ = -1;
+        setNet('網路不穩，請再點一次', 3000);
+        draw();
+      }
+    }
+
+    // ---- 畫面 ----
+    function barsHtml(s: State, reveal: boolean) {
+      const q = s.question!;
+      const counts = s.counts || q.options.map(() => 0);
+      const total = counts.reduce((a, b) => a + b, 0);
+      return '<div class="bars">' + q.options.map((o, i) => {
+        const pct = total ? Math.round((counts[i] / total) * 100) : 0;
+        let cls = 'bar-row';
+        let mark = '';
+        if (myAnswer === i && answerQ === s.q) cls += ' picked';
+        if (reveal && s.points) {
+          const p = s.points[i] ?? 0;
+          if (p >= 1) { cls += ' correct'; mark = '<span class="mark">✓ 得 ' + fmt(p) + ' 分</span>'; }
+          else if (p > 0) { cls += ' half'; mark = '<span class="mark">得 ' + fmt(p) + ' 分</span>'; }
+          else cls += ' wrong';
+        }
+        return '<div class="' + cls + '"><div class="fill" style="width:' + pct + '%"></div><div class="row-in">' +
+          '<span class="letter">' + LETTERS[i] + '</span><span class="otext">' + esc(o) + '</span>' + mark +
+          '<span class="cnt">' + counts[i] + ' 人<br>' + pct + '%</span></div></div>';
+      }).join('') + '</div>';
+    }
+
+    function topHtml(rows: Row[], title: string) {
+      if (!rows.length) return '';
+      return '<p class="sub-title">' + title + '</p><ol class="top">' + rows.map((r) => {
+        const medal = r.rank === 1 ? '🥇' : r.rank === 2 ? '🥈' : r.rank === 3 ? '🥉' : String(r.rank);
+        const mine = me && me.joined && r.name === myName ? ' me' : '';
+        return '<li class="' + mine.trim() + '"><span class="rk">' + medal + '</span><span class="nm">' + esc(r.name) + '</span><span class="sc">' + fmt(r.score) + ' 分</span></li>';
+      }).join('') + '</ol>';
+    }
+
+    function head(s: State) {
+      const q = s.question!;
+      return '<div class="qhead"><span>第 ' + ((s.q as number) + 1) + ' / ' + s.total + ' 題</span>' +
+        (q.practice ? '<span class="tag">暖身題・不計分</span>' : '') + '</div>';
+    }
+
+    function viewHtml(view: string): string {
+      const s = S as State;
+      if (view === 'join') {
+        return '<div class="card center"><p class="lead">輸入暱稱就能一起玩 ♡</p>' +
+          '<input id="nameInput" maxlength="12" autocomplete="off" placeholder="你的暱稱（最多 12 字）" value="' + esc(myName) + '">' +
+          '<p class="err">' + esc(joinError) + '</p><button id="joinBtn" class="btn" type="button">加入遊戲</button></div>';
+      }
+      if (view === 'lobby') {
+        return '<div class="card center"><p class="hi">嗨，' + esc(myName) + '！</p>' +
+          '<p class="lead">已經加入囉～<br>等主持人開始第一題</p>' +
+          '<p class="small">目前 ' + s.playerCount + ' 人在線上</p>' +
+          '<button id="renameBtn" class="linkbtn" type="button">換暱稱</button></div>';
+      }
+      if (view === 'open' && s.question) {
+        const q = s.question;
+        const locked = myAnswer !== null || localClosed;
+        let status = '點選你的答案';
+        if (myAnswer !== null) status = '已送出！等時間到揭曉 ✓';
+        else if (missed) status = '來不及了，這題沒計到';
+        else if (localClosed) status = '時間到！統計中…';
+        return head(s) +
+          '<div class="timer"><div class="tbar" id="tbarWrap"><i id="tbar"></i></div><b id="tnum"></b></div>' +
+          '<h2 class="qtext">' + esc(q.text) + '</h2><div class="opts">' +
+          q.options.map((o, i) => {
+            let cls = 'opt';
+            if (myAnswer === i) cls += ' picked'; else if (myAnswer !== null) cls += ' dim';
+            return '<button type="button" class="' + cls + '" data-i="' + i + '"' + (locked ? ' disabled' : '') + '>' +
+              '<span class="letter">' + LETTERS[i] + '</span><span>' + esc(o) + '</span></button>';
+          }).join('') + '</div><p class="status">' + status + '</p>';
+      }
+      if (view === 'closed' && s.question) {
+        return head(s) + '<h2 class="qtext">' + esc(s.question.text) + '</h2>' +
+          '<p class="banner">時間到！大家是這樣選的</p>' + barsHtml(s, false) +
+          '<p class="status">' + (myAnswer === null ? '這題你沒有作答 · ' : '') + '等主持人公布答案…</p>';
+      }
+      if (view === 'reveal' && s.question) {
+        const q = s.question;
+        const pts = myAnswer !== null && s.points ? (s.points[myAnswer] ?? 0) : 0;
+        let result = '';
+        if (q.practice) {
+          result = '<div class="result"><p class="gain">暖身題，不計分</p></div>';
+        } else {
+          const gain = myAnswer === null ? '這題沒作答，+0 分' : '這題 +' + fmt(pts) + ' 分';
+          result = '<div class="result' + (pts > 0 ? ' good' : '') + '"><p class="gain">' + gain + '</p>' +
+            (me && me.joined ? '<p class="big">' + fmt(me.score ?? 0) + ' 分</p><p>目前第 ' + (me.rank ?? '-') + ' 名 / ' + (me.playerCount ?? s.playerCount) + ' 人</p>' : '') +
+            '</div>';
+        }
+        return head(s) + '<h2 class="qtext">' + esc(q.text) + '</h2>' + barsHtml(s, true) + result +
+          (q.practice ? '' : topHtml(s.top || [], '目前前五名'));
+      }
+      if (view === 'final') {
+        const mine = me && me.joined
+          ? '<div class="card center"><p class="lead">遊戲結束，謝謝大家！</p><p class="big" style="font-family:\'Cormorant Garamond\',serif;font-size:2.4rem;color:var(--gold-light)">第 ' +
+            (me.rank ?? '-') + ' 名</p><p>' + fmt(me.score ?? 0) + ' 分</p></div>'
+          : '<div class="card center"><p class="lead">遊戲結束，謝謝大家！</p></div>';
+        return mine + topHtml(s.top || [], '前十名');
+      }
+      return '<div class="card center"><p class="lead">連線中…</p></div>';
+    }
+
+    function draw(force = false) {
+      if (!S) return;
+      const view = !pid || !joined || editingName ? 'join' : S.phase;
+      const key = view === 'join'
+        ? JSON.stringify(['join', joinError])
+        : JSON.stringify([view, S.gid, S.q, S.counts, S.points, S.top, myAnswer, answerQ, missed, localClosed,
+            me && [me.score, me.rank, me.playerCount], view === 'lobby' ? S.playerCount : 0]);
+      if (!force && key === lastKey) return;
+      lastKey = key;
+      screenEl.innerHTML = viewHtml(view);
+
+      if (view === 'join') {
+        const input = document.getElementById('nameInput') as HTMLInputElement;
+        const go = () => { const v = input.value.trim(); if (!v) { joinError = '請輸入暱稱'; draw(true); return; } (document.getElementById('joinBtn') as HTMLButtonElement).disabled = true; join(v); };
+        document.getElementById('joinBtn')!.addEventListener('click', go);
+        input.addEventListener('keydown', (e) => { if ((e as KeyboardEvent).key === 'Enter') go(); });
+      } else if (view === 'lobby') {
+        document.getElementById('renameBtn')!.addEventListener('click', () => { editingName = true; draw(true); });
+      } else if (view === 'open') {
+        screenEl.querySelectorAll<HTMLButtonElement>('.opt').forEach((b) =>
+          b.addEventListener('click', () => pick(Number(b.dataset.i))));
+        tick();
+      }
+    }
+
+    // ---- 倒數 ----
+    function tick() {
+      if (!S || S.phase !== 'open' || !joined) return;
+      const rem = (S.endsAt as number) - serverNow();
+      const dur = (S.question as Q).duration * 1000;
+      const numEl = document.getElementById('tnum');
+      const barEl = document.getElementById('tbar');
+      const wrapEl = document.getElementById('tbarWrap');
+      if (numEl) numEl.textContent = String(Math.max(0, Math.ceil(rem / 1000)));
+      if (barEl) barEl.style.width = Math.max(0, Math.min(100, (rem / dur) * 100)) + '%';
+      if (wrapEl) wrapEl.classList.toggle('warn', rem <= 5000);
+      if (rem <= 0 && !localClosed) {
+        localClosed = true;
+        draw();
+        window.setTimeout(poll, 300);
+      }
+    }
+    window.setInterval(tick, 250);
+
+    // ---- 輪詢進度 ----
+    function handleState(ns: State) {
+      const prev = S;
+      S = ns;
+      const changed = !prev || prev.phase !== ns.phase || prev.q !== ns.q;
+
+      if (prev && prev.gid !== ns.gid) {
+        myAnswer = null; answerQ = -1; missed = false; localClosed = false; joined = false; me = null;
+        fetchMe().then(() => draw(true));
+      }
+      if (changed) {
+        if (ns.phase === 'open') {
+          if (answerQ !== ns.q) { myAnswer = null; missed = false; }
+          localClosed = false;
+        }
+        if (joined && (ns.phase === 'reveal' || ns.phase === 'final')) {
+          fetchMe().then(() => draw());
+        }
+      }
+      draw();
+    }
+
+    let pollTimer = 0;
+    async function poll() {
+      clearTimeout(pollTimer);
+      try {
+        const r = await fetch('/api/quiz/state', { cache: 'no-store' });
+        if (!r.ok) throw new Error(String(r.status));
+        handleState(await r.json());
+        setNet('');
+      } catch {
+        setNet('連線不穩，重新連線中…');
+      }
+      // 加一點隨機，避免 100 個人同一瞬間一起來問
+      pollTimer = window.setTimeout(poll, 1500 + Math.random() * 500);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') { syncClock(1); poll(); }
+    });
+
+    (async () => {
+      await Promise.all([syncClock(), fetchMe()]);
+      await poll();
+      window.setInterval(() => syncClock(1), 60000);
+    })();
+  </script>
+</body>
+</html>

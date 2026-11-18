@@ -1,0 +1,394 @@
+---
+// src/pages/quiz/host.astro — 主持人頁：大螢幕顯示 + 控制按鈕（需要 ADMIN_PASSWORD）
+---
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>主持人 · 婚禮問答</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+TC:wght@300;400;600;700&family=LXGW+WenKai+TC&display=swap" rel="stylesheet">
+
+  <style is:global>
+    :root{
+      --dusk-gold:#C59B47;
+      --gold-light:#E8D08C;
+      --ink-navy:#0B191F;
+      --sand:#F3EEE3;
+      --ok:#8fdcaa;
+      --bad:#f0a39a;
+    }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    html,body{ height:100%; }
+    body{
+      background: linear-gradient(160deg,#1c3335 0%,#2A4A4D 45%,#375D5D 100%);
+      background-attachment: fixed;
+      color: var(--sand);
+      font-family:'Noto Serif TC', serif;
+      font-weight:400;
+      letter-spacing:0.03em;
+      overflow-x:hidden;
+    }
+    [hidden]{ display:none !important; }
+
+    /* 登入 */
+    .login{ min-height:100vh; display:grid; place-items:center; padding:1.5rem; }
+    .login-card{ width:100%; max-width:380px; text-align:center; border:1px dashed rgba(232,208,140,0.6); background:rgba(11,25,31,0.4); padding:2rem 1.5rem; }
+    .login-card h1{ font-family:'Parisienne', cursive; font-weight:400; font-size:2.2rem; color:var(--gold-light); margin-bottom:0.3rem; }
+    .login-card p.sub{ font-size:0.85rem; opacity:0.75; margin-bottom:1.2rem; }
+    .login-card input{ width:100%; padding:0.85rem 1rem; font:inherit; font-size:1rem; border-radius:10px; border:1px solid var(--dusk-gold); background:#FFFDF8; color:var(--ink-navy); text-align:center; }
+    .login-card .err{ min-height:1.4em; margin:0.6rem 0; font-size:0.85rem; color:var(--bad); }
+
+    .btn{
+      appearance:none; border:1px solid var(--dusk-gold); background:var(--dusk-gold); color:var(--ink-navy);
+      font-family:inherit; font-weight:700; letter-spacing:0.12em; cursor:pointer; border-radius:999px;
+      padding:0.85rem 2.2rem; font-size:1.05rem;
+    }
+    .btn:active{ transform:scale(0.97); }
+    .btn[disabled]{ opacity:0.5; cursor:default; }
+    .btn.ghost{ background:transparent; color:var(--sand); border-color:rgba(255,255,255,0.45); font-weight:400; font-size:0.9rem; padding:0.7rem 1.3rem; letter-spacing:0.08em; }
+    .btn.ghost:hover{ background:rgba(255,255,255,0.1); }
+
+    /* 主畫面 */
+    #app{ min-height:100vh; display:flex; flex-direction:column; }
+    .top{ display:flex; justify-content:space-between; align-items:baseline; padding:1rem 1.6rem; }
+    .top .t{ font-family:'Parisienne', cursive; font-size:1.8rem; color:var(--gold-light); }
+    .top .i{ font-size:0.95rem; opacity:0.8; }
+
+    .stage{ flex:1; width:100%; max-width:1100px; margin:0 auto; padding:0.5rem 1.6rem 7.5rem; }
+
+    .qhead{ display:flex; align-items:center; gap:1rem; color:var(--gold-light); letter-spacing:0.15em; font-size:clamp(1rem, 2vw, 1.4rem); margin-bottom:0.8rem; }
+    .tag{ font-size:0.8em; border:1px solid rgba(232,208,140,0.6); border-radius:999px; padding:0.1rem 0.9rem; }
+    .qtext{ font-size:clamp(1.8rem, 4.6vw, 3.4rem); line-height:1.5; font-weight:700; margin-bottom:1.4rem; }
+
+    .timer{ display:flex; align-items:center; gap:1.2rem; margin-bottom:1.4rem; }
+    .tbar{ flex:1; height:14px; background:rgba(255,255,255,0.15); border-radius:7px; overflow:hidden; }
+    .tbar > i{ display:block; height:100%; width:100%; background:var(--gold-light); }
+    .tbar.warn > i{ background:var(--bad); }
+    #hnum{ font-family:'Cormorant Garamond', serif; font-size:clamp(2.6rem, 6vw, 4.6rem); min-width:1.6em; text-align:right; line-height:1; }
+
+    .opts{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:1rem; }
+    @media (max-width:700px){ .opts{ grid-template-columns:1fr; } }
+    .opt{ display:flex; align-items:center; gap:1rem; padding:1.1rem 1.3rem; border:1px solid rgba(232,208,140,0.7); background:rgba(11,25,31,0.45); border-radius:16px; font-size:clamp(1.2rem, 2.6vw, 2rem); }
+    .letter{ flex:none; width:2.2em; height:2.2em; border-radius:50%; display:grid; place-items:center; border:1px solid currentColor; font-family:'Cormorant Garamond', serif; font-weight:600; font-size:0.8em; }
+
+    .answered{ margin-top:1.4rem; font-size:clamp(1rem, 2vw, 1.5rem); color:var(--gold-light); }
+    .answered .pbar{ margin-top:0.5rem; height:8px; background:rgba(255,255,255,0.15); border-radius:4px; overflow:hidden; }
+    .answered .pbar > i{ display:block; height:100%; background:var(--gold-light); transition:width .4s ease; }
+
+    .banner{ color:var(--gold-light); font-size:clamp(1.1rem, 2.4vw, 1.8rem); letter-spacing:0.2em; margin-bottom:1rem; }
+    .bars{ display:grid; gap:0.9rem; }
+    .bar-row{ position:relative; overflow:hidden; border-radius:16px; border:1px solid rgba(232,208,140,0.5); background:rgba(11,25,31,0.45); }
+    .bar-row .fill{ position:absolute; inset:0 auto 0 0; width:0; background:rgba(232,208,140,0.3); transition:width .8s ease; }
+    .bar-row .row-in{ position:relative; display:flex; align-items:center; gap:1rem; padding:1rem 1.3rem; font-size:clamp(1.1rem, 2.4vw, 1.9rem); }
+    .bar-row .otext{ flex:1; }
+    .bar-row .cnt{ flex:none; text-align:right; font-size:0.8em; }
+    .bar-row .cnt b{ font-size:1.25em; font-weight:700; }
+    .bar-row .mark{ flex:none; font-size:0.65em; padding:0.1rem 0.8rem; border-radius:999px; border:1px solid currentColor; }
+    .bar-row.correct{ border-color:var(--ok); border-width:2px; }
+    .bar-row.correct .fill{ background:rgba(143,220,170,0.33); }
+    .bar-row.correct .mark{ color:var(--ok); }
+    .bar-row.half{ border-color:var(--gold-light); border-width:2px; }
+    .bar-row.half .mark{ color:var(--gold-light); }
+    .bar-row.wrong{ opacity:0.5; }
+
+    .lobby{ display:grid; grid-template-columns:auto 1fr; gap:2.5rem; align-items:center; padding-top:1rem; }
+    @media (max-width:760px){ .lobby{ grid-template-columns:1fr; justify-items:center; text-align:center; } }
+    .qrbox{ background:#FFFDF8; padding:14px; border-radius:16px; line-height:0; }
+    .lobby h1{ font-family:'Parisienne', cursive; font-weight:400; font-size:clamp(2.6rem, 6vw, 4.6rem); color:var(--gold-light); line-height:1.1; }
+    .lobby .zh{ letter-spacing:0.5em; font-size:0.9rem; opacity:0.8; margin:0.3rem 0 1.2rem; }
+    .lobby .lead{ font-family:'LXGW WenKai TC','Noto Serif TC',serif; font-size:clamp(1.2rem, 2.6vw, 1.9rem); line-height:1.9; }
+    .lobby .url{ margin-top:0.8rem; font-size:0.95rem; opacity:0.8; word-break:break-all; }
+    .lobby .count{ margin-top:1rem; font-size:clamp(1.3rem, 3vw, 2.2rem); color:var(--gold-light); }
+    .lobby .warn{ margin-top:0.8rem; font-size:0.85rem; color:var(--bad); }
+
+    .top-list{ list-style:none; display:grid; gap:0.7rem; margin-top:0.8rem; }
+    .top-list li{ display:flex; align-items:center; gap:1.1rem; padding:0.8rem 1.3rem; border:1px solid rgba(232,208,140,0.4); border-radius:14px; background:rgba(11,25,31,0.4); font-size:clamp(1.1rem, 2.4vw, 1.9rem); }
+    .top-list .rk{ flex:none; width:2.2em; text-align:center; font-family:'Cormorant Garamond', serif; color:var(--gold-light); }
+    .top-list .nm{ flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .top-list .sc{ flex:none; font-size:0.85em; opacity:0.9; }
+    .top-list li.first{ border-color:var(--gold-light); background:rgba(232,208,140,0.15); }
+    .sub-title{ margin-top:1.6rem; color:var(--gold-light); letter-spacing:0.25em; font-size:clamp(1rem, 2vw, 1.4rem); }
+    .final-title{ font-family:'Parisienne', cursive; font-size:clamp(2.4rem, 5.5vw, 4rem); color:var(--gold-light); }
+
+    .ctrl{ position:fixed; left:0; right:0; bottom:0; display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;
+      padding:0.9rem 1.6rem; background:rgba(5,12,15,0.92); border-top:1px solid rgba(232,208,140,0.4); }
+    #ctrlInfo{ font-size:0.95rem; opacity:0.85; }
+    .ctrl-btns{ display:flex; gap:0.8rem; align-items:center; }
+    .msg{ position:fixed; top:14px; left:50%; transform:translateX(-50%); background:rgba(120,40,40,0.95); color:#fff; padding:0.6rem 1.2rem; border-radius:999px; font-size:0.9rem; z-index:20; }
+  </style>
+</head>
+<body>
+  <div id="login" class="login" hidden>
+    <form id="loginForm" class="login-card">
+      <h1>Host</h1>
+      <p class="sub">主持人頁面，請輸入管理密碼</p>
+      <input id="pw" type="password" autocomplete="current-password" placeholder="管理密碼">
+      <p id="loginErr" class="err"></p>
+      <button class="btn" type="submit">進入</button>
+    </form>
+  </div>
+
+  <div id="app" hidden>
+    <header class="top">
+      <span class="t">Wedding Quiz</span>
+      <span id="topInfo" class="i"></span>
+    </header>
+    <section id="stage" class="stage"></section>
+    <footer class="ctrl">
+      <div id="ctrlInfo"></div>
+      <div class="ctrl-btns">
+        <button id="resetBtn" class="btn ghost" type="button">重置遊戲</button>
+        <button id="primaryBtn" class="btn" type="button" hidden></button>
+      </div>
+    </footer>
+  </div>
+
+  <div id="qrHold" hidden><div id="qrBox" class="qrbox"><canvas id="qrCanvas"></canvas></div></div>
+  <div id="msg" class="msg" hidden></div>
+
+  <script>
+    import QRCode from 'qrcode';
+
+    type Row = { name: string; score: number; rank: number };
+    type State = {
+      gid: string; phase: 'lobby' | 'open' | 'closed' | 'reveal' | 'final'; total: number; playerCount: number; now: number;
+      q?: number; startedAt?: number; endsAt?: number;
+      question?: { text: string; options: string[]; practice: boolean; duration: number };
+      counts?: number[]; answered?: number; points?: number[]; top?: Row[];
+    };
+
+    const $ = (id: string) => document.getElementById(id) as HTMLElement;
+    const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
+    const esc = (s: unknown) =>
+      String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string));
+    const fmt = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
+    const ssGet = (k: string) => { try { return sessionStorage.getItem(k); } catch { return null; } };
+    const ssSet = (k: string, v: string) => { try { sessionStorage.setItem(k, v); } catch {} };
+    const ssDel = (k: string) => { try { sessionStorage.removeItem(k); } catch {} };
+
+    let pw = ssGet('quizHostPw') || '';
+    let S: State | null = null;
+    let offset = 0;
+    let busy = false;
+    let lastKey = '';
+    let msgTimer = 0;
+
+    const joinUrl = location.origin + '/quiz';
+    const isTestUrl = /localhost|127\.0\.0\.1|github\.dev|\.app\.github/.test(location.hostname);
+
+    function showMsg(t: string) {
+      const el = $('msg');
+      el.textContent = t; el.hidden = !t;
+      clearTimeout(msgTimer);
+      if (t) msgTimer = window.setTimeout(() => (el.hidden = true), 4000);
+    }
+
+    async function api(action: string): Promise<{ ok: boolean; status: number; data: any }> {
+      const r = await fetch('/api/quiz/host', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-password': pw },
+        body: JSON.stringify({ action }),
+      });
+      return { ok: r.ok, status: r.status, data: await r.json().catch(() => ({})) };
+    }
+
+    // ---- 登入 ----
+    async function tryLogin(candidate: string): Promise<boolean> {
+      const prev = pw;
+      pw = candidate;
+      try {
+        const r = await api('verify');
+        if (r.ok) { ssSet('quizHostPw', candidate); return true; }
+      } catch {}
+      pw = prev === candidate ? '' : prev;
+      return false;
+    }
+    function showLogin(err = '') {
+      $('app').hidden = true; $('login').hidden = false; $('loginErr').textContent = err;
+    }
+    $('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const v = ($('pw') as HTMLInputElement).value;
+      if (await tryLogin(v)) { $('login').hidden = true; start(); }
+      else showLogin('密碼不正確');
+    });
+
+    // ---- 畫面 ----
+    function medal(rank: number) { return rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : String(rank); }
+    function topHtml(rows: Row[], title: string) {
+      if (!rows.length) return '';
+      return '<p class="sub-title">' + title + '</p><ol class="top-list">' + rows.map((r) =>
+        '<li class="' + (r.rank === 1 ? 'first' : '') + '"><span class="rk">' + medal(r.rank) + '</span><span class="nm">' + esc(r.name) +
+        '</span><span class="sc">' + fmt(r.score) + ' 分</span></li>').join('') + '</ol>';
+    }
+    function head(s: State) {
+      return '<div class="qhead"><span>第 ' + ((s.q as number) + 1) + ' / ' + s.total + ' 題</span>' +
+        (s.question!.practice ? '<span class="tag">暖身題・不計分</span>' : '') + '</div>';
+    }
+    function barsHtml(s: State, reveal: boolean) {
+      const q = s.question!;
+      const counts = s.counts || q.options.map(() => 0);
+      const total = counts.reduce((a, b) => a + b, 0);
+      return '<div class="bars">' + q.options.map((o, i) => {
+        const pct = total ? Math.round((counts[i] / total) * 100) : 0;
+        let cls = 'bar-row'; let mark = '';
+        if (reveal && s.points) {
+          const p = s.points[i] ?? 0;
+          if (p >= 1) { cls += ' correct'; mark = '<span class="mark">✓ 得 ' + fmt(p) + ' 分</span>'; }
+          else if (p > 0) { cls += ' half'; mark = '<span class="mark">得 ' + fmt(p) + ' 分</span>'; }
+          else cls += ' wrong';
+        }
+        return '<div class="' + cls + '"><div class="fill" style="width:' + pct + '%"></div><div class="row-in">' +
+          '<span class="letter">' + LETTERS[i] + '</span><span class="otext">' + esc(o) + '</span>' + mark +
+          '<span class="cnt"><b>' + counts[i] + '</b> 人 · ' + pct + '%</span></div></div>';
+      }).join('') + '</div>';
+    }
+
+    function stageHtml(s: State): string {
+      if (s.phase === 'lobby') {
+        return '<div class="lobby"><div id="qrSlot"></div><div><h1>Wedding Quiz</h1><p class="zh">婚禮問答</p>' +
+          '<p class="lead">拿出手機掃描 QR code<br>輸入暱稱就能一起玩！</p>' +
+          '<p class="url">' + esc(joinUrl) + '</p>' +
+          '<p class="count">已加入 <b id="lobbyCount">' + s.playerCount + '</b> 位賓客</p>' +
+          (isTestUrl ? '<p class="warn">⚠ 目前是測試網址，賓客掃不到。正式使用請用正式網站網址開啟這個主持人頁。</p>' : '') +
+          '</div></div>';
+      }
+      if (s.phase === 'open' && s.question) {
+        const q = s.question;
+        return head(s) +
+          '<div class="timer"><div class="tbar" id="hbarWrap"><i id="hbar"></i></div><b id="hnum"></b></div>' +
+          '<h2 class="qtext">' + esc(q.text) + '</h2><div class="opts">' +
+          q.options.map((o, i) => '<div class="opt"><span class="letter">' + LETTERS[i] + '</span><span>' + esc(o) + '</span></div>').join('') +
+          '</div><div class="answered"><span id="ansText"></span><div class="pbar"><i id="ansBar"></i></div></div>';
+      }
+      if (s.phase === 'closed' && s.question) {
+        return head(s) + '<h2 class="qtext">' + esc(s.question.text) + '</h2>' +
+          '<p class="banner">時間到！大家是這樣選的</p>' + barsHtml(s, false);
+      }
+      if (s.phase === 'reveal' && s.question) {
+        // 大螢幕只放題目與答案，排行榜留到最後一次公布（手機上會看到目前前五名）
+        return head(s) + '<h2 class="qtext">' + esc(s.question.text) + '</h2>' + barsHtml(s, true);
+      }
+      if (s.phase === 'final') {
+        return '<p class="final-title">Final Ranking</p>' + topHtml(s.top || [], '排行榜 前十名');
+      }
+      return '';
+    }
+
+    function render() {
+      if (!S) return;
+      const s = S;
+      const key = JSON.stringify([s.gid, s.phase, s.q, s.counts, s.points, s.top, s.phase === 'lobby' ? s.playerCount : 0]);
+      if (key !== lastKey) {
+        lastKey = key;
+        $('qrHold').appendChild($('qrBox')); // 重畫前先把 QR code 收好，避免跟著舊畫面被清掉
+        $('stage').innerHTML = stageHtml(s);
+        if (s.phase === 'lobby') {
+          const slot = document.getElementById('qrSlot');
+          if (slot) slot.appendChild($('qrBox'));
+        }
+      }
+      updateLive();
+
+      // 控制列
+      const btn = $('primaryBtn') as HTMLButtonElement;
+      let label = ''; let info = '';
+      const last = s.q !== undefined && s.q + 1 >= s.total;
+      if (s.phase === 'lobby') { label = '開始遊戲'; info = '等賓客加入中 · 已加入 ' + s.playerCount + ' 人'; }
+      else if (s.phase === 'open') { label = '提前結束作答'; info = '第 ' + ((s.q as number) + 1) + ' 題 · 作答中'; }
+      else if (s.phase === 'closed') { label = '公布答案'; info = '第 ' + ((s.q as number) + 1) + ' 題 · 時間到，可以先讓大家看統計'; }
+      else if (s.phase === 'reveal') { label = last ? '看排行榜' : '下一題'; info = '第 ' + ((s.q as number) + 1) + ' 題 · 答案已公布'; }
+      else if (s.phase === 'final') { info = '遊戲結束'; }
+      btn.hidden = !label;
+      btn.textContent = label;
+      btn.disabled = busy;
+      $('ctrlInfo').textContent = info;
+      $('topInfo').textContent = '加入 ' + s.playerCount + ' 人';
+    }
+
+    // 倒數與「已作答」會一直變動，不重畫整個畫面，只更新這幾個元素
+    function updateLive() {
+      const s = S;
+      if (!s || s.phase !== 'open' || !s.question) return;
+      const rem = (s.endsAt as number) - (Date.now() + offset);
+      const dur = s.question.duration * 1000;
+      const n = $('hnum'), b = $('hbar'), w = $('hbarWrap');
+      if (n) n.textContent = String(Math.max(0, Math.ceil(rem / 1000)));
+      if (b) b.style.width = Math.max(0, Math.min(100, (rem / dur) * 100)) + '%';
+      if (w) w.classList.toggle('warn', rem <= 5000);
+      const a = $('ansText'), ab = $('ansBar');
+      if (a) a.textContent = '已作答 ' + (s.answered ?? 0) + ' / ' + s.playerCount + ' 人';
+      if (ab) ab.style.width = (s.playerCount ? Math.min(100, ((s.answered ?? 0) / s.playerCount) * 100) : 0) + '%';
+    }
+    window.setInterval(updateLive, 150);
+
+    // ---- 操作 ----
+    async function act(action: string) {
+      if (busy) return;
+      busy = true; render();
+      try {
+        const r = await api(action);
+        if (r.status === 401) { pw = ''; ssDel('quizHostPw'); busy = false; showLogin('密碼失效，請重新輸入'); return; }
+        if (!r.ok) showMsg(r.data.error || '操作失敗');
+      } catch { showMsg('網路不穩，請再試一次'); }
+      busy = false;
+      await refresh();
+    }
+
+    function primaryAction() {
+      if (!S) return;
+      const p = S.phase;
+      if (p === 'lobby') act('start');
+      else if (p === 'open') act('closeNow');
+      else if (p === 'closed') act('reveal');
+      else if (p === 'reveal') act('next');
+    }
+    $('primaryBtn').addEventListener('click', primaryAction);
+    $('resetBtn').addEventListener('click', () => {
+      const t = prompt('這會清空所有賓客的暱稱和分數。\n要重置請輸入「重置」');
+      if (t === '重置') act('reset');
+    });
+    document.addEventListener('keydown', (e) => {
+      const tag = (document.activeElement && document.activeElement.tagName) || '';
+      if (tag === 'INPUT') return;
+      if (e.code === 'Space' || e.key === 'Enter') { e.preventDefault(); primaryAction(); }
+    });
+
+    // ---- 輪詢（主持人頁不走快取）----
+    async function refresh() {
+      const t0 = Date.now();
+      try {
+        const r = await fetch('/api/quiz/state?t=' + t0, { cache: 'no-store' });
+        const j = await r.json();
+        if (!r.ok) { showMsg(j.error === 'redis not configured' ? '資料庫還沒設定好（缺少 KV_REST_API_URL / TOKEN）' : '讀取失敗：' + (j.error || r.status)); return; }
+        const t1 = Date.now();
+        offset = j.now - (t0 + t1) / 2;
+        S = j;
+        render();
+      } catch { showMsg('連線不穩…'); }
+    }
+
+    let started = false;
+    function start() {
+      $('app').hidden = false; $('login').hidden = true;
+      if (started) { refresh(); return; }
+      started = true;
+      QRCode.toCanvas($('qrCanvas') as HTMLCanvasElement, joinUrl, {
+        width: 300, margin: 1, color: { dark: '#0B191F', light: '#FFFDF8' },
+      });
+      refresh();
+      window.setInterval(refresh, 1000);
+    }
+
+    (async () => {
+      if (pw && (await tryLogin(pw))) start();
+      else showLogin();
+    })();
+  </script>
+</body>
+</html>
