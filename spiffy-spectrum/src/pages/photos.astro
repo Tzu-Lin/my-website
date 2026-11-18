@@ -1,0 +1,582 @@
+---
+// src/pages/photos.astro — 賓客相簿：上傳 + 瀏覽 + 刪除
+---
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>賓客相簿 · 唐靖軒 &amp; 林子瑜</title>
+  <meta name="description" content="拍到我們的、拍到你們的，都歡迎傳到這裡。">
+  <meta property="og:title" content="賓客相簿 · 唐靖軒 & 林子瑜">
+  <meta property="og:description" content="拍到我們的、拍到你們的，都歡迎傳到這裡。">
+  <meta property="og:image" content="https://my-website-theta-ruby-23.vercel.app/images/og-cover-wedding.jpg">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate icon" href="/favicon.ico">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+TC:wght@300;400;600&family=LXGW+WenKai+TC&display=swap" rel="stylesheet">
+
+  <style is:global>
+    :root{
+      --tide-deep:#2A4A4D;
+      --dusk-gold:#C59B47;
+      --gold-light:#E8D08C;
+      --ink-navy:#0B191F;
+      --sand:#F3EEE3;
+    }
+    *{ box-sizing:border-box; margin:0; padding:0; }
+    html{ scroll-behavior:smooth; }
+    body{
+      min-height:100vh;
+      background: linear-gradient(160deg,#223C3E 0%,#2A4A4D 40%,#375D5D 100%);
+      background-attachment: fixed;
+      color: var(--sand);
+      font-family:'Noto Serif TC', serif;
+      font-weight:300;
+      letter-spacing:0.03em;
+    }
+    .wrap{ max-width:920px; margin:0 auto; padding:2.2rem 1.2rem 4rem; }
+
+    .back{
+      display:inline-block; font-size:0.8rem; letter-spacing:0.15em;
+      color:var(--gold-light); text-decoration:none; opacity:0.85; margin-bottom:1.6rem;
+    }
+    .back:hover{ opacity:1; }
+
+    header{ text-align:center; margin-bottom:2rem; }
+    .title-en{ font-family:'Parisienne', cursive; font-size:2.6rem; color:var(--gold-light); line-height:1.1; display:block; }
+    .title-zh{ font-family:'Cormorant Garamond', serif; font-size:0.75rem; letter-spacing:0.5em; color:var(--gold-light); opacity:0.85; margin-top:0.5rem; display:block; }
+    .squiggle{ width:90px; height:18px; margin:0.9rem auto 1.1rem; color:var(--dusk-gold); opacity:0.8; display:block; }
+    .intro{
+      font-family:'LXGW WenKai TC','Noto Serif TC',serif;
+      font-size:1rem; line-height:2; color:rgba(255,253,248,0.9);
+    }
+
+    .upload-card{
+      border:1px dashed rgba(232,208,140,0.6);
+      background:rgba(11,25,31,0.35);
+      padding:1.8rem 1.2rem;
+      text-align:center;
+      margin-bottom:2.4rem;
+    }
+    .btn{
+      appearance:none; border:1px solid var(--dusk-gold);
+      background:var(--dusk-gold); color:var(--ink-navy);
+      font-family:'Noto Serif TC', serif; font-weight:600;
+      font-size:1rem; letter-spacing:0.12em;
+      padding:0.85rem 2.2rem; cursor:pointer; border-radius:999px;
+      transition:transform .15s ease, background .2s ease;
+    }
+    .btn:hover{ background:var(--gold-light); }
+    .btn:active{ transform:scale(0.97); }
+    .btn[disabled]{ opacity:0.55; cursor:default; }
+    .hint{ margin-top:0.9rem; font-size:0.78rem; opacity:0.7; line-height:1.7; }
+
+    .queue{ list-style:none; margin-top:1.3rem; text-align:left; display:grid; gap:0.55rem; }
+    .queue:empty{ display:none; }
+    .q-item{ font-size:0.82rem; }
+    .q-top{ display:flex; justify-content:space-between; gap:0.8rem; margin-bottom:0.25rem; }
+    .q-name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; opacity:0.9; }
+    .q-state{ flex:none; opacity:0.85; }
+    .q-state.ok{ color:var(--gold-light); }
+    .q-state.err{ color:#f0a39a; }
+    .bar{ height:3px; background:rgba(255,255,255,0.15); border-radius:2px; overflow:hidden; }
+    .bar > i{ display:block; height:100%; width:0; background:var(--gold-light); transition:width .2s ease; }
+
+    .gallery-head{
+      display:flex; align-items:baseline; justify-content:space-between;
+      border-bottom:1px solid rgba(232,208,140,0.35); padding-bottom:0.6rem; margin-bottom:1rem;
+    }
+    .gallery-head h2{ font-family:'Cormorant Garamond', serif; font-weight:400; font-size:1.4rem; letter-spacing:0.15em; color:var(--gold-light); }
+    #count{ font-size:0.82rem; opacity:0.75; }
+
+    .grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; }
+    @media (min-width:640px){ .grid{ grid-template-columns:repeat(4, 1fr); gap:8px; } }
+    .grid button{
+      appearance:none; border:0; padding:0; cursor:pointer; background:rgba(255,255,255,0.06);
+      aspect-ratio:1/1; overflow:hidden; display:block; min-width:0; position:relative;
+    }
+    .grid img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s ease; }
+    .grid button:hover img{ transform:scale(1.04); }
+
+    .gallery-head .right{ display:flex; align-items:baseline; gap:0.9rem; }
+    .head-btn, .sel-bar button{
+      appearance:none; cursor:pointer; background:transparent; color:var(--gold-light);
+      font-family:inherit; font-size:0.82rem; letter-spacing:0.1em;
+      border:1px solid rgba(232,208,140,0.6); padding:0.4rem 1rem; border-radius:999px;
+    }
+    .head-btn:hover, .sel-bar button:hover{ background:rgba(232,208,140,0.12); }
+    .sel-bar{ display:none; align-items:center; gap:0.6rem; flex-wrap:wrap; margin-bottom:1rem; font-size:0.85rem; }
+    .sel-bar.open{ display:flex; }
+    .sel-bar .sel-count{ margin-right:auto; color:var(--gold-light); }
+    .sel-bar .danger{ color:#f0a39a; border-color:rgba(240,163,154,0.7); }
+    .sel-bar button[disabled]{ opacity:0.4; cursor:default; }
+    .selecting .grid button:not(.sel):not(.locked)::after{
+      content:''; position:absolute; top:6px; right:6px; width:22px; height:22px; border-radius:50%;
+      border:2px solid rgba(255,255,255,0.85); background:rgba(0,0,0,0.2);
+    }
+    .grid button.sel img{ opacity:0.5; }
+    .grid button.sel::after{
+      content:'✓'; position:absolute; top:6px; right:6px; width:24px; height:24px; border-radius:50%;
+      background:var(--dusk-gold); color:var(--ink-navy); font-size:0.95rem; font-weight:600;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .grid button.locked{ cursor:not-allowed; }
+    .grid button.locked img{ opacity:0.3; }
+
+    .empty{ text-align:center; padding:2.5rem 0; opacity:0.75; font-size:0.9rem; line-height:2; }
+
+    .admin-bar{ display:flex; gap:1rem; justify-content:center; margin-top:2.4rem; font-size:0.78rem; }
+    .admin-bar button{
+      appearance:none; background:none; border:0; cursor:pointer; color:var(--gold-light);
+      opacity:0.55; font-family:inherit; letter-spacing:0.1em; text-decoration:underline; font-size:inherit;
+    }
+    .admin-bar button:hover{ opacity:1; }
+    .admin-bar button[hidden]{ display:none; }
+    .admin-bar .danger{ color:#f0a39a; opacity:0.85; }
+
+    .lightbox{
+      position:fixed; inset:0; z-index:50; background:rgba(5,12,15,0.94);
+      display:none; align-items:center; justify-content:center;
+    }
+    .lightbox.open{ display:flex; }
+    .lightbox img{ max-width:96vw; max-height:84vh; object-fit:contain; }
+    .lb-btn{
+      position:absolute; appearance:none; border:0; background:rgba(255,255,255,0.1);
+      color:#fff; width:44px; height:44px; border-radius:50%; font-size:1.3rem; cursor:pointer;
+    }
+    .lb-btn:hover{ background:rgba(255,255,255,0.2); }
+    .lb-close{ top:14px; right:14px; }
+    .lb-prev{ left:10px; top:50%; transform:translateY(-50%); }
+    .lb-next{ right:10px; top:50%; transform:translateY(-50%); }
+    .lb-dl{
+      position:absolute; bottom:18px; left:50%; transform:translateX(-50%);
+      color:var(--gold-light); font-size:0.85rem; letter-spacing:0.15em; text-decoration:none;
+      border:1px solid rgba(232,208,140,0.6); padding:0.5rem 1.3rem; border-radius:999px;
+    }
+    .lb-del{
+      position:absolute; bottom:18px; right:18px; appearance:none; cursor:pointer;
+      background:transparent; color:#f0a39a; font-family:inherit; font-size:0.85rem; letter-spacing:0.15em;
+      border:1px solid rgba(240,163,154,0.6); padding:0.5rem 1.1rem; border-radius:999px;
+    }
+    .lb-del[hidden]{ display:none; }
+    .lb-del[disabled]{ opacity:0.5; cursor:default; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <a class="back" href="/">← 回到喜帖</a>
+
+    <header>
+      <span class="title-en">Share Your Moments</span>
+      <span class="title-zh">賓客相簿</span>
+      <svg class="squiggle" viewBox="0 0 90 18" aria-hidden="true">
+        <path d="M2,9 C15,2 20,16 33,9 C46,2 51,16 64,9 C72,5 80,12 88,9"
+              fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      <p class="intro">
+        拍到我們的、拍到你們的，<br>
+        都歡迎傳到這裡。<br>
+        婚禮之後這裡也會留著，大家隨時可以回來看。
+      </p>
+    </header>
+
+    <section class="upload-card">
+      <input id="fileInput" type="file" accept="image/*" multiple hidden>
+      <button id="pickBtn" class="btn" type="button">選擇照片上傳</button>
+      <p class="hint">可以一次選很多張・支援 JPG / PNG / HEIC・單張 25MB 內<br>上傳後，所有賓客都看得到喔<br>自己上傳的照片，點開後可以自行刪除</p>
+      <ul id="queue" class="queue"></ul>
+    </section>
+
+    <section>
+      <div class="gallery-head">
+        <h2>Gallery</h2>
+        <div class="right">
+          <span id="count"></span>
+          <button id="selectBtn" class="head-btn" type="button" hidden>選取</button>
+        </div>
+      </div>
+      <div id="selBar" class="sel-bar">
+        <span id="selCount" class="sel-count">已選 0 張</span>
+        <button id="selAll" type="button">全選</button>
+        <button id="selDel" class="danger" type="button" disabled>刪除所選</button>
+        <button id="selCancel" type="button">取消</button>
+      </div>
+      <div id="grid" class="grid"></div>
+      <p id="empty" class="empty" hidden>還沒有照片<br>來當第一個上傳的人吧 ♡</p>
+      <p id="loadError" class="empty" hidden>相簿暫時讀取不到，稍後再試一次看看</p>
+    </section>
+
+    <div class="admin-bar">
+      <button id="adminBtn" type="button">管理員登入</button>
+      <button id="delAllBtn" class="danger" type="button" hidden>刪除全部照片</button>
+    </div>
+  </main>
+
+  <div id="lightbox" class="lightbox" aria-modal="true" role="dialog">
+    <button id="lbClose" class="lb-btn lb-close" type="button" aria-label="關閉">✕</button>
+    <button id="lbPrev" class="lb-btn lb-prev" type="button" aria-label="上一張">‹</button>
+    <img id="lbImg" alt="">
+    <button id="lbNext" class="lb-btn lb-next" type="button" aria-label="下一張">›</button>
+    <a id="lbDl" class="lb-dl" href="#" download>下載原圖</a>
+    <button id="lbDel" class="lb-del" type="button" hidden>刪除這張</button>
+  </div>
+
+  <script>
+    import { upload } from '@vercel/blob/client';
+
+    type Photo = { url: string; downloadUrl: string; uploadedAt?: string };
+
+    const MAX_BYTES = 25 * 1024 * 1024;
+    const RESIZE_OVER = 1 * 1024 * 1024;   // 超過 1MB 的照片先縮圖，傳得快、相簿載入也快
+    const MAX_EDGE = 2048;
+    const CONCURRENCY = 3;
+
+    const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+    const fileInput = $<HTMLInputElement>('fileInput');
+    const pickBtn = $<HTMLButtonElement>('pickBtn');
+    const queueEl = $('queue');
+    const gridEl = $('grid');
+    const countEl = $('count');
+    const emptyEl = $('empty');
+    const loadErrorEl = $('loadError');
+
+    let photos: Photo[] = [];
+
+    // ---- 身分 / 刪除權限 ----
+    const SECRET_KEY = 'guest-album-secret';
+    const ADMIN_KEY = 'album-admin';
+
+    function getSecret() {
+      let s = '';
+      try { s = localStorage.getItem(SECRET_KEY) || ''; } catch {}
+      if (!s) {
+        s = crypto.randomUUID() + crypto.randomUUID();
+        try { localStorage.setItem(SECRET_KEY, s); } catch {}
+      }
+      return s;
+    }
+
+    let ownerCache = '';
+    async function ownerId() {
+      if (ownerCache) return ownerCache;
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(getSecret()));
+      ownerCache = Array.from(new Uint8Array(buf)).slice(0, 8)
+        .map((b) => b.toString(16).padStart(2, '0')).join('');
+      return ownerCache;
+    }
+
+    function pathOf(p: Photo) {
+      try { return decodeURIComponent(new URL(p.url).pathname); } catch { return ''; }
+    }
+
+    let isAdmin = false;
+    let adminPw = '';
+    try { adminPw = sessionStorage.getItem(ADMIN_KEY) || ''; } catch {}
+
+    function canDelete(p: Photo) {
+      if (isAdmin) return true;
+      return !!ownerCache && pathOf(p).includes('/guest-photos/' + ownerCache + '/');
+    }
+
+    async function callDelete(payload: object) {
+      try {
+        const res = await fetch('/api/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...payload,
+            secret: getSecret(),
+            adminPassword: isAdmin ? adminPw : undefined,
+          }),
+        });
+        return res.ok;
+      } catch {
+        return false;
+      }
+    }
+
+    // ---- 勾選刪除 ----
+    let selecting = false;
+    const selected = new Set<string>();
+    const selectBtn = $<HTMLButtonElement>('selectBtn');
+    const selBar = $('selBar');
+    const selCount = $('selCount');
+    const selAllBtn = $<HTMLButtonElement>('selAll');
+    const selDelBtn = $<HTMLButtonElement>('selDel');
+    const selCancelBtn = $<HTMLButtonElement>('selCancel');
+
+    function updateSelUI() {
+      selectBtn.hidden = photos.length === 0 || selecting;
+      selBar.classList.toggle('open', selecting);
+      document.body.classList.toggle('selecting', selecting);
+      selCount.textContent = '已選 ' + selected.size + ' 張';
+      selDelBtn.disabled = selected.size === 0;
+    }
+    function exitSelect() { selecting = false; selected.clear(); render(); }
+    function toggleSel(p: Photo) {
+      if (!canDelete(p)) return;
+      if (selected.has(p.url)) selected.delete(p.url); else selected.add(p.url);
+      render();
+    }
+
+    function render() {
+      gridEl.innerHTML = '';
+      photos.forEach((p, i) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('aria-label', '查看照片 ' + (i + 1));
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.src = p.url;
+        img.alt = '';
+        b.appendChild(img);
+        if (selecting) {
+          if (selected.has(p.url)) b.classList.add('sel');
+          if (!canDelete(p)) b.classList.add('locked');
+          b.addEventListener('click', () => toggleSel(p));
+        } else {
+          b.addEventListener('click', () => openLightbox(i));
+        }
+        gridEl.appendChild(b);
+      });
+      countEl.textContent = photos.length ? photos.length + ' 張' : '';
+      emptyEl.hidden = photos.length > 0 || !loadErrorEl.hidden;
+      updateSelUI();
+    }
+
+    async function loadPhotos() {
+      try {
+        const res = await fetch('/api/photos');
+        if (!res.ok) throw new Error('bad status');
+        const data = await res.json();
+        photos = data.photos || [];
+        loadErrorEl.hidden = true;
+      } catch {
+        loadErrorEl.hidden = false;
+      }
+      render();
+    }
+
+    // ---- 縮圖（HEIC 或太大的檔案）----
+    async function maybeResize(file: File): Promise<File> {
+      const isHeic = /heic|heif/i.test(file.type) || /\.(heic|heif)$/i.test(file.name);
+      if (!isHeic && file.size <= RESIZE_OVER) return file;
+      if (/gif/i.test(file.type)) return file;
+      try {
+        const bmp = await createImageBitmap(file);
+        const scale = Math.min(1, MAX_EDGE / Math.max(bmp.width, bmp.height));
+        const w = Math.round(bmp.width * scale);
+        const h = Math.round(bmp.height * scale);
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d')!.drawImage(bmp, 0, 0, w, h);
+        const blob: Blob | null = await new Promise((r) => canvas.toBlob(r, 'image/jpeg', 0.85));
+        if (!blob) return file;
+        return new File([blob], 'photo.jpg', { type: 'image/jpeg' });
+      } catch {
+        return file; // 瀏覽器讀不了（例如 Chrome 的 HEIC），就直接傳原檔
+      }
+    }
+
+    function addQueueRow(name: string) {
+      const li = document.createElement('li');
+      li.className = 'q-item';
+      li.innerHTML = '<div class="q-top"><span class="q-name"></span><span class="q-state">準備中…</span></div><div class="bar"><i></i></div>';
+      li.querySelector('.q-name')!.textContent = name;
+      queueEl.prepend(li);
+      return {
+        progress(pct: number) {
+          (li.querySelector('.bar > i') as HTMLElement).style.width = pct + '%';
+          li.querySelector('.q-state')!.textContent = Math.round(pct) + '%';
+        },
+        done() {
+          (li.querySelector('.bar > i') as HTMLElement).style.width = '100%';
+          const s = li.querySelector('.q-state')!;
+          s.textContent = '完成 ✓'; s.classList.add('ok');
+          setTimeout(() => li.remove(), 4000);
+        },
+        fail(msg: string) {
+          const s = li.querySelector('.q-state')!;
+          s.textContent = msg; s.classList.add('err');
+        },
+      };
+    }
+
+    async function uploadOne(original: File) {
+      const row = addQueueRow(original.name || '照片');
+      if (!original.type.startsWith('image/') && !/\.(heic|heif)$/i.test(original.name)) {
+        row.fail('不是照片'); return;
+      }
+      try {
+        const file = await maybeResize(original);
+        if (file.size > MAX_BYTES) { row.fail('檔案太大（超過 25MB）'); return; }
+        const ext = (file.type.split('/')[1] || 'jpg').replace('jpeg', 'jpg').replace('heif', 'heic');
+        const rand = Math.random().toString(36).slice(2, 8);
+        const owner = await ownerId();
+        const blob = await upload('guest-photos/' + owner + '/' + Date.now() + '-' + rand + '.' + ext, file, {
+          access: 'public',
+          handleUploadUrl: '/api/upload',
+          multipart: file.size > 8 * 1024 * 1024,
+          onUploadProgress: ({ percentage }) => row.progress(percentage),
+        });
+        row.done();
+        photos.unshift({ url: blob.url, downloadUrl: blob.downloadUrl || blob.url });
+        render();
+      } catch {
+        row.fail('上傳失敗，請再試一次');
+      }
+    }
+
+    async function uploadMany(files: File[]) {
+      pickBtn.disabled = true;
+      const pending = files.slice();
+      const workers = Array.from({ length: Math.min(CONCURRENCY, pending.length) }, async () => {
+        while (pending.length) {
+          const f = pending.shift()!;
+          await uploadOne(f);
+        }
+      });
+      await Promise.all(workers);
+      pickBtn.disabled = false;
+    }
+
+    pickBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => {
+      const files = Array.from(fileInput.files || []);
+      fileInput.value = '';
+      if (files.length) uploadMany(files);
+    });
+
+    // ---- Lightbox ----
+    const lb = $('lightbox');
+    const lbImg = $<HTMLImageElement>('lbImg');
+    const lbDl = $<HTMLAnchorElement>('lbDl');
+    const lbDel = $<HTMLButtonElement>('lbDel');
+    let cur = 0;
+
+    function show(i: number) {
+      cur = (i + photos.length) % photos.length;
+      lbImg.src = photos[cur].url;
+      lbDl.href = photos[cur].downloadUrl;
+      lbDel.hidden = !canDelete(photos[cur]);
+    }
+    function openLightbox(i: number) { show(i); lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeLightbox() { lb.classList.remove('open'); lbImg.src = ''; document.body.style.overflow = ''; }
+
+    $('lbClose').addEventListener('click', closeLightbox);
+    $('lbPrev').addEventListener('click', () => show(cur - 1));
+    $('lbNext').addEventListener('click', () => show(cur + 1));
+    lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
+    document.addEventListener('keydown', (e) => {
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') show(cur - 1);
+      if (e.key === 'ArrowRight') show(cur + 1);
+    });
+
+    lbDel.addEventListener('click', async () => {
+      const p = photos[cur];
+      if (!p) return;
+      if (!confirm('確定要刪除這張照片嗎？刪除後無法復原')) return;
+      lbDel.disabled = true;
+      const ok = await callDelete({ mode: 'one', url: p.url });
+      lbDel.disabled = false;
+      if (!ok) { alert('刪除失敗，請再試一次'); return; }
+      photos.splice(cur, 1);
+      render();
+      if (!photos.length) closeLightbox(); else show(cur);
+    });
+
+    selectBtn.addEventListener('click', () => { selecting = true; selected.clear(); render(); });
+    selCancelBtn.addEventListener('click', exitSelect);
+    selAllBtn.addEventListener('click', () => {
+      const mine = photos.filter(canDelete);
+      if (mine.length && mine.every((p) => selected.has(p.url))) selected.clear();
+      else mine.forEach((p) => selected.add(p.url));
+      render();
+    });
+    selDelBtn.addEventListener('click', async () => {
+      const urls = Array.from(selected);
+      if (!urls.length) return;
+      if (!confirm('確定要刪除選取的 ' + urls.length + ' 張照片嗎？刪除後無法復原')) return;
+      selDelBtn.disabled = true;
+      const removed = new Set<string>();
+      for (let i = 0; i < urls.length; i += 100) {
+        const chunk = urls.slice(i, i + 100);
+        if (await callDelete({ mode: 'many', urls: chunk })) chunk.forEach((u) => removed.add(u));
+      }
+      photos = photos.filter((p) => !removed.has(p.url));
+      removed.forEach((u) => selected.delete(u));
+      if (selected.size) alert('有 ' + selected.size + ' 張刪除失敗，請再試一次');
+      else selecting = false;
+      render();
+    });
+
+    // ---- 管理員 ----
+    const adminBtn = $<HTMLButtonElement>('adminBtn');
+    const delAllBtn = $<HTMLButtonElement>('delAllBtn');
+
+    function applyAdminUI() {
+      adminBtn.textContent = isAdmin ? '登出管理員' : '管理員登入';
+      delAllBtn.hidden = !isAdmin;
+    }
+
+    async function checkAdmin(pw: string) {
+      try {
+        const res = await fetch('/api/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mode: 'check', adminPassword: pw }),
+        });
+        const data = await res.json().catch(() => ({}));
+        return !!data.admin;
+      } catch {
+        return false;
+      }
+    }
+
+    adminBtn.addEventListener('click', async () => {
+      if (isAdmin) {
+        isAdmin = false; adminPw = '';
+        try { sessionStorage.removeItem(ADMIN_KEY); } catch {}
+        applyAdminUI();
+        exitSelect();
+        return;
+      }
+      const pw = prompt('請輸入管理密碼');
+      if (!pw) return;
+      if (await checkAdmin(pw)) {
+        isAdmin = true; adminPw = pw;
+        try { sessionStorage.setItem(ADMIN_KEY, pw); } catch {}
+        applyAdminUI();
+        render();
+      } else {
+        alert('密碼不對');
+      }
+    });
+
+    delAllBtn.addEventListener('click', async () => {
+      if (!isAdmin) return;
+      if (!confirm('確定要刪除「全部」照片嗎？這個動作無法復原！')) return;
+      if (!confirm('再確認一次：所有賓客的照片都會消失。')) return;
+      delAllBtn.disabled = true;
+      const ok = await callDelete({ mode: 'all' });
+      delAllBtn.disabled = false;
+      if (!ok) { alert('刪除失敗，請再試一次'); return; }
+      photos = [];
+      render();
+    });
+
+    // ---- 啟動 ----
+    (async () => {
+      await ownerId();
+      if (adminPw && await checkAdmin(adminPw)) isAdmin = true;
+      applyAdminUI();
+      loadPhotos();
+    })();
+  </script>
+</body>
+</html>
