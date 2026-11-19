@@ -172,10 +172,29 @@
     const ssSet = (k: string, v: string) => { try { sessionStorage.setItem(k, v); } catch {} };
     const ssDel = (k: string) => { try { sessionStorage.removeItem(k); } catch {} };
 
+    // ---- 自動輪播播放器（單首自動循環、多首依序無縫接續）----
+    function createPlaylist(tracks: string[], vol: number) {
+      let idx = 0;
+      const audio = new Audio(encodeURI(tracks[0]));
+      audio.volume = vol;
+      if (tracks.length === 1) {
+        audio.loop = true;
+      } else {
+        audio.addEventListener('ended', () => {
+          idx = (idx + 1) % tracks.length;
+          audio.src = encodeURI(tracks[idx]);
+          audio.play().catch(() => {});
+        });
+      }
+      return audio;
+    }
+
     // ---- 音效控制 ----
-    const bgmAudio = new Audio('/sub_clair-upbeat-instrumental-588419.mp3');
-    bgmAudio.loop = true;
-    bgmAudio.volume = 0.36;
+    // 掃 QR code 等待中的暖場音樂（如之後有加第二首，直接逗號加在陣列裡即可）
+    const lobbyBgm = createPlaylist(['/Jazzy Frenchy.mp3'], 0.34);
+
+    // 作答進行中的背景音樂
+    const bgmAudio = createPlaylist(['/sub_clair-upbeat-instrumental-588419.mp3'], 0.36);
 
     const countdownAudio = new Audio('/countdown-8sec-steady.mp3');
     countdownAudio.volume = 0.42;
@@ -191,6 +210,22 @@
     let lastRevealedKey = '';
     let resumeTimer = 0;
     let playedCountdownForKey = '';
+    let unlockBound = false;
+
+    function bindLobbyUnlock() {
+      if (unlockBound) return;
+      unlockBound = true;
+      const unlock = () => {
+        unlockBound = false;
+        document.removeEventListener('pointerdown', unlock);
+        document.removeEventListener('keydown', unlock);
+        if (S && S.phase === 'lobby' && !muted && lobbyBgm.paused) {
+          lobbyBgm.play().catch(() => {});
+        }
+      };
+      document.addEventListener('pointerdown', unlock);
+      document.addEventListener('keydown', unlock);
+    }
 
     const quizAudio = {
       playClick() {
@@ -200,11 +235,22 @@
       },
       setMuted(m: boolean) {
         muted = m;
-        [bgmAudio, countdownAudio, revealAudio, clickAudio].forEach((a) => (a.muted = m));
+        [lobbyBgm, bgmAudio, countdownAudio, revealAudio, clickAudio].forEach((a) => (a.muted = m));
         $('muteBtn').textContent = m ? '🔇 已靜音' : '🔊 音效開';
+        if (!m && S && S.phase === 'lobby') this.startLobby();
+      },
+      startLobby() {
+        if (lobbyBgm.paused) {
+          lobbyBgm.play().catch(() => bindLobbyUnlock());
+        }
+      },
+      stopLobby() {
+        lobbyBgm.pause();
+        lobbyBgm.currentTime = 0;
       },
       startBgm() {
         clearTimeout(resumeTimer);
+        this.stopLobby();
         bgmAudio.volume = 0.36;
         if (bgmAudio.paused) bgmAudio.play().catch(() => {});
       },
@@ -221,9 +267,10 @@
         countdownAudio.currentTime = 0;
       },
       playReveal(key = '', resumeAfterMs = 0) {
-        if (key && key === lastRevealedKey) return; // 防止按鈕即時播放與畫面更新重複觸發
+        if (key && key === lastRevealedKey) return;
         if (key) lastRevealedKey = key;
         clearTimeout(resumeTimer);
+        this.stopLobby();
         this.stopCountdown();
         bgmAudio.pause();
         revealAudio.currentTime = 0;
@@ -232,7 +279,7 @@
           resumeTimer = window.setTimeout(() => this.startBgm(), resumeAfterMs);
         }
       },
-      stopAll() {
+      stopGameAudio() {
         clearTimeout(resumeTimer);
         this.stopCountdown();
         [bgmAudio, revealAudio].forEach((a) => {
@@ -250,11 +297,13 @@
       if (s.phase === 'lobby') {
         playedCountdownForKey = '';
         lastRevealedKey = '';
-        quizAudio.stopAll();
+        quizAudio.stopGameAudio();
+        quizAudio.startLobby();
       } else if (s.phase === 'open') {
         quizAudio.stopCountdown();
         quizAudio.startBgm();
       } else if (s.phase === 'closed') {
+        quizAudio.stopLobby();
         quizAudio.pauseBgm();
       } else if (s.phase === 'reveal') {
         quizAudio.playReveal(`${s.gid}:reveal:${s.q ?? -1}`);
@@ -449,6 +498,7 @@
       if (!S || busy) return;
       const p = S.phase;
       if (p === 'lobby') {
+        quizAudio.stopLobby();
         quizAudio.playClick();
         quizAudio.startBgm();
         act('start');
