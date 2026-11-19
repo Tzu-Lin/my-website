@@ -142,6 +142,7 @@
     <footer class="ctrl">
       <div id="ctrlInfo"></div>
       <div class="ctrl-btns">
+        <button id="muteBtn" class="btn ghost" type="button">🔊 音效開</button>
         <button id="resetBtn" class="btn ghost" type="button">重置遊戲</button>
         <button id="primaryBtn" class="btn" type="button" hidden></button>
       </div>
@@ -170,6 +171,102 @@
     const ssGet = (k: string) => { try { return sessionStorage.getItem(k); } catch { return null; } };
     const ssSet = (k: string, v: string) => { try { sessionStorage.setItem(k, v); } catch {} };
     const ssDel = (k: string) => { try { sessionStorage.removeItem(k); } catch {} };
+
+    // ---- 音效控制 ----
+    const bgmAudio = new Audio('/sub_clair-upbeat-instrumental-588419.mp3');
+    bgmAudio.loop = true;
+    bgmAudio.volume = 0.36;
+
+    const countdownAudio = new Audio('/countdown-8sec-steady.mp3');
+    countdownAudio.volume = 0.42;
+
+    const revealAudio = new Audio('/universfield-magic-spell-03-242245.mp3');
+    revealAudio.volume = 0.38;
+
+    const clickAudio = new Audio('/vadim_makes_sound-soft-app-button-tap-sound-2-547872.mp3');
+    clickAudio.volume = 0.38;
+
+    let muted = false;
+    let lastAudioKey = '';
+    let lastRevealedKey = '';
+    let resumeTimer = 0;
+    let playedCountdownForKey = '';
+
+    const quizAudio = {
+      playClick() {
+        if (muted) return;
+        clickAudio.currentTime = 0;
+        clickAudio.play().catch(() => {});
+      },
+      setMuted(m: boolean) {
+        muted = m;
+        [bgmAudio, countdownAudio, revealAudio, clickAudio].forEach((a) => (a.muted = m));
+        $('muteBtn').textContent = m ? '🔇 已靜音' : '🔊 音效開';
+      },
+      startBgm() {
+        clearTimeout(resumeTimer);
+        bgmAudio.volume = 0.36;
+        if (bgmAudio.paused) bgmAudio.play().catch(() => {});
+      },
+      pauseBgm() {
+        clearTimeout(resumeTimer);
+        bgmAudio.pause();
+      },
+      playCountdown() {
+        countdownAudio.currentTime = 0;
+        countdownAudio.play().catch(() => {});
+      },
+      stopCountdown() {
+        countdownAudio.pause();
+        countdownAudio.currentTime = 0;
+      },
+      playReveal(key = '', resumeAfterMs = 0) {
+        if (key && key === lastRevealedKey) return; // 防止按鈕即時播放與畫面更新重複觸發
+        if (key) lastRevealedKey = key;
+        clearTimeout(resumeTimer);
+        this.stopCountdown();
+        bgmAudio.pause();
+        revealAudio.currentTime = 0;
+        revealAudio.play().catch(() => {});
+        if (resumeAfterMs > 0) {
+          resumeTimer = window.setTimeout(() => this.startBgm(), resumeAfterMs);
+        }
+      },
+      stopAll() {
+        clearTimeout(resumeTimer);
+        this.stopCountdown();
+        [bgmAudio, revealAudio].forEach((a) => {
+          a.pause();
+          a.currentTime = 0;
+        });
+      },
+    };
+
+    function syncAudio(s: State) {
+      const audioKey = `${s.gid}:${s.phase}:${s.q ?? -1}`;
+      if (audioKey === lastAudioKey) return;
+      lastAudioKey = audioKey;
+
+      if (s.phase === 'lobby') {
+        playedCountdownForKey = '';
+        lastRevealedKey = '';
+        quizAudio.stopAll();
+      } else if (s.phase === 'open') {
+        quizAudio.stopCountdown();
+        quizAudio.startBgm();
+      } else if (s.phase === 'closed') {
+        quizAudio.pauseBgm();
+      } else if (s.phase === 'reveal') {
+        quizAudio.playReveal(`${s.gid}:reveal:${s.q ?? -1}`);
+      } else if (s.phase === 'final') {
+        quizAudio.playReveal(`${s.gid}:final:${s.q ?? -1}`, 2500);
+      }
+    }
+
+    $('muteBtn').addEventListener('click', () => {
+      quizAudio.setMuted(!muted);
+      quizAudio.playClick();
+    });
 
     let pw = ssGet('quizHostPw') || '';
     let S: State | null = null;
@@ -213,6 +310,7 @@
     }
     $('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      quizAudio.playClick();
       const v = ($('pw') as HTMLInputElement).value;
       if (await tryLogin(v)) { $('login').hidden = true; start(); }
       else showLogin('密碼不正確');
@@ -271,7 +369,6 @@
           '<p class="banner">時間到！大家是這樣選的</p>' + barsHtml(s, false);
       }
       if (s.phase === 'reveal' && s.question) {
-        // 大螢幕只放題目與答案，排行榜留到最後一次公布（手機上會看到目前前五名）
         return head(s) + '<h2 class="qtext">' + esc(s.question.text) + '</h2>' + barsHtml(s, true);
       }
       if (s.phase === 'final') {
@@ -283,10 +380,11 @@
     function render() {
       if (!S) return;
       const s = S;
+      syncAudio(s);
       const key = JSON.stringify([s.gid, s.phase, s.q, s.counts, s.points, s.top, s.phase === 'lobby' ? s.playerCount : 0]);
       if (key !== lastKey) {
         lastKey = key;
-        $('qrHold').appendChild($('qrBox')); // 重畫前先把 QR code 收好，避免跟著舊畫面被清掉
+        $('qrHold').appendChild($('qrBox'));
         $('stage').innerHTML = stageHtml(s);
         if (s.phase === 'lobby') {
           const slot = document.getElementById('qrSlot');
@@ -311,7 +409,6 @@
       $('topInfo').textContent = '加入 ' + s.playerCount + ' 人';
     }
 
-    // 倒數與「已作答」會一直變動，不重畫整個畫面，只更新這幾個元素
     function updateLive() {
       const s = S;
       if (!s || s.phase !== 'open' || !s.question) return;
@@ -320,7 +417,15 @@
       const n = $('hnum'), b = $('hbar'), w = $('hbarWrap');
       if (n) n.textContent = String(Math.max(0, Math.ceil(rem / 1000)));
       if (b) b.style.width = Math.max(0, Math.min(100, (rem / dur) * 100)) + '%';
-      if (w) w.classList.toggle('warn', rem <= 5000);
+      if (w) w.classList.toggle('warn', rem <= 8000);
+
+      // 剩餘 8 秒時播放 8 秒等速倒數＋結束鈴聲
+      const qKey = `${s.gid}:${s.q}`;
+      if (rem <= 8000 && rem > 500 && playedCountdownForKey !== qKey) {
+        playedCountdownForKey = qKey;
+        quizAudio.playCountdown();
+      }
+
       const a = $('ansText'), ab = $('ansBar');
       if (a) a.textContent = '已作答 ' + (s.answered ?? 0) + ' / ' + s.playerCount + ' 人';
       if (ab) ab.style.width = (s.playerCount ? Math.min(100, ((s.answered ?? 0) / s.playerCount) * 100) : 0) + '%';
@@ -341,15 +446,33 @@
     }
 
     function primaryAction() {
-      if (!S) return;
+      if (!S || busy) return;
       const p = S.phase;
-      if (p === 'lobby') act('start');
-      else if (p === 'open') act('closeNow');
-      else if (p === 'closed') act('reveal');
-      else if (p === 'reveal') act('next');
+      if (p === 'lobby') {
+        quizAudio.playClick();
+        quizAudio.startBgm();
+        act('start');
+      } else if (p === 'open') {
+        quizAudio.playClick();
+        quizAudio.stopCountdown();
+        quizAudio.pauseBgm();
+        act('closeNow');
+      } else if (p === 'closed') {
+        quizAudio.playReveal(`${S.gid}:reveal:${S.q ?? -1}`);
+        act('reveal');
+      } else if (p === 'reveal') {
+        const isLast = S.q !== undefined && S.q + 1 >= S.total;
+        if (isLast) {
+          quizAudio.playReveal(`${S.gid}:final:${S.q ?? -1}`, 2500);
+        } else {
+          quizAudio.playClick();
+        }
+        act('next');
+      }
     }
     $('primaryBtn').addEventListener('click', primaryAction);
     $('resetBtn').addEventListener('click', () => {
+      quizAudio.playClick();
       const t = prompt('這會清空所有賓客的暱稱和分數。\n要重置請輸入「重置」');
       if (t === '重置') act('reset');
     });

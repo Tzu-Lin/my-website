@@ -13,7 +13,7 @@ export type Question = {
   practice?: boolean;
 };
 
-export const DEFAULT_DURATION = 20;
+export const DEFAULT_DURATION = 15;
 
 export const QUESTIONS: Question[] = [
   {
@@ -43,7 +43,7 @@ export const QUESTIONS: Question[] = [
   },
   {
     text: '新郎在哪裡跟新娘求婚的？',
-    options: ['夜景餐廳', '日本', '家裡', '根本沒求婚'],
+    options: ['夜景餐廳', '日本', '床上', '根本沒求婚'],
     points: [0, 0, 0, 1],
   },
   {
